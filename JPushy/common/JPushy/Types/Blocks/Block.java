@@ -1,34 +1,34 @@
 package JPushy.Types.Blocks;
 
-import java.awt.Image;
-
 import JPushy.Blocks;
 import JPushy.Items;
 import JPushy.Types.Picture;
 import JPushy.Types.Items.Item;
 import JPushy.Types.Level.Level;
+
 /**
  * 
  * @author Marcel Benning
  * 
  */
 public class Block {
-	
-	private int id;
-	private Picture img;
-	private String name;
-	private boolean playerAbleToWalkOn;
-	private boolean solid;
-	private boolean visible;
-	private Block invincebleBlock;
-	private boolean switchable;
-	private boolean lever;
-	private boolean ocupied;
-	private boolean destroyable;
-	private Block occupiedByBlock;
-	private Item keptItem = Items.noitem;
-	
-	public Block(Block b){
+
+	private int	    id;
+	private Picture	img;
+	private String	name;
+	private boolean	playerAbleToWalkOn;
+	private boolean	solid;
+	private boolean	visible;
+	private Block	  invincebleBlock;
+	private boolean	switchable;
+	private boolean	lever;
+	private boolean	ocupied;
+	private boolean	destroyable;
+	private boolean	register;
+	private Block	  occupiedByBlock;
+	private Item	  keptItem	= Items.noitem;
+
+	public Block(Block b) {
 		this.id = b.getId();
 		this.img = b.getTexture();
 		this.name = b.getName();
@@ -39,7 +39,7 @@ public class Block {
 		this.switchable = b.isSwitchable();
 		this.keptItem = b.getKeptItem();
 	}
-	
+
 	public Block(String name, int id, Picture img) {
 		this(name, id, img, true);
 	}
@@ -48,24 +48,19 @@ public class Block {
 		this(name, id, img, true, false, visible);
 	}
 
-	public Block(String name, int id, Picture img, boolean playerAbleToWalkOn,
-			boolean visible) {
+	public Block(String name, int id, Picture img, boolean playerAbleToWalkOn, boolean visible) {
 		this(name, id, img, playerAbleToWalkOn, true, visible);
 	}
 
-	public Block(String name, int id, Picture img, boolean playerAbleToWalkOn,
-			boolean solid, boolean visible) {
-		this(name, id, img, playerAbleToWalkOn, solid, false,visible, Blocks.air);
+	public Block(String name, int id, Picture img, boolean playerAbleToWalkOn, boolean solid, boolean visible) {
+		this(name, id, img, playerAbleToWalkOn, solid, false, visible, Blocks.air);
 	}
-	
-	public Block(String name, int id, Picture img, boolean playerAbleToWalkOn,
-			boolean solid, boolean destroyable, boolean visible, Block invincebleBlock) {
+
+	public Block(String name, int id, Picture img, boolean playerAbleToWalkOn, boolean solid, boolean destroyable, boolean visible, Block invincebleBlock) {
 		this(name, id, img, playerAbleToWalkOn, solid, destroyable, visible, Blocks.air, true);
 	}
-	
-	public Block(String name, int id, Picture img,
-			boolean playerAbleToWalkOn, boolean solid, boolean destroyable, boolean visible,
-			Block invincebleBlock, boolean register) {
+
+	public Block(String name, int id, Picture img, boolean playerAbleToWalkOn, boolean solid, boolean destroyable, boolean visible, Block invincebleBlock, boolean register) {
 		this.id = id;
 		this.img = img;
 		this.name = name;
@@ -74,13 +69,11 @@ public class Block {
 		this.visible = visible;
 		this.invincebleBlock = invincebleBlock;
 		this.destroyable = destroyable;
-		if(register){
-			Blocks.registerBlock(this);
-		}
+		this.register = register;
 		this.init();
 		this.keptItem = Items.noitem;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -159,7 +152,7 @@ public class Block {
 		this.switchable = switchable;
 		return this;
 	}
-	
+
 	public boolean isLever() {
 		return lever;
 	}
@@ -195,7 +188,7 @@ public class Block {
 		this.destroyable = destroyable;
 		return this;
 	}
-	
+
 	public Item getKeptItem() {
 		return keptItem;
 	}
@@ -204,20 +197,41 @@ public class Block {
 		this.keptItem = keptItem;
 	}
 
-	public void init(){}
-	
-	public void toggle(){System.out.println("Toggle native");}
+	public boolean isRegister() {
+		return register;
+	}
 
-	public void onWalk(int x, int y, Level l) {}
+	public Block setRegister(boolean register) {
+		this.register = register;
+		return this;
+	}
 
-	public void onPush(int oldX, int oldY, int newX, int newY, int side, Level l) {}
-	
-	public void update(){}
-	
-	public void set(){}
-	
-	public void reset(){}
-	
-	public void onOccupied(boolean o, Level l){}
-	
+	public void init() {
+		if (this.isRegister()) {
+			Blocks.registerBlock(this);
+		}
+	}
+
+	public void toggle() {
+		System.out.println("Toggle native");
+	}
+
+	public void onWalk(int x, int y, Level l) {
+	}
+
+	public void onPush(int oldX, int oldY, int newX, int newY, int side, Level l) {
+	}
+
+	public void update() {
+	}
+
+	public void set() {
+	}
+
+	public void reset() {
+	}
+
+	public void onOccupied(boolean o, Level l) {
+	}
+
 }

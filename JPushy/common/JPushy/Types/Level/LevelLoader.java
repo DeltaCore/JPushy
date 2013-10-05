@@ -22,7 +22,7 @@ import JPushy.Types.Blocks.TeleportBase;
  */
 
 public class LevelLoader {
-	
+
 	public static Level loadLevelFromFile(String filename) {
 		Blocks.wakeUpDummy();
 		String line;
@@ -32,15 +32,15 @@ public class LevelLoader {
 		ArrayList<String> lines = loadLevelFile(filename);
 		ArrayList<String> cfgLines = loadLevelConfig(filename);
 		int x = 0, y = 0;
-		
+
 		String start_regex = "^<stage id=([0-9])>$";
 		String end_regex = "^</stage>";
-		String levelRegEx = "^^<level name=\"([a-zA-Z]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
+		String levelRegEx = "^^<level name=\"([a-zA-Z\\s]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
 		String commentStart = "^<comment>";
 		String commentEnd = "^</comment>";
-		
+
 		Random r = new Random();
-		
+
 		int levelSizes[][] = new int[32][2];
 		int stageCid = 0;
 		boolean flag = false;
@@ -50,19 +50,19 @@ public class LevelLoader {
 		String Comment = "";
 		for (int i = 0; i < lines.size(); i++) {
 			line = lines.get(i);
-			if(comment){
-				if(line.matches(commentEnd)){
-					
-				}else{
+			if (comment) {
+				if (line.matches(commentEnd)) {
+
+				} else {
 					l.addComment(line);
 					System.out.println("[Comment] New comment line : " + line);
 				}
 			}
 			if (line.matches(commentStart)) {
 				comment = true;
-			}else if (line.matches(commentEnd)) {
+			} else if (line.matches(commentEnd)) {
 				comment = false;
-			}else if (line.matches(levelRegEx)) {
+			} else if (line.matches(levelRegEx)) {
 				System.out.println("Yes !!!");
 				Pattern pattern = Pattern.compile(levelRegEx);
 				Matcher matcher = pattern.matcher(line);
@@ -73,7 +73,7 @@ public class LevelLoader {
 					l.setName(name);
 					l.setVersion(version);
 				}
-			}else if (line.matches(start_regex)) {
+			} else if (line.matches(start_regex)) {
 				flag = true;
 				Pattern pattern = Pattern.compile(start_regex);
 				Matcher matcher = pattern.matcher(line);
@@ -90,20 +90,16 @@ public class LevelLoader {
 			}
 			bX = 0;
 			int le = line.length();
-			if (le >= x) {
-				x = le;
-			}
-			if(x >= bX)
-				bX = x;
+			bX = le;
 			y++;
 			startY++;
 		}
-		blocks = new Block[y][x];
+		blocks = new Block[1][1];
 		System.out.println("Level data : ");
 		// System.out.println("Lines : ");
 		// for(int i = 0;i<lines.size();i++) System.out.println(lines.get(i));
 		// System.out.println();
-		//http://rubular.com/r/ypQuk06b0u
+		// http://rubular.com/r/ypQuk06b0u
 		flag = false;
 		int stageId = -1;
 		Stage stage = null;
@@ -120,7 +116,7 @@ public class LevelLoader {
 					stageId = id;
 				}
 				blocks = new Block[levelSizes[stageId][1]][levelSizes[stageId][0]];
-				System.out.println("Levelsize : x: " + levelSizes[stageId][1] + " y:" + levelSizes[stageId][0]);
+				System.out.println("Levelsize : x: " + levelSizes[stageId][0] + " y:" + levelSizes[stageId][1]);
 				stage = new Stage(stageId);
 				yCounter = 0;
 			} else if (line.matches(end_regex)) {
@@ -128,8 +124,7 @@ public class LevelLoader {
 				l.registerStage(stage);
 				flag = false;
 				yCounter = 0;
-			}
-			else if (flag) {
+			} else if (flag) {
 				int le = line.length();
 				// System.out.println("Line : " + line + " length : " + le);
 				for (int j = 0; j < le; j++) {
@@ -138,11 +133,7 @@ public class LevelLoader {
 						int val = c - 48;
 						b = new Block(Blocks.air);
 						if (val == Blocks.TeleportBase.getId()) {
-							TeleportBase base = (TeleportBase) new TeleportBase(
-									"Teleporter",
-									Blocks.TeleportBase.getId(),
-									PictureLoader
-											.loadImageFromFile("teleportbase.png")).setDestroyable(false).setSolid(true).setPlayerAbleToWalkOn(true);
+							TeleportBase base = (TeleportBase) new TeleportBase("Teleporter", Blocks.TeleportBase.getId(), PictureLoader.loadImageFromFile("teleportbase.png")).setDestroyable(false).setSolid(true).setPlayerAbleToWalkOn(true);
 							int[] cfgCords = checkCFGCords(cfgLines, stageId, j, yCounter);
 							if (cfgCords[0] == 0 && cfgCords[1] == 0) {
 							} else {
@@ -151,28 +142,28 @@ public class LevelLoader {
 								b = base;
 							}
 						}/*
-						 * else if(val == Blocks.button.getId()){ Button base =
-						 * new Button("Button", Blocks.button.getId(),
-						 * PictureLoader.loadImageFromFile("button.png"), true,
-						 * true, true, Blocks.air, false); int[] cfgCords =
-						 * checkCFGCords(cfgLines, j, i); if(cfgCords[0] == 0 &&
-						 * cfgCords[1] == 0){ }else{ base.setX(cfgCords[0]);
-						 * base.setY(cfgCords[1]); b = base; } }else if(val ==
-						 * Blocks.leverOff.getId()){ SwitchBlock base = new
-						 * SwitchBlock("Lever", Blocks.leverOff.getId(),
-						 * PictureLoader.loadImageFromFile("leverOff.png"),
-						 * true, true, true, Blocks.air, false); int[] cfgCords
-						 * = checkCFGCords(cfgLines, j, i); if(cfgCords[0] == 0
-						 * && cfgCords[1] == 0){ }else{ base.setX(cfgCords[0]);
-						 * base.setY(cfgCords[1]); b = base; } }else if(val ==
-						 * Blocks.leverOn.getId()){ SwitchBlock base = new
-						 * SwitchBlock("Lever", Blocks.leverOff.getId(),
-						 * PictureLoader.loadImageFromFile("leverOff.png"),
-						 * true, true, true, Blocks.air, false); int[] cfgCords
-						 * = checkCFGCords(cfgLines, j, i); if(cfgCords[0] == 0
-						 * && cfgCords[1] == 0){ }else{ base.setX(cfgCords[0]);
-						 * base.setY(cfgCords[1]); b = base; } }
-						 */
+							 * else if(val == Blocks.button.getId()){ Button base = new
+							 * Button("Button", Blocks.button.getId(),
+							 * PictureLoader.loadImageFromFile("button.png"), true, true,
+							 * true, Blocks.air, false); int[] cfgCords =
+							 * checkCFGCords(cfgLines, j, i); if(cfgCords[0] == 0 &&
+							 * cfgCords[1] == 0){ }else{ base.setX(cfgCords[0]);
+							 * base.setY(cfgCords[1]); b = base; } }else if(val ==
+							 * Blocks.leverOff.getId()){ SwitchBlock base = new
+							 * SwitchBlock("Lever", Blocks.leverOff.getId(),
+							 * PictureLoader.loadImageFromFile("leverOff.png"), true, true,
+							 * true, Blocks.air, false); int[] cfgCords =
+							 * checkCFGCords(cfgLines, j, i); if(cfgCords[0] == 0 &&
+							 * cfgCords[1] == 0){ }else{ base.setX(cfgCords[0]);
+							 * base.setY(cfgCords[1]); b = base; } }else if(val ==
+							 * Blocks.leverOn.getId()){ SwitchBlock base = new
+							 * SwitchBlock("Lever", Blocks.leverOff.getId(),
+							 * PictureLoader.loadImageFromFile("leverOff.png"), true, true,
+							 * true, Blocks.air, false); int[] cfgCords =
+							 * checkCFGCords(cfgLines, j, i); if(cfgCords[0] == 0 &&
+							 * cfgCords[1] == 0){ }else{ base.setX(cfgCords[0]);
+							 * base.setY(cfgCords[1]); b = base; } }
+							 */
 						else if (val == Blocks.home.getId()) {
 							b = Blocks.home;
 							stage.setHomeY(yCounter);
@@ -182,7 +173,7 @@ public class LevelLoader {
 							b = Blocks.getBlockById(val);
 						}
 						int itemForBlock = getItemForBlock(stageId, j, yCounter, filename);
-						if(itemForBlock != -1){
+						if (itemForBlock != -1) {
 							b.setKeptItem(Items.getItemById(itemForBlock));
 						}
 						System.out.print(b.toString() + " : ");
@@ -198,8 +189,8 @@ public class LevelLoader {
 		System.out.println("Level data end.");
 		return l;
 	}
-	
-	private static int[] checkCFGCords(ArrayList<String> cfg,int stageId , int x, int y) {
+
+	private static int[] checkCFGCords(ArrayList<String> cfg, int stageId, int x, int y) {
 		String regex = "^([0-9]{1,}),([0-9]{1,}),([0-9]{1,})=([0-9]{1,}),([0-9]{1,})$";
 		for (String line : cfg) {
 			if (line.matches(regex)) {
@@ -223,7 +214,7 @@ public class LevelLoader {
 
 	private static ArrayList<String> loadLevelFile(String filename) {
 		ArrayList<String> returnString = new ArrayList<String>();
-		if(!filename.startsWith("Data/lvl/")){
+		if (!filename.startsWith("Data/lvl/")) {
 			filename = "Data/lvl/" + filename;
 		}
 		File f = new File(filename);
@@ -239,11 +230,11 @@ public class LevelLoader {
 		}
 		return returnString;
 	}
-	
+
 	private static ArrayList<String> loadLevelConfig(String filename) {
 		ArrayList<String> returnString = new ArrayList<String>();
 		String modPath = filename.replace(".lvl", ".cfg");
-		if(!modPath.startsWith("Data/lvl/")){
+		if (!modPath.startsWith("Data/lvl/")) {
 			modPath = "Data/lvl/" + modPath;
 		}
 		File f = new File(modPath);
@@ -259,13 +250,13 @@ public class LevelLoader {
 		}
 		return returnString;
 	}
-	
-	private static int getItemForBlock(int stage, int x, int y, String filename){
+
+	private static int getItemForBlock(int stage, int x, int y, String filename) {
 		ArrayList<String> content = loadLevelConfig(filename);
 		String regex = "^item=([0-9]),([0-9]),([0-9])=([0-9]);";
-		for(int i = 0;i<content.size();i++){
+		for (int i = 0; i < content.size(); i++) {
 			String line = content.get(i);
-			if(line.matches(regex)){
+			if (line.matches(regex)) {
 				Pattern pattern = Pattern.compile(regex);
 				Matcher matcher = pattern.matcher(line);
 				if (matcher.matches()) {
@@ -274,7 +265,7 @@ public class LevelLoader {
 					int y1 = Integer.parseInt(matcher.group(3));
 					int itemid = Integer.parseInt(matcher.group(4));
 					if (x1 == x && y1 == y && stage == id) {
-						System.out.println("ID : " + id + " X: "+x+"-"+ x1 + " Y: "+y+"-"+ y1 + " - " + itemid);
+						System.out.println("ID : " + id + " X: " + x + "-" + x1 + " Y: " + y + "-" + y1 + " - " + itemid);
 						return itemid;
 					}
 				}
