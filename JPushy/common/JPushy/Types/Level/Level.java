@@ -296,8 +296,9 @@ public class Level {
 		for(String s: comment){
 			Game.sendMessage(s);
 		}
+		getActiveStage().init(Game.getPlayer());
 	}
-
+	
 	public String getFileName() {
 		// TODO Auto-generated method stub
 		return null;

@@ -58,7 +58,7 @@ public class Stage {
 	}
 	
 	public void init(Player p){
-		p.setX(homeX);
+		p.setX(homeX + 1);
 		p.setY(homeY);
 	}
 	

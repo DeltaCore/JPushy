@@ -2,14 +2,13 @@ package JPushy;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import JPushy.Gui.LevelSelector;
+import JPushy.LevelEditor.EditorThread;
 /**
  * 
  * @author Marcel Benning
@@ -18,6 +17,8 @@ import JPushy.Gui.LevelSelector;
 public class LevelSelectorListener implements ListSelectionListener, ActionListener{
 	LevelSelector selector;
 	private String value = "";
+	EditorThread th = new EditorThread();
+	boolean flag = false;
 	
 	public LevelSelectorListener(LevelSelector frame){
 		this.selector = frame;
@@ -48,6 +49,11 @@ public class LevelSelectorListener implements ListSelectionListener, ActionListe
 			selector.game.loadLevel(ip, 1);
 			Game.getPlayer().setName(username);
 			Game.gameThread.client.loadPlayer();
+		}else if(cmd.equals("leveleditor")){
+			th = new EditorThread();
+			th.setLevelSelector(selector);
+			Thread t = new Thread(th);
+			t.start();
 		}
 	}
 }

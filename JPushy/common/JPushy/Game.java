@@ -1,15 +1,8 @@
 package JPushy;
 
-import java.util.ArrayList;
-
-import javax.swing.JTextArea;
-
 import JPushy.Gui.LevelSelector;
-import JPushy.Gui.MainFrame;
 import JPushy.MultiPlayer.MPClient;
-import JPushy.MultiPlayer.MPServer;
 import JPushy.Types.Level.Level;
-import JPushy.Types.Level.LevelLoader;
 /**
  * 
  * @author Marcel Benning

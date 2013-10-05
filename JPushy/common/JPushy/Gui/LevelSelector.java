@@ -1,32 +1,30 @@
 package JPushy.Gui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JToolBar;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
 
 import JPushy.Game;
 import JPushy.LevelSelectorListener;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import javax.swing.ListSelectionModel;
+import JPushy.LevelEditor.Editor;
+import JPushy.LevelEditor.EditorThread;
 /**
  * 
  * @author Marcel Benning
@@ -34,13 +32,13 @@ import javax.swing.ListSelectionModel;
  */
 
 public class LevelSelector extends JFrame {
-
+	
+	private Editor editor;
 	private JPanel contentPane;
-	public JList levels = new JList();
+	DefaultListModel<String> listModel = new DefaultListModel<String>();
+	public JList levels = new JList<String>(listModel);
 	LevelSelectorListener selectionListener;
 	public Game game;
-	
-	private String levelEndRegEx = "^([a-zA-Z0-9]{1,}).lvl";
 	
 	public LevelSelector(Game game) {
 		this.game = game;
@@ -71,7 +69,24 @@ public class LevelSelector extends JFrame {
 		btnConnectToServer.setActionCommand("connect");
 		
 		toolBar.add(btnConnectToServer);
+		
+		JButton btnLevelEditor = new JButton("Level Editor");
+		btnLevelEditor.addActionListener(selectionListener);
+		btnLevelEditor.setActionCommand("leveleditor");
+		toolBar.add(btnLevelEditor);
 		btnExit.addActionListener(selectionListener);
+		getContentPane().add(levels);
+		levels.addListSelectionListener(selectionListener);
+		readLevels();
+	}
+	
+	public void updateLevels(){
+		System.out.println("Update levels");
+		readLevels();
+	}
+	
+	public void readLevels(){
+		remove(levels);
 		File dataFolder = new File("Data/lvl");
 		
 		String levelList[];
@@ -79,7 +94,7 @@ public class LevelSelector extends JFrame {
 		for(File f : dataFolder.listFiles()){
 			if(!f.isDirectory()){
 				String tmp = f.getName();
-				if(tmp.matches(levelEndRegEx)){
+				if(tmp.endsWith(".lvl")){
 					i++;
 				}
 			}
@@ -89,19 +104,18 @@ public class LevelSelector extends JFrame {
 		for(File f : dataFolder.listFiles()){
 			if(!f.isDirectory()){
 				String tmp = f.getName();
-				if(tmp.matches(levelEndRegEx)){
+				if(tmp.endsWith(".lvl")){
 					levelList[i] = tmp;
 					System.out.println("New Level file : " + tmp);
 					i++;
 				}
 			}
 		}
-		String levelRegEx = "^^<level name=\"([a-zA-Z]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
+		String levelRegEx = "<level name=\"([a-zA-Z0-9\\s]{1,})\" version='([a-zA-Z0-9.,\\s]{1,})'>";
 		String commentStart = "^<comment>";
 		String commentEnd = "^</comment>";
 		boolean comment = false;
-		String Comment = "";
-		DefaultListModel listModel = new DefaultListModel();
+		listModel = new DefaultListModel<String>();
 		for(String s: levelList){
 			ArrayList<String> content = loadLevelFile(s);
 			for(String line: content){
@@ -109,7 +123,6 @@ public class LevelSelector extends JFrame {
 					if(line.matches(commentEnd)){
 						
 					}else{
-						Comment += line;
 						System.out.println("[Comment] New comment line : " + line);
 					}
 				}
@@ -117,7 +130,6 @@ public class LevelSelector extends JFrame {
 					comment = true;
 				}else if (line.matches(commentEnd)) {
 					comment = false;
-					
 				}else if (line.matches(levelRegEx)) {
 					Pattern pattern = Pattern.compile(levelRegEx);
 					Matcher matcher = pattern.matcher(line);
@@ -130,10 +142,18 @@ public class LevelSelector extends JFrame {
 				}
 			}
 		}
-		levels = new JList(listModel);
+		levels = new JList<>(listModel);
+		this.repaint();
 		levels.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		levels.addListSelectionListener(selectionListener);
-		getContentPane().add(levels);
+		add(levels);
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+		}
+		Rectangle r = this.getBounds();
+		this.setSize((int) r.getWidth() + 1,(int) r.getHeight());
+		this.setSize((int) r.getWidth(),(int) r.getHeight());
 	}
 	
 	private ArrayList<String> loadLevelFile(String filename) {
