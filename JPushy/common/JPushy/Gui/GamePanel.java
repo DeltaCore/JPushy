@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Timer;
 
 import javax.swing.JPanel;
@@ -13,6 +14,7 @@ import javax.swing.JPanel;
 import JPushy.Blocks;
 import JPushy.Game;
 import JPushy.GraphicUtils;
+import JPushy.Items;
 import JPushy.LevelScheduler;
 import JPushy.PictureLoader;
 import JPushy.Player;
@@ -32,7 +34,6 @@ public class GamePanel extends JPanel {
 	MainFrame frame;
 	boolean sizeSet = false;
 	int lastId = 0;
-	
 	Font font = new Font("Arial", Font.PLAIN, 18);
 	public ArrayList<String> consoleLines = new ArrayList<String>();
 	
@@ -50,8 +51,7 @@ public class GamePanel extends JPanel {
 				for (int j = 0; j < l.getLevel().getActiveStage().getBlocks()[0].length; j++) {
 					if (!flag2) {
 						Block b = new Block("Dummy", -1,
-								PictureLoader.loadImageFromFile("base.png"),
-								false, false, false, Blocks.air, false);
+								PictureLoader.loadImageFromFile("base.png"));
 						try {
 							b = l.getLevel().getActiveStage().getBlock(j, i);
 							System.out.print(b.toString() + " - ");
@@ -65,8 +65,7 @@ public class GamePanel extends JPanel {
 			}
 			if (!flag1) {
 				Block b = new Block("Dummy", -1,
-						PictureLoader.loadImageFromFile("base.png"), false,
-						false, false, Blocks.air, false);
+						PictureLoader.loadImageFromFile("base.png"));
 				try {
 					b = l.getLevel().getActiveStage().getBlock(0, i);
 					System.out.print(b.toString() + " - ");
@@ -128,6 +127,10 @@ public class GamePanel extends JPanel {
 									t = GraphicUtils.getImageFromPicture(b
 											.getTexture());
 									g.drawImage(t, ((x * 40)), ((y * 40)), null);
+									if(b.getKeptItem() != null){
+										if(!(b.getKeptItem() == Items.noitem))
+											g.drawImage(GraphicUtils.getImageFromPicture(b.getKeptItem().getTexture()), ((x * 40)), ((y * 40)), null);
+									}
 								}
 								sizeX = x;
 							} else {

@@ -168,8 +168,7 @@ public class Level {
 			return false;
 		} else {
 			Block t = new Block("Dummy", -1,
-					PictureLoader.loadImageFromFile("base.png"), false, false,
-					false, Blocks.air, false);
+					PictureLoader.loadImageFromFile("base.png"));
 			if (dir == 0) {
 				t = stages.get(activeStage).getBlocks()[y - 1][x];
 			} else if (dir == 1) {

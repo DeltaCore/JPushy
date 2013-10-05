@@ -29,19 +29,6 @@ public class Gate extends Block {
 			boolean solid, boolean visible) {
 		super(name, id, img, playerAbleToWalkOn, solid, visible);
 	}
-
-	public Gate(String name, int id, Picture img, boolean playerAbleToWalkOn,
-			boolean solid, boolean visible, Block invincebleBlock) {
-		super(name, id, img, playerAbleToWalkOn, solid, visible,
-				invincebleBlock);
-	}
-
-	public Gate(String name, int id, Picture img, boolean playerAbleToWalkOn,
-			boolean solid, boolean visible, Block invincebleBlock,
-			boolean register) {
-		super(name, id, img, playerAbleToWalkOn, solid, visible,
-				invincebleBlock, register);
-	}
 	
 	@Override
 	public void init() {

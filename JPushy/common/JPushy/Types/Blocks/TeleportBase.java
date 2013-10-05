@@ -36,20 +36,6 @@ public class TeleportBase extends Block {
 			boolean playerAbleToWalkOn, boolean solid, boolean visible) {
 		super(name, id, img, playerAbleToWalkOn, solid, visible);
 	}
-
-	public TeleportBase(String name, int id, Picture img,
-			boolean playerAbleToWalkOn, boolean solid, boolean visible,
-			Block invincebleBlock) {
-		super(name, id, img, playerAbleToWalkOn, solid, visible,
-				invincebleBlock);
-	}
-	
-	public TeleportBase(String name, int id, Picture img,
-			boolean playerAbleToWalkOn, boolean solid, boolean visible,
-			Block invincebleBlock, boolean register) {
-		super(name, id, img, playerAbleToWalkOn, solid, visible,
-				invincebleBlock, register);
-	}
 	
 	@Override
 	public void onWalk(int x, int y, Level l) {

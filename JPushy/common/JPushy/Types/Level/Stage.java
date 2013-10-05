@@ -16,7 +16,7 @@ public class Stage {
 	public Stage(int id) {
 		this.id = id;
 	}
-
+	
 	public int getId() {
 		return id;
 	}
@@ -58,7 +58,7 @@ public class Stage {
 	}
 	
 	public void init(Player p){
-		p.setX(homeX + 1);
+		p.setX(homeX);
 		p.setY(homeY);
 	}
 	

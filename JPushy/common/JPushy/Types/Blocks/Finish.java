@@ -11,9 +11,8 @@ import JPushy.Types.Level.Level;
  */
 public class Finish extends Block{
 
-	public Finish(String name, int id, Picture img, boolean playerAbleToWalkOn,
-			boolean solid, boolean visible) {
-		super(name, id, img, playerAbleToWalkOn, solid, visible);
+	public Finish(String name, int id, Picture img) {
+		super(name, id, img);
 	}
 	
 	@Override

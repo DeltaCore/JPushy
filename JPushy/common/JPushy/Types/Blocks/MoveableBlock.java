@@ -30,20 +30,7 @@ public class MoveableBlock extends Block {
 			boolean solid, boolean visible) {
 		super(name, id, img, playerAbleToWalkOn, solid, visible);
 	}
-
-	public MoveableBlock(String name, int id, Picture img, boolean playerAbleToWalkOn,
-			boolean solid, boolean visible, Block invincebleBlock) {
-		super(name, id, img, playerAbleToWalkOn, solid, visible,
-				invincebleBlock);
-	}
-
-	public MoveableBlock(String name, int id, Picture img, boolean playerAbleToWalkOn,
-			boolean solid, boolean visible, Block invincebleBlock,
-			boolean register) {
-		super(name, id, img, playerAbleToWalkOn, solid, visible,
-				invincebleBlock, register);
-	}
-
+	
 	@Override
 	public void onPush(int oldX, int oldY, int newX, int newY, int side, Level l) {
 		super.onPush(oldX, oldY, newX, newY, side, l);

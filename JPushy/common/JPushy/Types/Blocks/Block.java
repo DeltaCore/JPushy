@@ -3,7 +3,9 @@ package JPushy.Types.Blocks;
 import java.awt.Image;
 
 import JPushy.Blocks;
+import JPushy.Items;
 import JPushy.Types.Picture;
+import JPushy.Types.Items.Item;
 import JPushy.Types.Level.Level;
 /**
  * 
@@ -11,7 +13,7 @@ import JPushy.Types.Level.Level;
  * 
  */
 public class Block {
-
+	
 	private int id;
 	private Picture img;
 	private String name;
@@ -22,7 +24,9 @@ public class Block {
 	private boolean switchable;
 	private boolean lever;
 	private boolean ocupied;
+	private boolean destroyable;
 	private Block occupiedByBlock;
+	private Item keptItem = Items.noitem;
 	
 	public Block(Block b){
 		this.id = b.getId();
@@ -33,6 +37,7 @@ public class Block {
 		this.visible = b.isVisible();
 		this.invincebleBlock = b.getInvincebleBlock();
 		this.switchable = b.isSwitchable();
+		this.keptItem = b.getKeptItem();
 	}
 	
 	public Block(String name, int id, Picture img) {
@@ -50,16 +55,16 @@ public class Block {
 
 	public Block(String name, int id, Picture img, boolean playerAbleToWalkOn,
 			boolean solid, boolean visible) {
-		this(name, id, img, playerAbleToWalkOn, solid, visible, Blocks.air);
+		this(name, id, img, playerAbleToWalkOn, solid, false,visible, Blocks.air);
 	}
-
+	
 	public Block(String name, int id, Picture img, boolean playerAbleToWalkOn,
-			boolean solid, boolean visible, Block invincebleBlock) {
-		this(name, id, img, playerAbleToWalkOn, solid, visible, Blocks.air, true);
+			boolean solid, boolean destroyable, boolean visible, Block invincebleBlock) {
+		this(name, id, img, playerAbleToWalkOn, solid, destroyable, visible, Blocks.air, true);
 	}
-
+	
 	public Block(String name, int id, Picture img,
-			boolean playerAbleToWalkOn, boolean solid, boolean visible,
+			boolean playerAbleToWalkOn, boolean solid, boolean destroyable, boolean visible,
 			Block invincebleBlock, boolean register) {
 		this.id = id;
 		this.img = img;
@@ -68,34 +73,39 @@ public class Block {
 		this.solid = solid;
 		this.visible = visible;
 		this.invincebleBlock = invincebleBlock;
+		this.destroyable = destroyable;
 		if(register){
 			Blocks.registerBlock(this);
 		}
 		this.init();
+		this.keptItem = Items.noitem;
 	}
 	
 	public int getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public Block setId(int id) {
 		this.id = id;
+		return this;
 	}
 
 	public Picture getTexture() {
 		return img;
 	}
 
-	public void setTexture(Picture img) {
+	public Block setTexture(Picture img) {
 		this.img = img;
+		return this;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public Block setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	@Override
@@ -107,16 +117,18 @@ public class Block {
 		return visible;
 	}
 
-	public void setVisible(boolean visible) {
+	public Block setVisible(boolean visible) {
 		this.visible = visible;
+		return this;
 	}
 
 	public Block getInvincebleBlock() {
 		return invincebleBlock;
 	}
 
-	public void setInvincebleBlock(Block invincebleBlock) {
+	public Block setInvincebleBlock(Block invincebleBlock) {
 		this.invincebleBlock = invincebleBlock;
+		return this;
 	}
 
 	/* Interact methods */
@@ -125,32 +137,36 @@ public class Block {
 		return playerAbleToWalkOn;
 	}
 
-	public void setPlayerAbleToWalkOn(boolean playerAbleToWalkOn) {
+	public Block setPlayerAbleToWalkOn(boolean playerAbleToWalkOn) {
 		this.playerAbleToWalkOn = playerAbleToWalkOn;
+		return this;
 	}
 
 	public boolean isSolid() {
 		return solid;
 	}
 
-	public void setSolid(boolean solid) {
+	public Block setSolid(boolean solid) {
 		this.solid = solid;
+		return this;
 	}
 
 	public boolean isSwitchable() {
 		return switchable;
 	}
 
-	public void setSwitchable(boolean switchable) {
+	public Block setSwitchable(boolean switchable) {
 		this.switchable = switchable;
+		return this;
 	}
 	
 	public boolean isLever() {
 		return lever;
 	}
 
-	public void setLever(boolean lever) {
+	public Block setLever(boolean lever) {
 		this.lever = lever;
+		return this;
 	}
 
 	public Block getOccupiedByBlock() {
@@ -161,12 +177,31 @@ public class Block {
 		return ocupied;
 	}
 
-	public void setOcupied(boolean ocupied) {
+	public Block setOcupied(boolean ocupied) {
 		this.ocupied = ocupied;
+		return this;
 	}
 
-	public void setOccupiedByBlock(Block occupiedByBlock) {
+	public Block setOccupiedByBlock(Block occupiedByBlock) {
 		this.occupiedByBlock = occupiedByBlock;
+		return this;
+	}
+
+	public boolean isDestroyable() {
+		return destroyable;
+	}
+
+	public Block setDestroyable(boolean destroyable) {
+		this.destroyable = destroyable;
+		return this;
+	}
+	
+	public Item getKeptItem() {
+		return keptItem;
+	}
+
+	public void setKeptItem(Item keptItem) {
+		this.keptItem = keptItem;
 	}
 
 	public void init(){}

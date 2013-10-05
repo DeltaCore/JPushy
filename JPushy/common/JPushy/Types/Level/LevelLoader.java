@@ -5,10 +5,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import JPushy.Blocks;
+import JPushy.Items;
 import JPushy.PictureLoader;
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.TeleportBase;
@@ -36,6 +38,8 @@ public class LevelLoader {
 		String levelRegEx = "^^<level name=\"([a-zA-Z]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
 		String commentStart = "^<comment>";
 		String commentEnd = "^</comment>";
+		
+		Random r = new Random();
 		
 		int levelSizes[][] = new int[32][2];
 		int stageCid = 0;
@@ -104,6 +108,7 @@ public class LevelLoader {
 		int stageId = -1;
 		Stage stage = null;
 		int yCounter = 0;
+		Block b;
 		for (int i = 0; i < lines.size(); i++) {
 			line = lines.get(i);
 			if (line.matches(start_regex)) {
@@ -131,14 +136,13 @@ public class LevelLoader {
 					char c = line.charAt(j);
 					try {
 						int val = c - 48;
-						Block b = Blocks.air;
+						b = new Block(Blocks.air);
 						if (val == Blocks.TeleportBase.getId()) {
-							TeleportBase base = new TeleportBase(
+							TeleportBase base = (TeleportBase) new TeleportBase(
 									"Teleporter",
 									Blocks.TeleportBase.getId(),
 									PictureLoader
-											.loadImageFromFile("teleportbase.png"),
-									true, true, true, Blocks.air, false);
+											.loadImageFromFile("teleportbase.png")).setDestroyable(false).setSolid(true).setPlayerAbleToWalkOn(true);
 							int[] cfgCords = checkCFGCords(cfgLines, stageId, j, yCounter);
 							if (cfgCords[0] == 0 && cfgCords[1] == 0) {
 							} else {
@@ -172,10 +176,14 @@ public class LevelLoader {
 						else if (val == Blocks.home.getId()) {
 							b = Blocks.home;
 							stage.setHomeY(yCounter);
-							stage.setHomeX(j - 1);
+							stage.setHomeX(j);
 							System.out.println("Home coords for stage:" + stage.getId() + " x:" + i + " y:" + yCounter);
 						} else {
 							b = Blocks.getBlockById(val);
+						}
+						int itemForBlock = getItemForBlock(stageId, j, yCounter, filename);
+						if(itemForBlock != -1){
+							b.setKeptItem(Items.getItemById(itemForBlock));
 						}
 						System.out.print(b.toString() + " : ");
 						blocks[yCounter][j] = b;
@@ -250,5 +258,28 @@ public class LevelLoader {
 			e.printStackTrace();
 		}
 		return returnString;
+	}
+	
+	private static int getItemForBlock(int stage, int x, int y, String filename){
+		ArrayList<String> content = loadLevelConfig(filename);
+		String regex = "^item=([0-9]),([0-9]),([0-9])=([0-9]);";
+		for(int i = 0;i<content.size();i++){
+			String line = content.get(i);
+			if(line.matches(regex)){
+				Pattern pattern = Pattern.compile(regex);
+				Matcher matcher = pattern.matcher(line);
+				if (matcher.matches()) {
+					int id = Integer.parseInt(matcher.group(1));
+					int x1 = Integer.parseInt(matcher.group(2));
+					int y1 = Integer.parseInt(matcher.group(3));
+					int itemid = Integer.parseInt(matcher.group(4));
+					if (x1 == x && y1 == y && stage == id) {
+						System.out.println("ID : " + id + " X: "+x+"-"+ x1 + " Y: "+y+"-"+ y1 + " - " + itemid);
+						return itemid;
+					}
+				}
+			}
+		}
+		return -1;
 	}
 }

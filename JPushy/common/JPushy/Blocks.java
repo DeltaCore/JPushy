@@ -2,6 +2,7 @@ package JPushy;
 
 import java.util.ArrayList;
 
+import JPushy.Types.Picture;
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Finish;
 import JPushy.Types.Blocks.MoveableBlock;
@@ -17,14 +18,15 @@ public class Blocks {
 	
 	public static final int maxBlocks = 32;
 	
-	public static final Block air = new Block("Air", 0, PictureLoader.loadImageFromFile("base.png"), true, false, true);
-	public static final Block wall = new Block("Wall", 1, PictureLoader.loadImageFromFile("wall.png"), false, true, true);
-	public static final Block chest = new MoveableBlock("Chest", 2, PictureLoader.loadImageFromFile("chest.png"), false, false, true);
-	public static final Block home = new Block("Home", 3, PictureLoader.loadImageFromFile("home.png"), true, true, true);
-	public static final Block finish = new Finish("Finish", 4, PictureLoader.loadImageFromFile("finish.png"), true, true, true);
-	public static final Block TeleportBase = new TeleportBase("Teleporter", 5, PictureLoader.loadImageFromFile("teleportbase.png"), true , true , true);
-	public static final Block TeleportExit = new Block("Teleporter", 6, PictureLoader.loadImageFromFile("teleportend.png"), true , true , true);
-	public static final Block bricks = new Block("BrickFloor", 7, PictureLoader.loadImageFromFile("brick.png"), false, true, true);
+	public static final Block dummy = new Block("DUMMY", -1, PictureLoader.loadImageFromFile("base.png"));
+	public static final Block air = new Block("Air", 0, PictureLoader.loadImageFromFile("base.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true);
+	public static final Block wall = new Block("Wall", 1, PictureLoader.loadImageFromFile("wall.png")).setPlayerAbleToWalkOn(false).setSolid(true).setDestroyable(false).setVisible(true);
+	public static final Block chest = new MoveableBlock("Chest", 2, PictureLoader.loadImageFromFile("chest.png")).setPlayerAbleToWalkOn(false).setSolid(false).setDestroyable(true).setVisible(true);
+	public static final Block home = new Block("Home", 3, PictureLoader.loadImageFromFile("home.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true);
+	public static final Block finish = new Finish("Finish", 4, PictureLoader.loadImageFromFile("finish.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true);
+	public static final Block TeleportBase = new TeleportBase("Teleporter", 5, PictureLoader.loadImageFromFile("teleportbase.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true);
+	public static final Block TeleportExit = new Block("Teleporter", 6, PictureLoader.loadImageFromFile("teleportend.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true);
+	public static final Block bricks = new Block("BrickFloor", 7, PictureLoader.loadImageFromFile("brick.png")).setPlayerAbleToWalkOn(false).setSolid(true).setDestroyable(true).setVisible(true);
 	//public static final Block button = new Button("Button", 7, PictureLoader.loadImageFromFile("button.png"), true, true, true);
 	//public static final Block gate = new Gate("Gate", 8, PictureLoader.loadImageFromFile("wall.png"), false , true , true , Blocks.air);
 	//public static final Block leverOff = new SwitchBlock("Switch", 9, PictureLoader.loadImageFromFile("leverOff.png"), true, true, true);
