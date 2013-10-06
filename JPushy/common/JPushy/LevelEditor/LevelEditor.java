@@ -104,12 +104,12 @@ public class LevelEditor extends Canvas implements MouseListener, MouseMotionLis
 		frame.setLocationRelativeTo(null);
 		frame.getContentPane().setLayout(null);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
-
+		
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
 		this.addKeyListener(new KeyListener() {
-
+		
 			@Override
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyChar() == '+') {
@@ -156,6 +156,7 @@ public class LevelEditor extends Canvas implements MouseListener, MouseMotionLis
 		showIds.setBounds(920, 130, 200, 20);
 		showIds.setFont(font);
 		showIds.setForeground(Color.WHITE);
+		showIds.setBackground(Color.DARK_GRAY);
 		showIds.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

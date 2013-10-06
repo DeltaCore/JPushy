@@ -28,6 +28,7 @@ public class MainFrame extends JFrame{
 		chat = new Chat(panel);
 		setContentPane(panel);
 		addKeyListener(new Input(panel, l.getClient()));
+		setBackground(Color.gray);
 		this.setVisible(true);
 	}
 	
