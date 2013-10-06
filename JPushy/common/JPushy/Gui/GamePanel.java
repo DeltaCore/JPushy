@@ -6,12 +6,9 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.Timer;
 
 import javax.swing.JPanel;
 
-import JPushy.Blocks;
 import JPushy.Game;
 import JPushy.GraphicUtils;
 import JPushy.Items;
@@ -19,24 +16,27 @@ import JPushy.LevelScheduler;
 import JPushy.PictureLoader;
 import JPushy.Player;
 import JPushy.Types.Blocks.Block;
+import JPushy.Types.Player.Inventory;
+
 /**
  * 
  * @author Marcel Benning
  * 
  */
 public class GamePanel extends JPanel {
-	
-	LevelScheduler level;
-	Block[][] blocks = null;
-	Image t;
-	int maxLines = 10;
-	int margin = 10;
-	MainFrame frame;
-	boolean sizeSet = false;
-	int lastId = 0;
-	Font font = new Font("Arial", Font.PLAIN, 18);
-	public ArrayList<String> consoleLines = new ArrayList<String>();
-	
+
+	LevelScheduler	         level;
+	Block[][]	               blocks	       = null;
+	Image	                   t;
+	int	                     maxLines	     = 10;
+	int	                     margin	       = 10;
+	MainFrame	               frame;
+	boolean	                 sizeSet	     = false;
+	int	                     lastId	       = 0;
+	Font	                   font	         = new Font("Arial", Font.PLAIN, 18);
+	public ArrayList<String>	consoleLines	= new ArrayList<String>();
+	Inventory	               inv;
+
 	public GamePanel(LevelScheduler l, MainFrame frame, int showLines) {
 		this.frame = frame;
 		this.level = l;
@@ -50,8 +50,7 @@ public class GamePanel extends JPanel {
 			if (!flag2) {
 				for (int j = 0; j < l.getLevel().getActiveStage().getBlocks()[0].length; j++) {
 					if (!flag2) {
-						Block b = new Block("Dummy", -1,
-								PictureLoader.loadImageFromFile("base.png"));
+						Block b = new Block("Dummy", -1, PictureLoader.loadImageFromFile("base.png"));
 						try {
 							b = l.getLevel().getActiveStage().getBlock(j, i);
 							System.out.print(b.toString() + " - ");
@@ -64,8 +63,7 @@ public class GamePanel extends JPanel {
 				}
 			}
 			if (!flag1) {
-				Block b = new Block("Dummy", -1,
-						PictureLoader.loadImageFromFile("base.png"));
+				Block b = new Block("Dummy", -1, PictureLoader.loadImageFromFile("base.png"));
 				try {
 					b = l.getLevel().getActiveStage().getBlock(0, i);
 					System.out.print(b.toString() + " - ");
@@ -82,11 +80,12 @@ public class GamePanel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if(lastId != level.getLevel().getActiveStageI()){
+
+		if (lastId != level.getLevel().getActiveStageI()) {
 			sizeSet = false;
 			lastId = level.getLevel().getActiveStageI();
-		}else{
-			
+		} else {
+
 		}
 		level.getLevel().update();
 		Block b;
@@ -112,6 +111,8 @@ public class GamePanel extends JPanel {
 			}
 		}
 		int sizeX = 0, sizeY = 0;
+		int xOffset = 40;
+		int yOffset = 0;
 		try {
 			for (y = 0; y < level.getLevel().getActiveStage().getBlocks().length; y++) {
 				for (x = 0; x < level.getLevel().getActiveStage().getBlocks()[0].length; x++) {
@@ -120,22 +121,19 @@ public class GamePanel extends JPanel {
 						try {
 							if (b.isVisible()) {
 								if (b.isOcupied()) {
-									t = GraphicUtils.getImageFromPicture(b
-											.getOccupiedByBlock().getTexture());
+									t = GraphicUtils.getImageFromPicture(b.getOccupiedByBlock().getTexture());
 									g.drawImage(t, ((x * 40)), ((y * 40)), null);
 								} else {
-									t = GraphicUtils.getImageFromPicture(b
-											.getTexture());
+									t = GraphicUtils.getImageFromPicture(b.getTexture());
 									g.drawImage(t, ((x * 40)), ((y * 40)), null);
-									if(b.getKeptItem() != null){
-										if(!(b.getKeptItem() == Items.noitem))
+									if (b.getKeptItem() != null) {
+										if (!(b.getKeptItem() == Items.noitem))
 											g.drawImage(GraphicUtils.getImageFromPicture(b.getKeptItem().getTexture()), ((x * 40)), ((y * 40)), null);
 									}
 								}
 								sizeX = x;
 							} else {
-								t = GraphicUtils.getImageFromPicture(b
-										.getInvincebleBlock().getTexture());
+								t = GraphicUtils.getImageFromPicture(b.getInvincebleBlock().getTexture());
 								g.drawImage(t, ((x * 40)), ((y * 40)), null);
 							}
 						} catch (Exception e) {
@@ -146,30 +144,43 @@ public class GamePanel extends JPanel {
 					}
 				}
 				sizeY = y;
+				yOffset += 40;
 			}
-			
+
 		} catch (Exception e) {
-			
+
 		}
-		if(!sizeSet){
-			frame.setSize(sizeX*40 + 40 + 16, (sizeY*40) + (10 * (18+10)) + 10);
+
+		if (!sizeSet) {
+			frame.setSize(sizeX * 40 + 40 + 16, (sizeY * 40) + (10 * (18 + 10)) + 10);
 			sizeSet = true;
 		}
 		// Draw own player
 		Player p = Game.getPlayer();
-		g.drawImage(GraphicUtils.getImageFromPicture(p.getTexture()),
-				p.getX() * 40, p.getY() * 40, null);
-		
-		//Draw other player
-		try{
+		g.drawImage(GraphicUtils.getImageFromPicture(p.getTexture()), p.getX() * 40, p.getY() * 40, null);
+
+		// Draw other player
+		try {
 			ArrayList<Player> players = level.getMultiPlayerServer().cmdHandler.getPlayers();
-			for(Player pl : players){
-				g.drawImage(GraphicUtils.getImageFromPicture(pl.getTexture()),
-					pl.getX() * 40, pl.getY() * 40, null);
+			for (Player pl : players) {
+				g.drawImage(GraphicUtils.getImageFromPicture(pl.getTexture()), pl.getX() * 40, pl.getY() * 40, null);
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			System.out.println("Failed drawin other player");
 		}
+		inv = Game.getPlayer().getInventory();
+		g.setColor(Color.BLACK);
+		yOffset = (int) (this.getBounds().getHeight() - 88);
+		int windowWidth = (int) this.getBounds().getWidth();
+		for (int i = 0; i < inv.getSlots().length; i++) {
+			int xoffset = windowWidth - (i * 68) - 88;
+			g.setColor(Color.BLACK);
+			g.fillRect(xoffset, yOffset, 68, 68);
+			g.setColor(Color.DARK_GRAY);
+			g.fillRect(xoffset + 4, yOffset + 4, 60, 60);
+			if (!inv.getSlots()[i].getItem().getName().equalsIgnoreCase("noitem"))
+				g.drawImage(GraphicUtils.getImageFromPicture(inv.getSlots()[i].getItem().getTexture()), xoffset + 4, yOffset + 4, 60, 60, null);
+		}
 	}
-	
+
 }

@@ -2,7 +2,8 @@ package JPushy;
 
 import JPushy.Types.Picture;
 import JPushy.Types.Blocks.Block;
-import JPushy.Types.Level.Level;
+import JPushy.Types.Player.Inventory;
+
 /**
  * 
  * @author Marcel Benning
@@ -10,22 +11,24 @@ import JPushy.Types.Level.Level;
  */
 public class Player {
 
-	private int x = 1;
-	private int y = 1;
-	private LevelScheduler level;
-	private Picture img;
-	private boolean freezed;
-	private String name = "Player";
-	
+	private int	           x	  = 1;
+	private int	           y	  = 1;
+	private LevelScheduler	level;
+	private Picture	       img;
+	private boolean	       freezed;
+	private String	       name	= "Player";
+	private Inventory	     inventory;
+
 	public Player(LevelScheduler l, Picture img, String name) {
 		this.level = l;
 		this.img = img;
 		this.name = name;
+		this.inventory = new Inventory();
 	}
-	
+
 	public void movePlayer(int dir) {// Sides : 0 = north ; 1 = east ; 2 = south
-										// ; 3 = west
-		if (isFreezed()){
+		// ; 3 = west
+		if (isFreezed()) {
 			return;
 		}
 		// Just air
@@ -74,11 +77,10 @@ public class Player {
 
 		}
 		/*
-		 * if(dir == 0){ if(level.notifyPlayerMove(x, y - 1, dir)){ y -= 1; }
-		 * }else if(dir == 1){ if(level.notifyPlayerMove(x + 1, y, dir)){ x +=
-		 * 1; } }else if(dir == 2){ if(level.notifyPlayerMove(x, y + 1, dir)){ y
-		 * += 1; } }else if(dir == 3){ if(level.notifyPlayerMove(x - 1, y,
-		 * dir)){
+		 * if(dir == 0){ if(level.notifyPlayerMove(x, y - 1, dir)){ y -= 1; } }else
+		 * if(dir == 1){ if(level.notifyPlayerMove(x + 1, y, dir)){ x += 1; } }else
+		 * if(dir == 2){ if(level.notifyPlayerMove(x, y + 1, dir)){ y += 1; } }else
+		 * if(dir == 3){ if(level.notifyPlayerMove(x - 1, y, dir)){
 		 * 
 		 * } }
 		 */
@@ -202,6 +204,14 @@ public class Player {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Inventory getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
 	}
 
 }

@@ -1,6 +1,7 @@
 package JPushy.Types.Blocks;
 
 import JPushy.Blocks;
+import JPushy.Game;
 import JPushy.Items;
 import JPushy.Types.Picture;
 import JPushy.Types.Items.Item;
@@ -103,7 +104,7 @@ public class Block {
 
 	@Override
 	public String toString() {
-		return this.name + ":" + this.id;
+		return this.name + "[" + this.id + "]:" + super.toString() + ";";
 	}
 
 	public boolean isVisible() {
@@ -217,6 +218,15 @@ public class Block {
 	}
 
 	public void onWalk(int x, int y, Level l) {
+		System.out.println(this.toString());
+		Item item = this.getKeptItem();
+		if (item != null) {
+			boolean pickup = Game.getPlayer().getInventory().addItem(item);
+			if (pickup) {
+				Game.sendMessage("Item picked up : " + item.getName());
+				this.setKeptItem(null);
+			}
+		}
 	}
 
 	public void onPush(int oldX, int oldY, int newX, int newY, int side, Level l) {
