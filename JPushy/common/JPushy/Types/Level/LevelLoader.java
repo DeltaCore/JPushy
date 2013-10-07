@@ -170,8 +170,7 @@ public class LevelLoader {
 							stage.setHomeX(j);
 							System.out.println("Home coords for stage:" + stage.getId() + " x:" + i + " y:" + yCounter);
 						} else {
-							Block t = Blocks.getBlockById(val);
-							b = new Block(t.getName(), t.getId(), t.getTexture()).setDestroyable(t.isDestroyable()).setPlayerAbleToWalkOn(t.isPlayerAbleToWalkOn()).setSolid(t.isSolid()).setVisible(t.isVisible());
+							b = Blocks.getBlockById(val);
 						}
 						int itemForBlock = getItemForBlock(stageId, j, yCounter, filename);
 						if (itemForBlock != -1) {

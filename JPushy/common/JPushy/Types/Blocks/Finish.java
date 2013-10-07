@@ -14,7 +14,7 @@ public class Finish extends Block {
 	public Finish(String name, int id, Picture img) {
 		super(name, id, img);
 	}
-
+	
 	@Override
 	public void onWalk(int x, int y, Level l) {
 		// super.onWalk(x,y,l);

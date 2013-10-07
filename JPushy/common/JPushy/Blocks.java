@@ -53,15 +53,16 @@ public class Blocks {
 	}
 
 	public static Block getBlockById(int id) {
+		Block b = null;
 		for (int i = 0; i < blockRegistry.size(); i++) {
 			if (blockRegistry.get(i) == null) {
 			} else {
 				if (blockRegistry.get(i).getId() == id) {
-					return blockRegistry.get(i);
+					return b = blockRegistry.get(i).copy(blockRegistry.get(i));
 				}
 			}
 		}
-		return air;
+		return air.copy(air);
 	}
 
 	public static void wakeUpDummy() {

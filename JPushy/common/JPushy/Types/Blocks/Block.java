@@ -13,7 +13,7 @@ import JPushy.Types.Level.Level;
  * @author Marcel Benning
  * 
  */
-public class Block {
+public class Block extends Object implements Cloneable{
 
 	private int	    id;
 	private Picture	img;
@@ -247,4 +247,12 @@ public class Block {
 	
 	public void onBlockActivated(Level l, Player p){}
 	
+	public Block copy (Block c) {
+        try{
+            return (Block)c.clone();
+        }
+        catch (CloneNotSupportedException err){ 
+            throw new RuntimeException(err); 
+        }
+    }
 }

@@ -24,7 +24,7 @@ import JPushy.Types.Player.Inventory;
  * 
  */
 public class GamePanel extends JPanel {
-
+	
 	LevelScheduler	         level;
 	Block[][]	               blocks	       = null;
 	Image	                   t;
@@ -36,7 +36,7 @@ public class GamePanel extends JPanel {
 	Font	                   font	         = new Font("Arial", Font.PLAIN, 18);
 	public ArrayList<String>	consoleLines	= new ArrayList<String>();
 	Inventory	               inv;
-
+	
 	public GamePanel(LevelScheduler l, MainFrame frame, int showLines) {
 		this.frame = frame;
 		this.level = l;
@@ -85,8 +85,8 @@ public class GamePanel extends JPanel {
 			sizeSet = false;
 			lastId = level.getLevel().getActiveStageI();
 		} else {
-
 		}
+		
 		level.getLevel().update();
 		Block b;
 		int x = margin, y = 0;
@@ -146,9 +146,7 @@ public class GamePanel extends JPanel {
 				sizeY = y;
 				yOffset += 40;
 			}
-
 		} catch (Exception e) {
-
 		}
 
 		if (!sizeSet) {
@@ -178,8 +176,12 @@ public class GamePanel extends JPanel {
 			g.fillRect(xoffset, yOffset, 68, 68);
 			g.setColor(Color.DARK_GRAY);
 			g.fillRect(xoffset + 4, yOffset + 4, 60, 60);
-			if (!inv.getSlots()[i].getItem().getName().equalsIgnoreCase("noitem"))
+			if (!inv.getSlots()[i].getItem().getName().equalsIgnoreCase("noitem")){
 				g.drawImage(GraphicUtils.getImageFromPicture(inv.getSlots()[i].getItem().getTexture()), xoffset + 4, yOffset + 4, 60, 60, null);
+				g.setFont(font);
+				g.setColor(Color.WHITE);
+				g.drawString(inv.getSlots()[i].getAmount() + "", xoffset + 2 + (int) g.getFontMetrics(font).getStringBounds(inv.getSlots()[i].getAmount() + "", g).getWidth(), yOffset + 2 + (int) g.getFontMetrics(font).getStringBounds(inv.getSlots()[i].getAmount() + "", g).getHeight());
+			}
 		}
 	}
 
