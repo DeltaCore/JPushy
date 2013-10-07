@@ -21,7 +21,7 @@ public class Inventory {
 			Item t = null;
 			int slotAmount = 0;
 			int temp = 0;
-			for (int i = 0; i < slots.length;) {
+			for (int i = 0; i < slots.length;i++) {
 				slot = slots[i];
 				t = slot.getItem();
 				if (t != null) {
@@ -33,18 +33,22 @@ public class Inventory {
 						temp = slotAmount;
 						temp++;
 						if (temp > t.getMaxStackSize()) {
+							if(i == slots.length -1){
+								return false;
+							}else{
+								continue;
+							}
 						} else {
 							slot.setAmount(slot.getAmount() + 1);
 							return true;
 						}
 					}
 				}
-			}
+				Game.sendMessage("No Inv. space.");
+			}return false;
 		}
-		Game.sendMessage("No Inv. space.");
 		return false;
 	}
-
 	public InventorySlot[] getSlots() {
 		return slots;
 	}

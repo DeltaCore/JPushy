@@ -3,6 +3,7 @@ package JPushy.Types.Blocks;
 import JPushy.Blocks;
 import JPushy.Game;
 import JPushy.Items;
+import JPushy.Player;
 import JPushy.Types.Picture;
 import JPushy.Types.Items.Item;
 import JPushy.Types.Level.Level;
@@ -243,5 +244,7 @@ public class Block {
 
 	public void onOccupied(boolean o, Level l) {
 	}
-
+	
+	public void onBlockActivated(Level l, Player p){}
+	
 }
