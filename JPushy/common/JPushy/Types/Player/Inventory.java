@@ -33,8 +33,6 @@ public class Inventory {
 						temp = slotAmount;
 						temp++;
 						if (temp > t.getMaxStackSize()) {
-							Game.sendMessage("No Inventory space :(");
-							return false;
 						} else {
 							slot.setAmount(slot.getAmount() + 1);
 							return true;
@@ -43,6 +41,7 @@ public class Inventory {
 				}
 			}
 		}
+		Game.sendMessage("No Inv. space.");
 		return false;
 	}
 
