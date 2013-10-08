@@ -103,10 +103,11 @@ public class Block extends Object implements Cloneable{
 		this.name = name;
 		return this;
 	}
-
+	
 	@Override
 	public String toString() {
-		return this.name + "[" + this.id + "]:" + super.toString() + ";";
+		return this.name + "[" + this.id + "];";
+		//return this.name + "[" + this.id + "]:" + super.toString() + ";";
 	}
 
 	public boolean isVisible() {
@@ -220,7 +221,7 @@ public class Block extends Object implements Cloneable{
 	}
 
 	public void onWalk(int x, int y, Level l) {
-		System.out.println(this.toString());
+		//System.out.println(this.toString());
 		Item item = this.getKeptItem();
 		if (item != null) {
 			boolean pickup = Game.getPlayer().getInventory().addItem(item);

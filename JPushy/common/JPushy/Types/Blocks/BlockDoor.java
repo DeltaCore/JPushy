@@ -59,6 +59,7 @@ public class BlockDoor extends Block {
 	public void init() {
 		super.init();
 		setPlayerAbleToWalkOn(false);
+		setSolid(true);
 	}
 	
 	@Override
