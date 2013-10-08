@@ -1,6 +1,7 @@
 package JPushy.Types.Player;
 
 import JPushy.Game;
+import JPushy.Items;
 import JPushy.Types.Items.Item;
 
 public class Inventory {
@@ -49,6 +50,23 @@ public class Inventory {
 		}
 		return false;
 	}
+	
+	public boolean removeItem(Item item){
+		boolean key = false;
+		for(int i = 0;i<this.getSlots().length;i++){
+			if(this.getSlots()[i].getItem().getName().equalsIgnoreCase("Key") && !key){
+				if(this.getSlots()[i].getAmount() >= 1){
+					key = true;
+					this.getSlots()[i].setAmount(this.getSlots()[i].getAmount() - 1);
+				}else{
+					key = true;
+					this.getSlots()[i].setItem(Items.noitem);
+				}
+			}
+		}
+		return key;
+	}
+	
 	public InventorySlot[] getSlots() {
 		return slots;
 	}

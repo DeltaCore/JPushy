@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 
 import JPushy.Gui.GamePanel;
 import JPushy.MultiPlayer.MPClient;
+import JPushy.Types.Blocks.Block;
 /**
  * 
  * @author Marcel Benning
@@ -59,31 +60,49 @@ public class Input implements KeyListener{
 			break;
 		case 27:
 			System.exit(0);
+		case 10:
+			enter = true;
+			Game.sendMessage("Go in that direction you wanne activate a block !");
+			break;
 		}
 		panel.repaint();
 	}
 
 	private boolean checkActivated(int dir){
+		int x = Game.getPlayer().getX();
+		int y = Game.getPlayer().getY();
+		Block b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y);
 		if(enter){
-			
+			if(dir == 0){
+				b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y - 1);
+				b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
+			}else if(dir == 1){
+				b = Game.gameThread.getLevel().getActiveStage().getBlock(x + 1, y);
+				b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
+			}else if(dir == 2){
+				b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y + 1);
+				b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
+			}else if(dir == 3){
+				b = Game.gameThread.getLevel().getActiveStage().getBlock(x - 1, y);
+				b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
+			}
+			enter = false;
 		}else{
 			
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void keyReleased(KeyEvent arg0) {
-		if(arg0.getKeyCode() == 10){
-			enter = false;
-		}
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
-		if(arg0.getKeyCode() == 10){
-			enter = true;
-		}
+		// TODO Auto-generated method stub
+		
 	}
-
+	
 }

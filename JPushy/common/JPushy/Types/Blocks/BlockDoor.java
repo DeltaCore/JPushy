@@ -4,6 +4,7 @@ import JPushy.Items;
 import JPushy.Player;
 import JPushy.Types.Picture;
 import JPushy.Types.Level.Level;
+import JPushy.Types.Level.Stage;
 import JPushy.Types.Player.Inventory;
 
 public class BlockDoor extends Block {
@@ -55,19 +56,16 @@ public class BlockDoor extends Block {
 	}
 	
 	@Override
-	public void onBlockActivated(Level l, Player p) {
-		super.onBlockActivated(l, p);
-		inv = p.getInventory();
-		boolean key = false;
-		for(int i = 0;i<inv.getSlots().length;i++){
-			if(inv.getSlots()[i].getItem().getName().equalsIgnoreCase("Key") && !key){
-				key = true;
-				inv.getSlots()[i].setItem(Items.noitem);
-			}
-		}
-		if(!active){
-			this.active = true;
-			setPlayerAbleToWalkOn(true);
+	public void init() {
+		super.init();
+		setPlayerAbleToWalkOn(false);
+	}
+	
+	@Override
+	public void onBlockActivated(Stage stage, Player p) {
+		super.onBlockActivated(stage, p);
+		if(p.getInventory().removeItem(Items.key)){
+			this.setPlayerAbleToWalkOn(true);
 		}
 	}
 	

@@ -131,7 +131,7 @@ public class LevelLoader {
 					char c = line.charAt(j);
 					try {
 						int val = c - 48;
-						b = new Block(Blocks.air);
+						b = Blocks.getBlockById(0);
 						if (val == Blocks.TeleportBase.getId()) {
 							TeleportBase base = (TeleportBase) new TeleportBase("Teleporter", Blocks.TeleportBase.getId(), PictureLoader.loadImageFromFile("teleportbase.png")).setDestroyable(false).setSolid(true).setPlayerAbleToWalkOn(true);
 							int[] cfgCords = checkCFGCords(cfgLines, stageId, j, yCounter);

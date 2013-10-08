@@ -3,6 +3,7 @@ package JPushy;
 import java.util.ArrayList;
 
 import JPushy.Types.Blocks.Block;
+import JPushy.Types.Blocks.BlockDoor;
 import JPushy.Types.Blocks.Finish;
 import JPushy.Types.Blocks.MoveableBlock;
 import JPushy.Types.Blocks.TeleportBase;
@@ -28,7 +29,8 @@ public class Blocks {
 	public static final Block	     TeleportBase	  = new TeleportBase("Teleporter", 5, PictureLoader.loadImageFromFile("teleportbase.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true);
 	public static final Block	     TeleportExit	  = new Block("Teleporter", 6, PictureLoader.loadImageFromFile("teleportend.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true);
 	public static final Block	     bricks	        = new Block("BrickFloor", 7, PictureLoader.loadImageFromFile("brick.png")).setPlayerAbleToWalkOn(false).setSolid(true).setDestroyable(true).setVisible(true);
-
+	public static final Block		 blockDoor 		= new BlockDoor("Door", 8, PictureLoader.loadImageFromFile("button.png"));
+	
 	public static void registerBlock(Block b) {
 		if (!checkBlockId(b.getId())) {
 			blockRegistry.add(b);

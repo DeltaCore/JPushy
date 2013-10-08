@@ -7,6 +7,7 @@ import JPushy.Player;
 import JPushy.Types.Picture;
 import JPushy.Types.Items.Item;
 import JPushy.Types.Level.Level;
+import JPushy.Types.Level.Stage;
 
 /**
  * 
@@ -245,7 +246,7 @@ public class Block extends Object implements Cloneable{
 	public void onOccupied(boolean o, Level l) {
 	}
 	
-	public void onBlockActivated(Level l, Player p){}
+	public void onBlockActivated(Stage stage, Player p){}
 	
 	public Block copy (Block c) {
         try{
