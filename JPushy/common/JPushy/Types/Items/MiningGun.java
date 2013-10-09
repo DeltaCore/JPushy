@@ -15,7 +15,7 @@ public class MiningGun extends Item {
 		super(name, id, texture, register);
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	@Override
 	public void onUse(Stage stage) {
 		super.onUse(stage);
@@ -25,6 +25,7 @@ public class MiningGun extends Item {
 				stage.getBlock(x, y).onDestroy();
 				stage.destroyBlock(x, y);
 				Game.sendMessage("Booom ! That block is gone ...");
+				return;
 			}
 		}
 		

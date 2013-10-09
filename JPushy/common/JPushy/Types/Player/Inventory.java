@@ -8,13 +8,14 @@ public class Inventory {
 
 	final int	      iSlots	= 8;
 	InventorySlot[]	slots	 = new InventorySlot[iSlots];
+	int selectedSlot = 0;
 
 	public Inventory() {
 		for (int i = 0; i < slots.length; i++) {
 			slots[i] = new InventorySlot();
 		}
 	}
-
+	
 	public boolean addItem(Item item) {
 		if (!item.getName().equalsIgnoreCase("noitem")) {
 			System.out.println("Item : " + item.toString());
@@ -30,18 +31,20 @@ public class Inventory {
 						slots[i].setItem(item);
 						return true;
 					} else {
-						slotAmount = slot.getAmount();
-						temp = slotAmount;
-						temp++;
-						if (temp > t.getMaxStackSize()) {
-							if(i == slots.length -1){
-								return false;
-							}else{
-								continue;
+						if(slot.getItem().getName().equalsIgnoreCase(item.getName())){
+							slotAmount = slot.getAmount();
+							temp = slotAmount;
+							temp++;
+							if (temp > t.getMaxStackSize()) {
+								if(i == slots.length -1){
+									return false;
+								}else{
+									continue;
+								}
+							} else {
+								slot.setAmount(slot.getAmount() + 1);
+								return true;
 							}
-						} else {
-							slot.setAmount(slot.getAmount() + 1);
-							return true;
 						}
 					}
 				}
@@ -77,6 +80,14 @@ public class Inventory {
 
 	public int getiSlots() {
 		return iSlots;
+	}
+
+	public int getSelectedSlot() {
+		return selectedSlot;
+	}
+
+	public void setSelectedSlot(int selectedSlot) {
+		this.selectedSlot = selectedSlot;
 	}
 
 }

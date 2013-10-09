@@ -182,7 +182,11 @@ public class GamePanel extends JPanel {
 				g.setColor(Color.WHITE);
 				g.drawString(inv.getSlots()[i].getAmount() + "", xoffset + 2 + (int) g.getFontMetrics(font).getStringBounds(inv.getSlots()[i].getAmount() + "", g).getWidth(), yOffset + 2 + (int) g.getFontMetrics(font).getStringBounds(inv.getSlots()[i].getAmount() + "", g).getHeight());
 			}
+			if(inv.getSelectedSlot() == i){
+				g.setColor(Color.BLUE);
+				g.drawRect(xoffset + 1, yOffset + 1, 66, 66);
+				g.drawRect(xoffset + 2, yOffset + 2, 64, 64);
+			}
 		}
 	}
-
 }

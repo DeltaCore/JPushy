@@ -16,6 +16,7 @@ public class Input implements KeyListener{
 	GamePanel panel;
 	MPClient client;
 	boolean enter = false;
+	boolean flag = false;
 	
 	public Input(GamePanel p, MPClient client) {
 		this.panel = p;
@@ -64,13 +65,25 @@ public class Input implements KeyListener{
 			enter = true;
 			Game.sendMessage("Go in that direction you wanne activate a block !");
 			break;
+		default:
+			if(!flag)
+				selectItem(arg0.getKeyCode());
 		}
 		panel.repaint();
+		enter = false;
+		flag = false;
 	}
-
+	
+	private void selectItem(int keyCode){
+		int  number = keyCode - 49;
+		Game.getPlayer().getInventory().setSelectedSlot(number);
+	}
+	
 	private boolean checkActivated(int dir){
+		flag = true;
 		int x = Game.getPlayer().getX();
 		int y = Game.getPlayer().getY();
+		Game.getPlayer().getInventory().getSlots()[Game.getPlayer().getInventory().getSelectedSlot()].getItem().onUse(Game.gameThread.getLevel().getActiveStage());
 		Block b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y);
 		if(enter){
 			if(dir == 0){
