@@ -1,5 +1,6 @@
 package JPushy.Types.Level;
 
+import JPushy.Blocks;
 import JPushy.Player;
 import JPushy.Types.Blocks.Block;
 /**
@@ -60,6 +61,10 @@ public class Stage {
 	public void init(Player p){
 		p.setX(homeX);
 		p.setY(homeY);
+	}
+	
+	public void destroyBlock(int x, int y){
+		this.setBlock(x, y, Blocks.getBlockById(Blocks.air.getId()));
 	}
 	
 }

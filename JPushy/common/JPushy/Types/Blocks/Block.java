@@ -257,4 +257,9 @@ public class Block extends Object implements Cloneable{
             throw new RuntimeException(err); 
         }
     }
+	
+	public void onDestroy(){
+		
+	}
+		
 }
