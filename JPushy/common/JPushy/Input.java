@@ -70,7 +70,6 @@ public class Input implements KeyListener{
 				selectItem(arg0.getKeyCode());
 		}
 		panel.repaint();
-		enter = false;
 		flag = false;
 	}
 	
@@ -83,27 +82,12 @@ public class Input implements KeyListener{
 		flag = true;
 		int x = Game.getPlayer().getX();
 		int y = Game.getPlayer().getY();
-		Game.getPlayer().getInventory().getSlots()[Game.getPlayer().getInventory().getSelectedSlot()].getItem().onUse(Game.gameThread.getLevel().getActiveStage());
 		Block b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y);
 		if(enter){
-			if(dir == 0){
-				b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y - 1);
-				b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
-			}else if(dir == 1){
-				b = Game.gameThread.getLevel().getActiveStage().getBlock(x + 1, y);
-				b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
-			}else if(dir == 2){
-				b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y + 1);
-				b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
-			}else if(dir == 3){
-				b = Game.gameThread.getLevel().getActiveStage().getBlock(x - 1, y);
-				b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
-			}
+			Game.getPlayer().getInventory().getSlots()[Game.getPlayer().getInventory().getSelectedSlot()].getItem().onUse(Game.gameThread.getLevel().getActiveStage(), dir);
 			enter = false;
-		}else{
-			
 		}
-		return false;
+		return enter;
 	}
 
 	@Override

@@ -1,7 +1,9 @@
 package JPushy.Types.Items;
 
+import JPushy.Blocks;
 import JPushy.Game;
 import JPushy.Types.Picture;
+import JPushy.Types.Blocks.Block;
 import JPushy.Types.Level.Stage;
 
 public class MiningGun extends Item {
@@ -17,20 +19,33 @@ public class MiningGun extends Item {
 	}
 	
 	@Override
-	public void onUse(Stage stage) {
-		super.onUse(stage);
+	public void onUse(Stage stage, int dir) {
+		super.onUse(stage, dir);
 		int y = Game.getPlayer().getY();
-		for(int x = Game.getPlayer().getX();x<stage.getBlocks().length;x++){
-			if(stage.getBlock(x, y).isDestroyable()){
-				stage.getBlock(x, y).onDestroy();
-				stage.destroyBlock(x, y);
-				Game.sendMessage("Booom ! That block is gone ...");
-				return;
-			}
+		int x = Game.getPlayer().getX();
+		Block b = Blocks.getBlockById(0);
+		if(dir == 0){
+			b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y - 1);
+			b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
+			stage.getBlock(x, y - 1).onDestroy();
+			stage.destroyBlock(x, y - 1);
+		}else if(dir == 1){
+			b = Game.gameThread.getLevel().getActiveStage().getBlock(x + 1, y);
+			b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
+			stage.getBlock(x + 1, y).onDestroy();
+			stage.destroyBlock(x + 1, y);
+		}else if(dir == 2){
+			b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y + 1);
+			b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
+			stage.getBlock(x, y + 1).onDestroy();
+			stage.destroyBlock(x, y + 1);
+		}else if(dir == 3){
+			b = Game.gameThread.getLevel().getActiveStage().getBlock(x - 1, y);
+			b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
+			stage.getBlock(x - 1, y).onDestroy();
+			stage.destroyBlock(x - 1, y);
 		}
-		
+	
 	}
-	
-	
 	
 }

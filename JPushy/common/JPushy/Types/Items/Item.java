@@ -91,7 +91,7 @@ public class Item {
 	public void init() {
 	}
 
-	public void onUse(Stage stage) {
+	public void onUse(Stage stage, int dir) {
 	}
 
 	public void onPickup() {
