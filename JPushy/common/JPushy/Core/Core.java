@@ -7,6 +7,7 @@ import JPushy.Settings.Settings;
  * @author Marcel Benning
  * 
  */
+
 public class Core {
 
 	Game			game;

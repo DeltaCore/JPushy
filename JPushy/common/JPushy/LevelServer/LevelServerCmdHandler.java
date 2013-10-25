@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import JPushy.MultiPlayer.ICommandHandler;
+
 /**
  * 
  * @author Marcel Benning
@@ -24,6 +25,8 @@ public class LevelServerCmdHandler implements ICommandHandler {
 	String	rgetLevels			= "^--[gG][eE][tT][lL][eE][vV][eE][lL][sS]$";
 	String	rloadLevel			= "^--[lL][oO][aA][dD][lL][eE][vV][eE][lL]#([a-zA-Z\\s]{1,})";
 	String	rloadLevelConfig	= "^--[lL][oO][aA][dD][lL][eE][vV][eE][lL][cC][oO][nN][fF][iI][gG]#([a-zA-Z\\s]{1,})";
+
+	String	errorLevel			= "<level name=\"error\" version='0.1'>\n" + "<stage id=0>\n" + "11111111111111111111111\n" + "10000000000000000000001\n" + "10111011001100111011001\n" + "10100010101010101010101\n" + "10111010101010101010101\n" + "10100011001100101011001\n" + "10111010101010111010101\n" + "10000000000000000000001\n" + "11111111111111111111111\n" + "</stage>\n";
 
 	private void handleCommand(String msg, DatagramPacket packet) {
 		if (msg.matches(rgetLevels)) {
@@ -85,7 +88,7 @@ public class LevelServerCmdHandler implements ICommandHandler {
 				}
 			}
 		}
-		return "";
+		return errorLevel;
 	}
 
 	public String packConfigFile(String levelname) {
