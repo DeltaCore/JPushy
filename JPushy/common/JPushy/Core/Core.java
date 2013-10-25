@@ -13,7 +13,6 @@ public class Core {
 	static Settings	settings;
 
 	public Core(String[] args, Settings settings) {
-		System.out.println(Math.pow(10, Math.pow(10, 10)));
 		Core.settings = settings;
 		game = new Game(args);
 	}
