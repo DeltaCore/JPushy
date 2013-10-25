@@ -68,6 +68,7 @@ public class LevelServerCmdHandler implements ICommandHandler {
 						if (data.getName().equals(levelname)) {
 							BufferedReader reader;
 							try {
+								System.out.println("File : " + f.getAbsoluteFile().toString());
 								reader = new BufferedReader(new FileReader(f));
 								String line;
 								String lines = "";
@@ -98,6 +99,7 @@ public class LevelServerCmdHandler implements ICommandHandler {
 						if (data.getName().equals(levelname)) {
 							BufferedReader reader;
 							try {
+								System.out.println("File : " + f.getAbsoluteFile().toString().replace(".lvl", ".cfg"));
 								reader = new BufferedReader(new FileReader(new File(f.getAbsoluteFile().toString().replace(".lvl", ".cfg"))));
 								String line;
 								String lines = "";

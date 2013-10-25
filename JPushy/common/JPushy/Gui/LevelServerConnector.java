@@ -105,7 +105,7 @@ public class LevelServerConnector extends JFrame {
 		public final ServerCommand	ping				= new ServerCommand("ping");
 		public final ServerCommand	getLevels			= new ServerCommand("getlevels");
 		public final ServerCommand	downloadLevel		= new ServerCommand("loadLevel");
-		public final ServerCommand	downloadLevelConfig	= new ServerCommand("loadLevel");
+		public final ServerCommand	downloadLevelConfig	= new ServerCommand("loadLevelConfig");
 
 		private DatagramSocket		socket;
 		private DatagramPacket		packet;
@@ -155,11 +155,8 @@ public class LevelServerConnector extends JFrame {
 			byte[] data = new byte[4096];
 			packet = new DatagramPacket(data, data.length);
 			try {
-				if (checkServer()) {
+					socket.setSoTimeout(1000);
 					socket.receive(packet);
-				} else {
-					return "error";
-				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
