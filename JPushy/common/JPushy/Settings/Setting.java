@@ -1,5 +1,9 @@
 package JPushy.Settings;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class Setting {
 
 	private String name;

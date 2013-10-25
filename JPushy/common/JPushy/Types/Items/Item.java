@@ -3,7 +3,11 @@ package JPushy.Types.Items;
 import JPushy.Core.Game;
 import JPushy.Types.Level.Stage;
 import JPushy.Types.gfx.Picture;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class Item {
 
 	private String	name;

@@ -3,7 +3,11 @@ package JPushy.Types.Items;
 import java.util.ArrayList;
 
 import JPushy.gfx.PictureLoader;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class Items {
 
 public static ArrayList<Item> itemRegistry = new ArrayList<Item>();

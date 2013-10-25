@@ -16,7 +16,11 @@ import javax.swing.JOptionPane;
 import JPushy.Core.Core;
 import JPushy.Gui.CheckBoxListEntry;
 import JPushy.Gui.LevelServerConnector;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class LevelServerListener implements ActionListener {
 
 	LevelServerConnector	gui;

@@ -1,7 +1,11 @@
 package JPushy.LevelEditor;
 
 import JPushy.Gui.LevelSelector;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class EditorThread implements Runnable{
 
 	public LevelEditor editor;

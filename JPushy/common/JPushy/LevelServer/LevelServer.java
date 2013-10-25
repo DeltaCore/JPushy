@@ -1,7 +1,11 @@
 package JPushy.LevelServer;
 
 import JPushy.MultiPlayer.ICommandHandler;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class LevelServer {
 
 	LevelServerCmdHandler cmdHandler;

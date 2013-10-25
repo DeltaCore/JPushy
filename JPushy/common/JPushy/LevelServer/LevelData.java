@@ -1,5 +1,9 @@
 package JPushy.LevelServer;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class LevelData {
 
 	private String name;

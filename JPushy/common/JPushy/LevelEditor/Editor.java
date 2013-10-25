@@ -28,6 +28,11 @@ import javax.swing.WindowConstants;
 
 import JPushy.Gui.LevelSelector;
 
+/**
+ * 
+ * @author Julien
+ * 
+ */
 
 public class Editor extends Canvas implements MouseListener, MouseMotionListener, MouseWheelListener {
 	private static final long serialVersionUID = 1L;

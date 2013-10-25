@@ -8,7 +8,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import JPushy.MultiPlayer.ICommandHandler;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class LevelServerCmdHandler implements ICommandHandler {
 
 	LevelServer	levelServer;

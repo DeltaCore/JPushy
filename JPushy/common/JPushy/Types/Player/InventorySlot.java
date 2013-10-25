@@ -6,7 +6,11 @@ import java.awt.Graphics;
 import JPushy.Types.Items.Item;
 import JPushy.Types.Items.Items;
 import JPushy.gfx.GraphicUtils;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class InventorySlot {
 
 	private Item	item;

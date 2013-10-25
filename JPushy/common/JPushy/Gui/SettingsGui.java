@@ -30,7 +30,11 @@ import javax.swing.JButton;
 
 import JPushy.Core.Core;
 import JPushy.Listener.SettingsListener;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class SettingsGui extends JFrame {
 
 	private JPanel		contentPane;

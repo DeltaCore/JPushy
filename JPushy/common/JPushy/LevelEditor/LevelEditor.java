@@ -35,7 +35,13 @@ import JPushy.Gui.LevelSelector;
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
 import JPushy.gfx.GraphicUtils;
-
+/**
+ * 
+ * @author Julien
+ * @changes Marcel Benning
+ * @original Editor.java
+ * 
+ */
 public class LevelEditor extends Canvas implements MouseListener, MouseMotionListener, MouseWheelListener {
 	private static final long	serialVersionUID	= 1L;
 

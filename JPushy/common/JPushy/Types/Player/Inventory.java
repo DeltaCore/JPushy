@@ -3,7 +3,11 @@ package JPushy.Types.Player;
 import JPushy.Core.Game;
 import JPushy.Types.Items.Item;
 import JPushy.Types.Items.Items;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class Inventory {
 
 	final int	      iSlots	= 8;

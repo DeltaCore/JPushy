@@ -1,5 +1,9 @@
 package JPushy.LevelServer;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class ServerCommand {
 
 	private String name;

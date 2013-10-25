@@ -6,7 +6,11 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 import JPushy.MultiPlayer.Connection;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class LevelConnectionHandler implements Runnable {
 
 	private int port;

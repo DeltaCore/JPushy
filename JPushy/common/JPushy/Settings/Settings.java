@@ -2,7 +2,11 @@ package JPushy.Settings;
 
 import java.io.File;
 import java.util.ArrayList;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class Settings {
  
 	public Setting				defaultUpdateServer	= new Setting("defaultUpdateServer", "http://devgensoft.de");

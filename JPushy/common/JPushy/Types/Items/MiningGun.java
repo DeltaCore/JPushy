@@ -5,7 +5,11 @@ import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
 import JPushy.Types.Level.Stage;
 import JPushy.Types.gfx.Picture;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class MiningGun extends Item {
 
 	public MiningGun(String name, int id, Picture texture) {

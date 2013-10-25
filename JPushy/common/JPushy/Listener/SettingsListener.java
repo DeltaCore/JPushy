@@ -5,7 +5,11 @@ import java.awt.event.ActionListener;
 
 import JPushy.Core.Core;
 import JPushy.Gui.SettingsGui;
-
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
 public class SettingsListener implements ActionListener {
 	
 	String cmd;

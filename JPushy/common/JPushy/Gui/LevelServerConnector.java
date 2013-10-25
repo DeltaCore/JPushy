@@ -26,6 +26,12 @@ import JPushy.Core.Core;
 import JPushy.LevelServer.ServerCommand;
 import JPushy.Listener.LevelServerListener;
 
+/**
+ * 
+ * @author Marcel Benning
+ * 
+ */
+
 public class LevelServerConnector extends JFrame {
 
 	private JPanel				contentPane;
