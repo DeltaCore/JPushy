@@ -14,7 +14,7 @@ import JPushy.Types.Player.Player;
 public class Game extends Thread {
 
 	public static final String		name	= "J-Pushy";
-	public static final String		version	= "0.0.1 b15";
+	public static final String		version	= "0.0.3 b9";
 
 	static LevelSelector			s;
 	public static LevelScheduler	gameThread;
