@@ -1,6 +1,5 @@
-package JPushy;
+package JPushy.Gui;
 
-import JPushy.Gui.GamePanel;
 /**
  * 
  * @author Marcel Benning

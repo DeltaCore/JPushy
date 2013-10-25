@@ -7,6 +7,11 @@ import java.applet.Applet;
  * 
  */
 public class AdvancedGamePanel extends Applet{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	/*Level level;
 	SimpleUniverse world;

@@ -31,10 +31,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import JPushy.Blocks;
-import JPushy.GraphicUtils;
 import JPushy.Gui.LevelSelector;
 import JPushy.Types.Blocks.Block;
+import JPushy.Types.Blocks.Blocks;
+import JPushy.gfx.GraphicUtils;
 
 public class LevelEditor extends Canvas implements MouseListener, MouseMotionListener, MouseWheelListener {
 	private static final long	serialVersionUID	= 1L;

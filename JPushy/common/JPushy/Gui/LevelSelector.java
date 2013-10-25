@@ -19,9 +19,9 @@ import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
-import JPushy.Game;
-import JPushy.LevelSelectorListener;
+import JPushy.Core.Game;
 import JPushy.LevelEditor.Editor;
+import JPushy.Listener.LevelSelectorListener;
 
 /**
  * 
@@ -31,19 +31,21 @@ import JPushy.LevelEditor.Editor;
 
 public class LevelSelector extends JFrame {
 
-	private Editor	      editor;
-	private JPanel	      contentPane;
-	DefaultListModel	    listModel	= new DefaultListModel();
-	public JList	        levels	  = new JList(listModel);
-	LevelSelectorListener	selectionListener;
-	public Game	          game;
+	private Editor					editor;
+	private JPanel					contentPane;
+	private DefaultListModel		listModel	= new DefaultListModel();
+	public JList					levels		= new JList(listModel);
+	private LevelSelectorListener	selectionListener;
+	public Game						game;
+	public SettingsGui				settingsGui;
+	public LevelServerConnector		levelServerconnector;
 
 	public LevelSelector(Game game) {
 		this.game = game;
 		selectionListener = new LevelSelectorListener(this);
 		setTitle("Level selection");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 422, 236);
+		setBounds(100, 100, 600, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -68,10 +70,22 @@ public class LevelSelector extends JFrame {
 
 		toolBar.add(btnConnectToServer);
 
+		JButton btnLevelServer = new JButton("Connect to LevelServer");
+		btnLevelServer.addActionListener(selectionListener);
+		btnLevelServer.setActionCommand("levelserver");
+
+		toolBar.add(btnLevelServer);
+
 		JButton btnLevelEditor = new JButton("Level Editor");
 		btnLevelEditor.addActionListener(selectionListener);
 		btnLevelEditor.setActionCommand("leveleditor");
 		toolBar.add(btnLevelEditor);
+
+		JButton btnSettings = new JButton("Settings");
+		btnSettings.addActionListener(selectionListener);
+		btnSettings.setActionCommand("settings");
+		toolBar.add(btnSettings);
+
 		btnExit.addActionListener(selectionListener);
 		getContentPane().add(levels);
 		levels.addListSelectionListener(selectionListener);
@@ -134,8 +148,7 @@ public class LevelSelector extends JFrame {
 					if (matcher.matches()) {
 						String name = matcher.group(1);
 						String version = matcher.group(2);
-						System.out.println("Level - Name : " + name + " version : "
-						    + version + " file: " + s);
+						System.out.println("Level - Name : " + name + " version : " + version + " file: " + s);
 						listModel.addElement(name + " V" + version + " - " + s);
 					}
 				}

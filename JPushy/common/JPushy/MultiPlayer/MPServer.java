@@ -26,8 +26,8 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import JPushy.Debug;
-import JPushy.LevelScheduler;
+import JPushy.Core.Debug;
+import JPushy.Core.LevelScheduler;
 /**
  * 
  * @author Marcel Benning

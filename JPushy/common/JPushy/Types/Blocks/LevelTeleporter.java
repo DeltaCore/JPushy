@@ -1,6 +1,6 @@
 package JPushy.Types.Blocks;
 
-import JPushy.Types.Picture;
+import JPushy.Types.gfx.Picture;
 /**
  * 
  * @author Marcel Benning

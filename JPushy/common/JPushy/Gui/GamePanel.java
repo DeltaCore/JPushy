@@ -9,14 +9,14 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import JPushy.Game;
-import JPushy.GraphicUtils;
-import JPushy.Items;
-import JPushy.LevelScheduler;
-import JPushy.PictureLoader;
-import JPushy.Player;
+import JPushy.Core.Game;
+import JPushy.Core.LevelScheduler;
 import JPushy.Types.Blocks.Block;
+import JPushy.Types.Items.Items;
 import JPushy.Types.Player.Inventory;
+import JPushy.Types.Player.Player;
+import JPushy.gfx.GraphicUtils;
+import JPushy.gfx.PictureLoader;
 
 /**
  * 
@@ -24,6 +24,9 @@ import JPushy.Types.Player.Inventory;
  * 
  */
 public class GamePanel extends JPanel {
+	
+
+	private static final long serialVersionUID = 1L;
 	
 	LevelScheduler	         level;
 	Block[][]	               blocks	       = null;
@@ -40,19 +43,19 @@ public class GamePanel extends JPanel {
 	public GamePanel(LevelScheduler l, MainFrame frame, int showLines) {
 		this.frame = frame;
 		this.level = l;
-		blocks = level.getLevel().getActiveStage().getBlocks();
+		blocks = LevelScheduler.getLevel().getActiveStage().getBlocks();
 		this.maxLines = showLines;
 		int x = 0;
 		int y = 0;
 		boolean flag1 = false;
 		boolean flag2 = false;
-		for (int i = 0; i < l.getLevel().getActiveStage().getBlocks().length; i++) {
+		for (int i = 0; i < LevelScheduler.getLevel().getActiveStage().getBlocks().length; i++) {
 			if (!flag2) {
-				for (int j = 0; j < l.getLevel().getActiveStage().getBlocks()[0].length; j++) {
+				for (int j = 0; j < LevelScheduler.getLevel().getActiveStage().getBlocks()[0].length; j++) {
 					if (!flag2) {
 						Block b = new Block("Dummy", -1, PictureLoader.loadImageFromFile("base.png"));
 						try {
-							b = l.getLevel().getActiveStage().getBlock(j, i);
+							b = LevelScheduler.getLevel().getActiveStage().getBlock(j, i);
 							System.out.print(b.toString() + " - ");
 							break;
 						} catch (Exception e) {
@@ -65,7 +68,7 @@ public class GamePanel extends JPanel {
 			if (!flag1) {
 				Block b = new Block("Dummy", -1, PictureLoader.loadImageFromFile("base.png"));
 				try {
-					b = l.getLevel().getActiveStage().getBlock(0, i);
+					b = LevelScheduler.getLevel().getActiveStage().getBlock(0, i);
 					System.out.print(b.toString() + " - ");
 					break;
 				} catch (Exception e) {
@@ -81,13 +84,13 @@ public class GamePanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		if (lastId != level.getLevel().getActiveStageI()) {
+		if (lastId != LevelScheduler.getLevel().getActiveStageI()) {
 			sizeSet = false;
-			lastId = level.getLevel().getActiveStageI();
+			lastId = LevelScheduler.getLevel().getActiveStageI();
 		} else {
 		}
 		
-		level.getLevel().update();
+		LevelScheduler.getLevel().update();
 		Block b;
 		int x = margin, y = 0;
 		int startAt = consoleLines.size() - maxLines;
@@ -111,13 +114,12 @@ public class GamePanel extends JPanel {
 			}
 		}
 		int sizeX = 0, sizeY = 0;
-		int xOffset = 40;
 		int yOffset = 0;
 		try {
-			for (y = 0; y < level.getLevel().getActiveStage().getBlocks().length; y++) {
-				for (x = 0; x < level.getLevel().getActiveStage().getBlocks()[0].length; x++) {
+			for (y = 0; y < LevelScheduler.getLevel().getActiveStage().getBlocks().length; y++) {
+				for (x = 0; x < LevelScheduler.getLevel().getActiveStage().getBlocks()[0].length; x++) {
 					try {
-						b = level.getLevel().getActiveStage().getBlock(x, y);
+						b = LevelScheduler.getLevel().getActiveStage().getBlock(x, y);
 						try {
 							if (b.isVisible()) {
 								if (b.isOcupied()) {
@@ -153,11 +155,7 @@ public class GamePanel extends JPanel {
 			frame.setSize(sizeX * 40 + 40 + 16, (sizeY * 40) + (10 * (18 + 10)) + 10);
 			sizeSet = true;
 		}
-		// Draw own player
-		Player p = Game.getPlayer();
-		g.drawImage(GraphicUtils.getImageFromPicture(p.getTexture()), p.getX() * 40, p.getY() * 40, null);
-
-		// Draw other player
+		// Draw player
 		try {
 			ArrayList<Player> players = level.getMultiPlayerServer().cmdHandler.getPlayers();
 			for (Player pl : players) {
@@ -166,6 +164,9 @@ public class GamePanel extends JPanel {
 		} catch (Exception e) {
 			System.out.println("Failed drawin other player");
 		}
+		if(!Game.getPlayer().getInventory().getItemInHand().getName().equals("noitem"))
+			g.drawImage(GraphicUtils.getImageFromPicture(Game.getPlayer().getInventory().getSlots()[Game.getPlayer().getInventory().getSelectedSlot()].getItem().getTexture()), Game.getPlayer().getX() * 40 + 20, Game.getPlayer().getY() * 40 + 20, 20, 20, null);
+		
 		inv = Game.getPlayer().getInventory();
 		g.setColor(Color.BLACK);
 		yOffset = (int) (this.getBounds().getHeight() - 88);

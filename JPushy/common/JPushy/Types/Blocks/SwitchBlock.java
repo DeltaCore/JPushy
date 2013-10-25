@@ -1,8 +1,7 @@
 package JPushy.Types.Blocks;
 
-import JPushy.Blocks;
-import JPushy.Types.Picture;
 import JPushy.Types.Level.Level;
+import JPushy.Types.gfx.Picture;
 /**
  * 
  * @author Marcel Benning

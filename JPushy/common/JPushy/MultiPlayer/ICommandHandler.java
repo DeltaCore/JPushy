@@ -10,4 +10,6 @@ public interface ICommandHandler {
 	
 	public void onCommand(String[] args, DatagramPacket packet);
 	
+	public void onCommand(String msg, DatagramPacket packet);
+	
 }

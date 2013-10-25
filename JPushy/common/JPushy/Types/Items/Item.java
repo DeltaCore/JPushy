@@ -1,9 +1,8 @@
 package JPushy.Types.Items;
 
-import JPushy.Game;
-import JPushy.Items;
-import JPushy.Types.Picture;
+import JPushy.Core.Game;
 import JPushy.Types.Level.Stage;
+import JPushy.Types.gfx.Picture;
 
 public class Item {
 

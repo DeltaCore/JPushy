@@ -1,4 +1,4 @@
-package JPushy;
+package JPushy.Core;
 
 import java.util.ArrayList;
 
@@ -9,6 +9,8 @@ import JPushy.MultiPlayer.MPClient;
 import JPushy.MultiPlayer.MPServer;
 import JPushy.Types.Level.Level;
 import JPushy.Types.Level.LevelLoader;
+import JPushy.Types.Player.Player;
+import JPushy.gfx.PictureLoader;
 /**
  * 
  * @author Marcel Benning

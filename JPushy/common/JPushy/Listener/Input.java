@@ -1,8 +1,9 @@
-package JPushy;
+package JPushy.Listener;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import JPushy.Core.Game;
 import JPushy.Gui.GamePanel;
 import JPushy.MultiPlayer.MPClient;
 import JPushy.Types.Blocks.Block;

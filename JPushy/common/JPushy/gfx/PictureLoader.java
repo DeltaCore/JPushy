@@ -1,8 +1,8 @@
-package JPushy;
+package JPushy.gfx;
 
 import java.io.IOException;
 
-import JPushy.Types.Picture;
+import JPushy.Types.gfx.Picture;
 /**
  * 
  * @author Marcel Benning

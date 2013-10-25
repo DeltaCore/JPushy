@@ -4,9 +4,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
 
-import JPushy.LevelScheduler;
-import JPushy.PictureLoader;
-import JPushy.Player;
+import JPushy.Core.LevelScheduler;
+import JPushy.Types.Player.Player;
+import JPushy.gfx.PictureLoader;
 /**
  * 
  * @author Marcel Benning
@@ -95,6 +95,10 @@ public class MPCommandHandler implements ICommandHandler{
 	
 	public void addPlayer(Player player){
 		players.add(player);
+	}
+
+	@Override
+	public void onCommand(String msg, DatagramPacket packet) {
 	}
 	
 }

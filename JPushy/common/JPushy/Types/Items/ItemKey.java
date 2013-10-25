@@ -1,10 +1,10 @@
 package JPushy.Types.Items;
 
-import JPushy.Blocks;
-import JPushy.Game;
-import JPushy.Types.Picture;
+import JPushy.Core.Game;
 import JPushy.Types.Blocks.Block;
+import JPushy.Types.Blocks.Blocks;
 import JPushy.Types.Level.Stage;
+import JPushy.Types.gfx.Picture;
 
 public class ItemKey extends Item {
 	

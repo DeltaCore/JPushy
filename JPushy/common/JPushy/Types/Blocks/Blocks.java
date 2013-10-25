@@ -1,12 +1,8 @@
-package JPushy;
+package JPushy.Types.Blocks;
 
 import java.util.ArrayList;
 
-import JPushy.Types.Blocks.Block;
-import JPushy.Types.Blocks.BlockDoor;
-import JPushy.Types.Blocks.Finish;
-import JPushy.Types.Blocks.MoveableBlock;
-import JPushy.Types.Blocks.TeleportBase;
+import JPushy.gfx.PictureLoader;
 
 /**
  * 

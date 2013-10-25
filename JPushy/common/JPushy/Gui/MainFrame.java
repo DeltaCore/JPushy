@@ -4,10 +4,9 @@ import java.awt.Color;
 
 import javax.swing.JFrame;
 
-import JPushy.Chat;
-import JPushy.Input;
-import JPushy.LevelScheduler;
-import JPushy.Player;
+import JPushy.Core.LevelScheduler;
+import JPushy.Listener.Input;
+import JPushy.Types.Player.Player;
 /**
  * 
  * @author Marcel Benning
@@ -23,7 +22,7 @@ public class MainFrame extends JFrame{
 		super("Level 1");
 		this.levelHandler = l;
 		setBackground(Color.BLACK);
-		setBounds(100, 100, 604, 388);
+		setBounds(100, 100, 600,600);
 		panel = new GamePanel(levelHandler ,this ,10);
 		chat = new Chat(panel);
 		setContentPane(panel);

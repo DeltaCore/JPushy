@@ -9,11 +9,11 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import JPushy.Blocks;
-import JPushy.Items;
-import JPushy.PictureLoader;
 import JPushy.Types.Blocks.Block;
+import JPushy.Types.Blocks.Blocks;
 import JPushy.Types.Blocks.TeleportBase;
+import JPushy.Types.Items.Items;
+import JPushy.gfx.PictureLoader;
 
 /**
  * 

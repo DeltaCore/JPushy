@@ -1,8 +1,8 @@
-package JPushy;
+package JPushy.Types.Player;
 
-import JPushy.Types.Picture;
+import JPushy.Core.LevelScheduler;
 import JPushy.Types.Blocks.Block;
-import JPushy.Types.Player.Inventory;
+import JPushy.Types.gfx.Picture;
 
 /**
  * 
@@ -213,5 +213,5 @@ public class Player {
 	public void setInventory(Inventory inventory) {
 		this.inventory = inventory;
 	}
-
+	
 }

@@ -1,4 +1,4 @@
-package JPushy.Types;
+package JPushy.Types.gfx;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

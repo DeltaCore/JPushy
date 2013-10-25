@@ -1,8 +1,8 @@
 package JPushy.Types.Player;
 
-import JPushy.Game;
-import JPushy.Items;
+import JPushy.Core.Game;
 import JPushy.Types.Items.Item;
+import JPushy.Types.Items.Items;
 
 public class Inventory {
 
@@ -90,4 +90,8 @@ public class Inventory {
 		this.selectedSlot = selectedSlot;
 	}
 
+	public Item getItemInHand(){
+		return slots[getSelectedSlot()].getItem();
+	}
+	
 }

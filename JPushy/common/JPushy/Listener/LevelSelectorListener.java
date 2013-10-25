@@ -1,4 +1,4 @@
-package JPushy;
+package JPushy.Listener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,7 +7,10 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import JPushy.Core.Game;
 import JPushy.Gui.LevelSelector;
+import JPushy.Gui.LevelServerConnector;
+import JPushy.Gui.SettingsGui;
 import JPushy.LevelEditor.EditorThread;
 /**
  * 
@@ -48,12 +51,18 @@ public class LevelSelectorListener implements ListSelectionListener, ActionListe
 			String username = JOptionPane.showInputDialog("Username : ");
 			selector.game.loadLevel(ip, 1);
 			Game.getPlayer().setName(username);
-			Game.gameThread.client.loadPlayer();
+			Game.gameThread.getClient().loadPlayer();
 		}else if(cmd.equals("leveleditor")){
 			th = new EditorThread();
 			th.setLevelSelector(selector);
 			Thread t = new Thread(th);
 			t.start();
+		}else if(cmd.equalsIgnoreCase("settings")){
+			selector.settingsGui = new SettingsGui();
+			selector.settingsGui.setVisible(true);
+		}else if(cmd.equalsIgnoreCase("levelserver")){
+			selector.levelServerconnector = new LevelServerConnector(selector);
+			selector.levelServerconnector.setVisible(true);
 		}
 	}
 }

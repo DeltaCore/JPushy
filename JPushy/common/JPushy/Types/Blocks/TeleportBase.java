@@ -2,11 +2,10 @@ package JPushy.Types.Blocks;
 
 import java.util.Timer;
 
-import JPushy.Blocks;
-import JPushy.Core;
-import JPushy.Game;
-import JPushy.Types.Picture;
+import JPushy.Core.Core;
+import JPushy.Core.Game;
 import JPushy.Types.Level.Level;
+import JPushy.Types.gfx.Picture;
 /**
  * 
  * @author Marcel Benning

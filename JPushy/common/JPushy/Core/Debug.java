@@ -1,4 +1,4 @@
-package JPushy;
+package JPushy.Core;
 
 public class Debug {
 	/**

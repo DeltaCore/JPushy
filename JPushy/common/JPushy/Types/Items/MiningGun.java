@@ -1,10 +1,10 @@
 package JPushy.Types.Items;
 
-import JPushy.Blocks;
-import JPushy.Game;
-import JPushy.Types.Picture;
+import JPushy.Core.Game;
 import JPushy.Types.Blocks.Block;
+import JPushy.Types.Blocks.Blocks;
 import JPushy.Types.Level.Stage;
+import JPushy.Types.gfx.Picture;
 
 public class MiningGun extends Item {
 
@@ -17,35 +17,37 @@ public class MiningGun extends Item {
 		super(name, id, texture, register);
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
 	public void onUse(Stage stage, int dir) {
 		super.onUse(stage, dir);
 		int y = Game.getPlayer().getY();
 		int x = Game.getPlayer().getX();
 		Block b = Blocks.getBlockById(0);
-		if(dir == 0){
+		if (dir == 0) {
 			b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y - 1);
-			b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
-			stage.getBlock(x, y - 1).onDestroy();
-			stage.destroyBlock(x, y - 1);
-		}else if(dir == 1){
+			if (b.isDestroyable()) {
+				stage.getBlock(x, y - 1).onDestroy();
+				stage.destroyBlock(x, y - 1);
+			}
+		} else if (dir == 1) {
 			b = Game.gameThread.getLevel().getActiveStage().getBlock(x + 1, y);
-			b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
-			stage.getBlock(x + 1, y).onDestroy();
-			stage.destroyBlock(x + 1, y);
-		}else if(dir == 2){
+			if (b.isDestroyable()) {
+				stage.getBlock(x + 1, y).onDestroy();
+				stage.destroyBlock(x + 1, y);
+			}
+		} else if (dir == 2) {
 			b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y + 1);
-			b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
-			stage.getBlock(x, y + 1).onDestroy();
-			stage.destroyBlock(x, y + 1);
-		}else if(dir == 3){
+			if (b.isDestroyable()) {
+				stage.getBlock(x, y + 1).onDestroy();
+				stage.destroyBlock(x, y + 1);
+			}
+		} else if (dir == 3) {
 			b = Game.gameThread.getLevel().getActiveStage().getBlock(x - 1, y);
-			b.onBlockActivated(Game.gameThread.getLevel().getActiveStage(), Game.getPlayer());
-			stage.getBlock(x - 1, y).onDestroy();
-			stage.destroyBlock(x - 1, y);
+			if (b.isDestroyable()) {
+				stage.getBlock(x - 1, y).onDestroy();
+				stage.destroyBlock(x - 1, y);
+			}
 		}
-	
 	}
-	
 }

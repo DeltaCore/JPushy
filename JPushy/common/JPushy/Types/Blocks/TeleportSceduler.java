@@ -2,8 +2,8 @@ package JPushy.Types.Blocks;
 
 import java.util.TimerTask;
 
-import JPushy.Core;
-import JPushy.Game;
+import JPushy.Core.Core;
+import JPushy.Core.Game;
 /**
  * 
  * @author Marcel Benning

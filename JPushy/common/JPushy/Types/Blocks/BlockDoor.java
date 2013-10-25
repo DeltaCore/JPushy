@@ -1,11 +1,11 @@
 package JPushy.Types.Blocks;
 
-import JPushy.Items;
-import JPushy.Player;
-import JPushy.Types.Picture;
+import JPushy.Types.Items.Items;
 import JPushy.Types.Level.Level;
 import JPushy.Types.Level.Stage;
 import JPushy.Types.Player.Inventory;
+import JPushy.Types.Player.Player;
+import JPushy.Types.gfx.Picture;
 
 public class BlockDoor extends Block {
 

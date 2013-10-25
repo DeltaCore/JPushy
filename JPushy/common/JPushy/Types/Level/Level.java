@@ -3,11 +3,11 @@ package JPushy.Types.Level;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
-import JPushy.Blocks;
-import JPushy.Game;
-import JPushy.PictureLoader;
+import JPushy.Core.Game;
 import JPushy.Types.Coord2D;
 import JPushy.Types.Blocks.Block;
+import JPushy.Types.Blocks.Blocks;
+import JPushy.gfx.PictureLoader;
 
 /**
  * 

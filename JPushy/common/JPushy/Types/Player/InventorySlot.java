@@ -3,9 +3,9 @@ package JPushy.Types.Player;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import JPushy.GraphicUtils;
-import JPushy.Items;
 import JPushy.Types.Items.Item;
+import JPushy.Types.Items.Items;
+import JPushy.gfx.GraphicUtils;
 
 public class InventorySlot {
 

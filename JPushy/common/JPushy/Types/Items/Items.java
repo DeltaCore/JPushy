@@ -1,10 +1,8 @@
-package JPushy;
+package JPushy.Types.Items;
 
 import java.util.ArrayList;
 
-import JPushy.Types.Items.Item;
-import JPushy.Types.Items.ItemKey;
-import JPushy.Types.Items.MiningGun;
+import JPushy.gfx.PictureLoader;
 
 public class Items {
 

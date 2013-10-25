@@ -1,8 +1,8 @@
 package JPushy.Types.Level;
 
-import JPushy.Blocks;
-import JPushy.Player;
 import JPushy.Types.Blocks.Block;
+import JPushy.Types.Blocks.Blocks;
+import JPushy.Types.Player.Player;
 /**
  * 
  * @author Marcel Benning
