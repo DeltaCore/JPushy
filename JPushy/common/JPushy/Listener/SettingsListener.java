@@ -19,19 +19,13 @@ public class SettingsListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		cmd = e.getActionCommand();
-		switch (cmd) {
-			case "save":
-				saveSettings();
-				break;
-			case "exit":
-				saveSettings();
-				gui.setVisible(false);
-				break;
-			case "exit_nosave":
-				gui.setVisible(false);
-				break;
-			default:
-				break;
+		if(cmd.equalsIgnoreCase("save")){
+			saveSettings();
+		}else if(cmd.equalsIgnoreCase("exit")){
+			saveSettings();
+			gui.setVisible(false);
+		}else if(cmd.equalsIgnoreCase("exit_nosave")){
+			gui.setVisible(false);
 		}
 	}
 

@@ -1,11 +1,14 @@
 package JPushy.Types.Blocks;
 
+import java.util.ArrayList;
+
 import JPushy.Types.Items.Items;
 import JPushy.Types.Level.Level;
 import JPushy.Types.Level.Stage;
 import JPushy.Types.Player.Inventory;
 import JPushy.Types.Player.Player;
 import JPushy.Types.gfx.Picture;
+import JPushy.gfx.PictureLoader;
 
 public class BlockDoor extends Block {
 
@@ -26,40 +29,13 @@ public class BlockDoor extends Block {
 		super(name, id, img, visible);
 		// TODO Auto-generated constructor stub
 	}
-
-	public BlockDoor(String name, int id, Picture img,
-			boolean playerAbleToWalkOn, boolean visible) {
-		super(name, id, img, playerAbleToWalkOn, visible);
-		// TODO Auto-generated constructor stub
-	}
-
-	public BlockDoor(String name, int id, Picture img,
-			boolean playerAbleToWalkOn, boolean solid, boolean visible) {
-		super(name, id, img, playerAbleToWalkOn, solid, visible);
-		// TODO Auto-generated constructor stub
-	}
-
-	public BlockDoor(String name, int id, Picture img,
-			boolean playerAbleToWalkOn, boolean solid, boolean destroyable,
-			boolean visible, JPushy.Types.Blocks.Block invincebleBlock) {
-		super(name, id, img, playerAbleToWalkOn, solid, destroyable, visible,
-				invincebleBlock);
-		// TODO Auto-generated constructor stub
-	}
-
-	public BlockDoor(String name, int id, Picture img,
-			boolean playerAbleToWalkOn, boolean solid, boolean destroyable,
-			boolean visible, JPushy.Types.Blocks.Block invincebleBlock,
-			boolean register) {
-		super(name, id, img, playerAbleToWalkOn, solid, destroyable, visible,
-				invincebleBlock, register);
-	}
 	
 	@Override
 	public void init() {
 		super.init();
 		setPlayerAbleToWalkOn(false);
 		setSolid(true);
+		setInvincebleBlock(Blocks.getBlockById(Blocks.air.getId()));
 	}
 	
 	@Override
@@ -67,7 +43,10 @@ public class BlockDoor extends Block {
 		super.onBlockActivated(stage, p);
 		if(p.getInventory().removeItem(Items.key)){
 			this.setPlayerAbleToWalkOn(true);
+			this.setTexture(PictureLoader.loadImageFromFile("door_open.png"));
+			this.setVisible(false);
 		}
+		playSound();
 	}
 	
 }

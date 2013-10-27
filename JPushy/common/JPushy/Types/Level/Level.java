@@ -16,12 +16,12 @@ import JPushy.gfx.PictureLoader;
  */
 public class Level {
 
-	private int	              homeX	      = 1, homeY = 1;
-	private int	              activeStage	= 0;
-	private ArrayList<Stage>	stages	    = new ArrayList<Stage>();
-	private String	          name	      = "", version = "";
-	private ArrayList<String>	comment	    = new ArrayList<String>();
-	private String	          fileName	  = "";
+	private int					homeX		= 1, homeY = 1;
+	private int					activeStage	= 0;
+	private ArrayList<Stage>	stages		= new ArrayList<Stage>();
+	private String				name		= "", version = "";
+	private ArrayList<String>	comment		= new ArrayList<String>();
+	private String				fileName	= "";
 
 	@Override
 	public String toString() {
@@ -59,10 +59,10 @@ public class Level {
 	/*
 	 * public boolean notifyPlayerMove(int x, int y, int dir) { // über gibt die
 	 * neue position und gibt ja/nein zurück ob es geht //Blöcke die n/e/s/w von
-	 * neuen block sind Block bN = getBlock(x, y - 1); Block bS = getBlock(x, y +
-	 * 1); Block bE = getBlock(x + 1, y); Block bW = getBlock(x - 1, y); Block
-	 * block = getBlock(x, y); if (dir == 0) { if(block.isSolid()){ return false;
-	 * }else if(block.isPlayerAbleToWalkOn()){ block.onWalk(x, y, this);
+	 * neuen block sind Block bN = getBlock(x, y - 1); Block bS = getBlock(x, y
+	 * + 1); Block bE = getBlock(x + 1, y); Block bW = getBlock(x - 1, y); Block
+	 * block = getBlock(x, y); if (dir == 0) { if(block.isSolid()){ return
+	 * false; }else if(block.isPlayerAbleToWalkOn()){ block.onWalk(x, y, this);
 	 * block.onOccupied(true, this); bS.onOccupied(false, this); setBlock(x, y -
 	 * 1, block); return true; }else if(!block.isSolid()){ if(bN.isSolid()){
 	 * return false; } block.onPush(x, y, x, y-1, 2, this); setBlock(x, y - 1,
@@ -70,29 +70,32 @@ public class Level {
 	 * bN.setOcupied(true); bN.onOccupied(true, this);
 	 * block.setOccupiedByBlock(Blocks.air); block.setOcupied(false);
 	 * block.onOccupied(false, this); return true; } } else if (dir == 1) {
-	 * if(block.isSolid()){ return false; }else if(block.isPlayerAbleToWalkOn()){
-	 * block.onWalk(x, y, this); block.onOccupied(true, this);
-	 * bW.onOccupied(false, this); return true; }else if(!block.isSolid()){
-	 * if(bW.isSolid()){ return false; } block.onPush(x, y, x, y-1, 3, this);
-	 * setBlock(x + 1, y, block); setBlock(x,y, Blocks.air);
-	 * bW.setOccupiedByBlock(block); bW.setOcupied(true); bW.onOccupied(true,
-	 * this); block.setOccupiedByBlock(Blocks.air); block.setOcupied(false);
+	 * if(block.isSolid()){ return false; }else
+	 * if(block.isPlayerAbleToWalkOn()){ block.onWalk(x, y, this);
+	 * block.onOccupied(true, this); bW.onOccupied(false, this); return true;
+	 * }else if(!block.isSolid()){ if(bW.isSolid()){ return false; }
+	 * block.onPush(x, y, x, y-1, 3, this); setBlock(x + 1, y, block);
+	 * setBlock(x,y, Blocks.air); bW.setOccupiedByBlock(block);
+	 * bW.setOcupied(true); bW.onOccupied(true, this);
+	 * block.setOccupiedByBlock(Blocks.air); block.setOcupied(false);
 	 * block.onOccupied(false, this); return true; } } else if (dir == 2) {
-	 * if(block.isSolid()){ return false; }else if(block.isPlayerAbleToWalkOn()){
-	 * block.onWalk(x, y, this); block.onOccupied(true, this);
-	 * bS.onOccupied(false, this); return true; }else if(!block.isSolid()){
-	 * if(bS.isSolid()){ return false; } block.onPush(x, y, x, y-1, 0, this);
-	 * setBlock(x, y + 1, block); setBlock(x,y, Blocks.air);
-	 * bS.setOccupiedByBlock(block); bS.setOcupied(true); bS.onOccupied(true,
-	 * this); block.setOccupiedByBlock(Blocks.air); block.setOcupied(false);
+	 * if(block.isSolid()){ return false; }else
+	 * if(block.isPlayerAbleToWalkOn()){ block.onWalk(x, y, this);
+	 * block.onOccupied(true, this); bS.onOccupied(false, this); return true;
+	 * }else if(!block.isSolid()){ if(bS.isSolid()){ return false; }
+	 * block.onPush(x, y, x, y-1, 0, this); setBlock(x, y + 1, block);
+	 * setBlock(x,y, Blocks.air); bS.setOccupiedByBlock(block);
+	 * bS.setOcupied(true); bS.onOccupied(true, this);
+	 * block.setOccupiedByBlock(Blocks.air); block.setOcupied(false);
 	 * block.onOccupied(false, this); return true; } } else if (dir == 3) {
-	 * if(block.isSolid()){ return false; }else if(block.isPlayerAbleToWalkOn()){
-	 * block.onWalk(x, y, this); block.onOccupied(true, this);
-	 * bE.onOccupied(false, this); return true; }else if(!block.isSolid()){
-	 * if(bE.isSolid()){ return false; } block.onPush(x, y, x, y-1, 1, this);
-	 * setBlock(x - 1, y, block); setBlock(x,y, Blocks.air);
-	 * bE.setOccupiedByBlock(block); bE.setOcupied(true); bE.onOccupied(true,
-	 * this); block.setOccupiedByBlock(Blocks.air); block.setOcupied(false);
+	 * if(block.isSolid()){ return false; }else
+	 * if(block.isPlayerAbleToWalkOn()){ block.onWalk(x, y, this);
+	 * block.onOccupied(true, this); bE.onOccupied(false, this); return true;
+	 * }else if(!block.isSolid()){ if(bE.isSolid()){ return false; }
+	 * block.onPush(x, y, x, y-1, 1, this); setBlock(x - 1, y, block);
+	 * setBlock(x,y, Blocks.air); bE.setOccupiedByBlock(block);
+	 * bE.setOcupied(true); bE.onOccupied(true, this);
+	 * block.setOccupiedByBlock(Blocks.air); block.setOcupied(false);
 	 * block.onOccupied(false, this); return true; } } return false; }
 	 */
 
@@ -102,43 +105,45 @@ public class Level {
 		if (b.isSolid()) {
 			return false;
 		} else {
-			Block t = new Block("Dummy", -1, PictureLoader.loadImageFromFile("base.png")).setRegister(false);
 			if (dir == 0) {
-				t = stages.get(activeStage).getBlocks()[y - 1][x];
+				return move_block_2(stages.get(activeStage).getBlocks()[y - 1][x], dir, x, y);
 			} else if (dir == 1) {
-				t = stages.get(activeStage).getBlocks()[y][x + 1];
+				return move_block_2(stages.get(activeStage).getBlocks()[y][x + 1], dir, x, y);
 			} else if (dir == 2) {
-				t = stages.get(activeStage).getBlocks()[y + 1][x];
+				return move_block_2(stages.get(activeStage).getBlocks()[y + 1][x], dir, x, y);
 			} else if (dir == 3) {
-				t = stages.get(activeStage).getBlocks()[y][x - 1];
+				return move_block_2(stages.get(activeStage).getBlocks()[y][x - 1], dir, x, y);
 			}
-			// ystem.out.println(t.toString());
-			if (t.getId() == Blocks.air.getId()) {// Sides : 0 = north ; 1 =
-				// east ; 2 = south ; 3 =
-				// west
-				if (dir == 0) {
-					stages.get(activeStage).setBlock(x, y - 1, b);
-					stages.get(activeStage).setBlock(x, y, Blocks.air);
-					return true;
-				} else if (dir == 1) {
-					stages.get(activeStage).setBlock(x + 1, y, b);
-					stages.get(activeStage).setBlock(x, y, Blocks.air);
-					return true;
-				} else if (dir == 2) {
-					stages.get(activeStage).setBlock(x, y + 1, b);
-					stages.get(activeStage).setBlock(x, y, Blocks.air);
-					return true;
-				} else if (dir == 3) {
-					stages.get(activeStage).setBlock(x - 1, y, b);
-					stages.get(activeStage).setBlock(x, y, Blocks.air);
-					return true;
-				} else {
-					return false;
-				}
+		}
+		return false;
+	}
+
+	private boolean move_block_2(Block b, int dir, int x, int y) {
+		if (b.getId() == Blocks.air.getId()) {// Sides : 0 = north ; 1 =
+			// east ; 2 = south ; 3 =
+			// west
+			if (dir == 0) {
+				stages.get(activeStage).setBlock(x, y - 1, b);
+				stages.get(activeStage).setBlock(x, y, Blocks.air);
+				return true;
+			} else if (dir == 1) {
+				stages.get(activeStage).setBlock(x + 1, y, b);
+				stages.get(activeStage).setBlock(x, y, Blocks.air);
+				return true;
+			} else if (dir == 2) {
+				stages.get(activeStage).setBlock(x, y + 1, b);
+				stages.get(activeStage).setBlock(x, y, Blocks.air);
+				return true;
+			} else if (dir == 3) {
+				stages.get(activeStage).setBlock(x - 1, y, b);
+				stages.get(activeStage).setBlock(x, y, Blocks.air);
+				return true;
 			} else {
-				if (t.getId() == -1) {
-					return false;
-				}
+				return false;
+			}
+		} else {
+			if (b.getId() == -1) {
+				return false;
 			}
 		}
 		return false;

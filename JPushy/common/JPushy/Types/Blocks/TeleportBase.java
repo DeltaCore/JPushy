@@ -1,11 +1,15 @@
 package JPushy.Types.Blocks;
 
+import java.util.ArrayList;
 import java.util.Timer;
 
 import JPushy.Core.Core;
 import JPushy.Core.Game;
 import JPushy.Types.Level.Level;
+import JPushy.Types.Level.LevelLoader;
+import JPushy.Types.Level.Stage;
 import JPushy.Types.gfx.Picture;
+import JPushy.gfx.PictureLoader;
 /**
  * 
  * @author Marcel Benning
@@ -25,17 +29,7 @@ public class TeleportBase extends Block {
 	public TeleportBase(String name, int id, Picture img, boolean visible) {
 		super(name, id, img, visible);
 	}
-	
-	public TeleportBase(String name, int id, Picture img,
-			boolean playerAbleToWalkOn, boolean visible) {
-		super(name, id, img, playerAbleToWalkOn, visible);
-	}
-
-	public TeleportBase(String name, int id, Picture img,
-			boolean playerAbleToWalkOn, boolean solid, boolean visible) {
-		super(name, id, img, playerAbleToWalkOn, solid, visible);
-	}
-	
+		
 	@Override
 	public void onWalk(int x, int y, Level l) {
 		super.onWalk(x, y, l);
@@ -61,6 +55,17 @@ public class TeleportBase extends Block {
 			Game.getPlayer().setY(endY);
 			Game.getClient().set(endX, endY);
 		}
+	}
+	
+	@Override
+	public Block onConfigLoaded(int x, int y, int stageId, ArrayList<String> cfgLines,Stage stage) {
+		int[] cfgCords = LevelLoader.checkCFGCords(cfgLines, stageId, x, y);
+		if (cfgCords[0] == 0 && cfgCords[1] == 0) {
+		} else {
+			this.setEndX(cfgCords[0]);
+			this.setEndY(cfgCords[1]);
+		}
+		return this;
 	}
 	
 	public int getEndX() {

@@ -79,6 +79,7 @@ public class Game extends Thread {
 	}
 
 	public void loadLevel(String level) {
+		gameThread.multiPlayerServer.stop();
 		gameThread = new LevelScheduler(level);
 		gameThread.start();
 	}

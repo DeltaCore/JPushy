@@ -8,27 +8,9 @@ import JPushy.Types.gfx.Picture;
  * 
  */
 public class MoveableBlock extends Block {
-
-	public MoveableBlock(Block b) {
-		super(b);
-	}
-
+	
 	public MoveableBlock(String name, int id, Picture img) {
 		super(name, id, img);
-	}
-
-	public MoveableBlock(String name, int id, Picture img, boolean visible) {
-		super(name, id, img, visible);
-	}
-
-	public MoveableBlock(String name, int id, Picture img, boolean playerAbleToWalkOn,
-			boolean visible) {
-		super(name, id, img, playerAbleToWalkOn, visible);
-	}
-
-	public MoveableBlock(String name, int id, Picture img, boolean playerAbleToWalkOn,
-			boolean solid, boolean visible) {
-		super(name, id, img, playerAbleToWalkOn, solid, visible);
 	}
 	
 	@Override

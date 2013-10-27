@@ -41,7 +41,6 @@ public class LevelSelectorListener implements ListSelectionListener, ActionListe
 			int index = value.lastIndexOf("- ");
 			String filename = value.substring(index + 2);
 			selector.game.loadLevel(filename);
-			selector.game.start();
 			Game.getPlayer().setName(username);
 			return;
 		}else if(cmd.equalsIgnoreCase("exit")){

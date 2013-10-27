@@ -1,5 +1,6 @@
 package JPushy.Listener;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -25,7 +26,8 @@ import JPushy.Gui.LevelServerConnector;
 public class LevelServerListener implements ActionListener {
 
 	LevelServerConnector	gui;
-	String					regex	= "<name=\"([a-zA-Z\\s]{1,})\";version='([a-zA-Z0-9.,]{1,})'>";
+	String					regex		= "<name=\"([a-zA-Z\\s]{1,})\";version='([a-zA-Z0-9.,]{1,})'>";
+	Color					dark_green	= new Color(0, 100, 0);
 
 	public LevelServerListener(LevelServerConnector gui) {
 		this.gui = gui;
@@ -35,15 +37,15 @@ public class LevelServerListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String msg = e.getActionCommand();
 		if (msg.equalsIgnoreCase("reloadlist")) {
-			gui.setStaus("Sending commands to server " + Core.getSettings().getSetting(Core.getSettings().defaultLevelServer) + " ...");
+			gui.setStaus("Sending commands to server " + Core.getSettings().getSetting(Core.getSettings().defaultLevelServer) + " ...", Color.getHSBColor(0.667f, 1f, 0.392f));
 			gui.serverConnection.sendCommand(gui.serverConnection.getLevels);
-			gui.setStaus("Sending receiving data ...");
+			gui.setStaus("Receiving data ...", dark_green);
 			String ret = gui.serverConnection.receive();
-			gui.setStaus("Parsing information ...");
+			gui.setStaus("Parsing information ...", dark_green);
 			String[] levels = ret.split("#");
 			Pattern pattern = Pattern.compile(regex);
 			Matcher matcher = pattern.matcher(ret);
-			gui.setStaus("Updating Level list ...");
+			gui.setStaus("Updating Level list ...", dark_green);
 			gui.listModel = new DefaultListModel();
 			int index = 0;
 			for (int i = 0; i < levels.length; i++) {
@@ -58,7 +60,7 @@ public class LevelServerListener implements ActionListener {
 				// gui.listModel.add(i, levels[i]);
 			}
 			gui.newCheckList(gui.listModel);
-			gui.setStaus("Idle");
+			gui.setStaus("Idle", Color.blue);
 		} else if (msg.equalsIgnoreCase("loadfile")) {
 			for (int i = 0; i < gui.checkBoxList.getModel().getSize(); i++) {
 				Object c = gui.checkBoxList.getModel().getElementAt(i);
@@ -84,7 +86,7 @@ public class LevelServerListener implements ActionListener {
 			index = temp.indexOf("-");
 			name = temp.substring(0, index - 1);
 			version = temp.substring(index + 2);
-			gui.setStaus("Loading level (" + name + ") ...");
+			gui.setStaus("Downloading level (" + name + ") ...", dark_green);
 			System.out.println(name + ":" + version);
 			gui.serverConnection.loadLevelFromServer(name);
 			String content = gui.serverConnection.receive();
@@ -108,7 +110,7 @@ public class LevelServerListener implements ActionListener {
 					writer.write(content);
 					writer.close();
 				}
-			}else{
+			} else {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(f));
 				writer.write(content);
 				writer.close();
@@ -119,7 +121,7 @@ public class LevelServerListener implements ActionListener {
 				writer.write(content);
 				writer.close();
 			}
-			gui.setStaus("Idle");
+			gui.setStaus("Idle", Color.blue);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

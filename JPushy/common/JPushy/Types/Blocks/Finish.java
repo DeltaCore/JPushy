@@ -23,9 +23,12 @@ public class Finish extends Block {
 		if (!l.isLastStage()) {
 			Game.win("You won this stage ! Get ready for another one ...");
 			l.setActiveStage(l.getActiveStageI() + 1);
+			Game.getPlayer().setFreezed(true);
 			l.getActiveStage().init(Game.getPlayer());
+			Game.getPlayer().setFreezed(false);
+			Game.getPlayer().cancelNextMove();
 		} else {
-			Game.win("I mean , you won this easy game for Elementary kids :DD");
+			Game.win("Yay ! You won this easy game for Elementary kids :DD");
 			Game.stopGame();
 		}
 		Game.pushUpdate();

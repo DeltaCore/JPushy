@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import JPushy.Core.Game;
 import JPushy.Core.LevelScheduler;
 import JPushy.Types.Blocks.Block;
+import JPushy.Types.Blocks.Blocks;
 import JPushy.Types.Items.Items;
 import JPushy.Types.Player.Inventory;
 import JPushy.Types.Player.Player;
@@ -45,39 +46,6 @@ public class GamePanel extends JPanel {
 		this.level = l;
 		blocks = LevelScheduler.getLevel().getActiveStage().getBlocks();
 		this.maxLines = showLines;
-		int x = 0;
-		int y = 0;
-		boolean flag1 = false;
-		boolean flag2 = false;
-		for (int i = 0; i < LevelScheduler.getLevel().getActiveStage().getBlocks().length; i++) {
-			if (!flag2) {
-				for (int j = 0; j < LevelScheduler.getLevel().getActiveStage().getBlocks()[0].length; j++) {
-					if (!flag2) {
-						Block b = new Block("Dummy", -1, PictureLoader.loadImageFromFile("base.png"));
-						try {
-							b = LevelScheduler.getLevel().getActiveStage().getBlock(j, i);
-							System.out.print(b.toString() + " - ");
-							break;
-						} catch (Exception e) {
-							flag2 = true;
-							x = j;
-						}
-					}
-				}
-			}
-			if (!flag1) {
-				Block b = new Block("Dummy", -1, PictureLoader.loadImageFromFile("base.png"));
-				try {
-					b = LevelScheduler.getLevel().getActiveStage().getBlock(0, i);
-					System.out.print(b.toString() + " - ");
-					break;
-				} catch (Exception e) {
-					flag1 = true;
-					y = i - 1;
-				}
-			}
-		}
-		System.out.println("Level height : " + y + " Level width : " + x);
 	}
 
 	@Override
@@ -121,6 +89,8 @@ public class GamePanel extends JPanel {
 					try {
 						b = LevelScheduler.getLevel().getActiveStage().getBlock(x, y);
 						try {
+							t = GraphicUtils.getImageFromPicture(Blocks.air.getTexture());
+							g.drawImage(t, ((x * 40)), ((y * 40)), null);
 							if (b.isVisible()) {
 								if (b.isOcupied()) {
 									t = GraphicUtils.getImageFromPicture(b.getOccupiedByBlock().getTexture());
@@ -149,10 +119,11 @@ public class GamePanel extends JPanel {
 				yOffset += 40;
 			}
 		} catch (Exception e) {
+			
 		}
 
 		if (!sizeSet) {
-			frame.setSize(sizeX * 40 + 40 + 16, (sizeY * 40) + (10 * (18 + 10)) + 10);
+			frame.setSize((sizeX + 1) * 40 + 16, (sizeY * 40) + ((maxLines + margin)* g.getFontMetrics(font).getHeight()));
 			sizeSet = true;
 		}
 		// Draw player

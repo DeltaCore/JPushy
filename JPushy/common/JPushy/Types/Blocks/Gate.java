@@ -8,28 +8,11 @@ import JPushy.Types.gfx.Picture;
  */
 public class Gate extends Block {
 	
-	public Gate(Block b){
-		super(b);
-	}
-	
+		
 	public Gate(String name, int id, Picture img) {
 		super(name, id, img);
 	}
 
-	public Gate(String name, int id, Picture img, boolean visible) {
-		super(name, id, img, visible);
-	}
-	
-	public Gate(String name, int id, Picture img, boolean playerAbleToWalkOn,
-			boolean visible) {
-		super(name, id, img, playerAbleToWalkOn, visible);
-	}
-
-	public Gate(String name, int id, Picture img, boolean playerAbleToWalkOn,
-			boolean solid, boolean visible) {
-		super(name, id, img, playerAbleToWalkOn, solid, visible);
-	}
-	
 	@Override
 	public void init() {
 		super.init();
@@ -42,7 +25,6 @@ public class Gate extends Block {
 			this.setVisible(!this.isVisible());
 			this.setPlayerAbleToWalkOn(!this.isPlayerAbleToWalkOn());
 		}
-		super.toggle();
 	}
 	
 	@Override

@@ -25,6 +25,13 @@ import javax.xml.ws.http.HTTPException;
 import JPushy.Core.Core;
 import JPushy.LevelServer.ServerCommand;
 import JPushy.Listener.LevelServerListener;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 
 /**
  * 
@@ -39,6 +46,7 @@ public class LevelServerConnector extends JFrame {
 	private LevelServerListener	actionListener;
 	public DefaultListModel		listModel	= new DefaultListModel();
 	public CheckBoxList			checkBoxList;
+	private JLabel				lblStatusText;
 	public LevelSelector		mainGui;
 	/**
 	 * Create the frame.
@@ -76,9 +84,6 @@ public class LevelServerConnector extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 
-		lblStatus = new JLabel("Status : Idle");
-		contentPane.add(lblStatus, BorderLayout.SOUTH);
-
 		listModel = new DefaultListModel();
 		listModel.add(0, new CheckBoxListEntry("Klick 'Server -> Reload List' to list available files on the Server", false));
 
@@ -86,6 +91,35 @@ public class LevelServerConnector extends JFrame {
 		checkBoxList.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		checkBoxList.setBackground(Color.LIGHT_GRAY);
 		contentPane.add(checkBoxList, BorderLayout.CENTER);
+		
+		JPopupMenu popupMenu = new JPopupMenu();
+		addPopup(checkBoxList, popupMenu);
+		
+		JMenuItem mntmReloadList_1 = new JMenuItem("Reload list");
+		popupMenu.add(mntmReloadList_1);
+		mntmReloadList_1.setActionCommand("reloadlist");
+		mntmReloadList_1.addActionListener(actionListener);
+		
+		JMenuItem mntmDownloadSelectedFiles_1 = new JMenuItem("Download selected files");
+		popupMenu.add(mntmDownloadSelectedFiles_1);
+		mntmDownloadSelectedFiles_1.setActionCommand("loadfile");
+		mntmDownloadSelectedFiles_1.addActionListener(actionListener);
+		
+		JToolBar toolBar = new JToolBar();
+		contentPane.add(toolBar, BorderLayout.SOUTH);
+		
+				lblStatus = new JLabel("Status: ");
+				toolBar.add(lblStatus);
+				
+				lblStatusText = new JLabel("Idle");
+				lblStatusText.setForeground(Color.BLUE);
+				toolBar.add(lblStatusText);
+				
+				JButton btnDownload = new JButton("Download");
+				btnDownload.setToolTipText("Download selected files");
+				toolBar.add(btnDownload);
+				btnDownload.setActionCommand("loadfile");
+				btnDownload.addActionListener(actionListener);
 	}
 
 	public void newCheckList(DefaultListModel model) {
@@ -97,7 +131,14 @@ public class LevelServerConnector extends JFrame {
 	}
 
 	public void setStaus(String status) {
-		lblStatus.setText("Status : " + status);
+		setStaus(status, Color.black);
+	}
+	
+	public void setStaus(String status, Color color) {
+		lblStatusText.setText(status + " ");
+		lblStatusText.setForeground(color);
+		this.repaint();
+		lblStatusText.repaint();
 	}
 
 	public class ServerConnection {
@@ -155,8 +196,8 @@ public class LevelServerConnector extends JFrame {
 			byte[] data = new byte[4096];
 			packet = new DatagramPacket(data, data.length);
 			try {
-					socket.setSoTimeout(1000);
-					socket.receive(packet);
+				socket.setSoTimeout(10000);
+				socket.receive(packet);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -177,4 +218,23 @@ public class LevelServerConnector extends JFrame {
 
 	}
 
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
+	}
 }

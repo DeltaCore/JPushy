@@ -262,6 +262,7 @@ public class LevelEditor extends Canvas implements MouseListener, MouseMotionLis
 	}
 
 	private void save() {
+		char c;
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File("Data/lvl/" + name.getText() + ".lvl")));
 			writer.write("<level name=\"" + name.getText() + "\" version='0.1'>\n");
@@ -269,7 +270,9 @@ public class LevelEditor extends Canvas implements MouseListener, MouseMotionLis
 				writer.write("<stage id=" + z + ">\n");
 				for (int y = 0; y < height; y++) {
 					for (int x = 0; x < width; x++) {
-						writer.write("" + tiles[x][y][z]);
+						c = (char) tiles[x][y][z];
+						c += 48;
+						writer.write(c);
 					}
 					writer.newLine();
 				}
