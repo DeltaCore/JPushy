@@ -79,7 +79,9 @@ public class Game extends Thread {
 	}
 
 	public void loadLevel(String level) {
-		gameThread.multiPlayerServer.stop();
+		try{
+			gameThread.multiPlayerServer.stop();
+		}catch(Exception e){}
 		gameThread = new LevelScheduler(level);
 		gameThread.start();
 	}

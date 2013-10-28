@@ -98,56 +98,53 @@ public class Level {
 	 * block.setOccupiedByBlock(Blocks.air); block.setOcupied(false);
 	 * block.onOccupied(false, this); return true; } } return false; }
 	 */
-
 	public boolean moveBlock(int x, int y, int dir) {
-		Block b = stages.get(activeStage).getBlocks()[y][x];
-		// System.out.println(b.toString() + ":" + b.isOcupied());
-		if (b.isSolid()) {
-			return false;
-		} else {
-			if (dir == 0) {
-				return move_block_2(stages.get(activeStage).getBlocks()[y - 1][x], dir, x, y);
-			} else if (dir == 1) {
-				return move_block_2(stages.get(activeStage).getBlocks()[y][x + 1], dir, x, y);
-			} else if (dir == 2) {
-				return move_block_2(stages.get(activeStage).getBlocks()[y + 1][x], dir, x, y);
-			} else if (dir == 3) {
-				return move_block_2(stages.get(activeStage).getBlocks()[y][x - 1], dir, x, y);
-			}
-		}
-		return false;
-	}
-
-	private boolean move_block_2(Block b, int dir, int x, int y) {
-		if (b.getId() == Blocks.air.getId()) {// Sides : 0 = north ; 1 =
-			// east ; 2 = south ; 3 =
-			// west
-			if (dir == 0) {
-				stages.get(activeStage).setBlock(x, y - 1, b);
-				stages.get(activeStage).setBlock(x, y, Blocks.air);
-				return true;
-			} else if (dir == 1) {
-				stages.get(activeStage).setBlock(x + 1, y, b);
-				stages.get(activeStage).setBlock(x, y, Blocks.air);
-				return true;
-			} else if (dir == 2) {
-				stages.get(activeStage).setBlock(x, y + 1, b);
-				stages.get(activeStage).setBlock(x, y, Blocks.air);
-				return true;
-			} else if (dir == 3) {
-				stages.get(activeStage).setBlock(x - 1, y, b);
-				stages.get(activeStage).setBlock(x, y, Blocks.air);
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			if (b.getId() == -1) {
-				return false;
-			}
-		}
-		return false;
-	}
+        Block b = stages.get(activeStage).getBlocks()[y][x];
+        // System.out.println(b.toString() + ":" + b.isOcupied());
+        if (b.isSolid()) {
+                return false;
+        } else {
+                Block t = new Block("Dummy", -1, PictureLoader.loadImageFromFile("base.png"),false);
+                if (dir == 0) {
+                        t = stages.get(activeStage).getBlocks()[y - 1][x];
+                } else if (dir == 1) {
+                        t = stages.get(activeStage).getBlocks()[y][x + 1];
+                } else if (dir == 2) {
+                        t = stages.get(activeStage).getBlocks()[y + 1][x];
+                } else if (dir == 3) {
+                        t = stages.get(activeStage).getBlocks()[y][x - 1];
+                }
+                // ystem.out.println(t.toString());
+                if (t.getId() == Blocks.air.getId()) {// Sides : 0 = north ; 1 =
+                        // east ; 2 = south ; 3 =
+                        // west
+                        if (dir == 0) {
+                                stages.get(activeStage).setBlock(x, y - 1, b);
+                                stages.get(activeStage).setBlock(x, y, Blocks.air);
+                                return true;
+                        } else if (dir == 1) {
+                                stages.get(activeStage).setBlock(x + 1, y, b);
+                                stages.get(activeStage).setBlock(x, y, Blocks.air);
+                                return true;
+                        } else if (dir == 2) {
+                                stages.get(activeStage).setBlock(x, y + 1, b);
+                                stages.get(activeStage).setBlock(x, y, Blocks.air);
+                                return true;
+                        } else if (dir == 3) {
+                                stages.get(activeStage).setBlock(x - 1, y, b);
+                                stages.get(activeStage).setBlock(x, y, Blocks.air);
+                                return true;
+                        } else {
+                                return false;
+                        }
+                } else {
+                        if (t.getId() == -1) {
+                                return false;
+                        }
+                }
+        }
+        return false;
+}
 
 	public void registerStage(Stage stage) {
 		if (stage.getId() == 0) {

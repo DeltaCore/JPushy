@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>JPushy settings file</comment>
-<entry key="debug">true</entry>
+<entry key="debug">false</entry>
 <entry key="defaultUpdateServer">http://devgensoft.de</entry>
 <entry key="defaultLevelServer">devgensoft.de</entry>
 </properties>

@@ -27,32 +27,37 @@ public class Player {
 		this.inventory = new Inventory();
 	}
 
-	public void movePlayer(int dir) {// Sides : 0 = north ; 1 = east ; 2 = south ; 3 = west
-		if (isFreezed() || isNextMoveCanceld()) {
+	public void movePlayer(int dir) {// Sides : 0 = north ; 1 = east ; 2 = south
+										// ; 3 = west
+		if (isFreezed()) {
 			setCancelnextmove(false);
 			return;
 		}
 		Block bo = level.getLevel().getActiveStage().getBlock(x, y);
 		if (dir == 0 && checkNorthWalk()) {
-			Block b = level.getLevel().getActiveStage().getBlock(x, y - 1);
-			b.onWalk(x, y - 1, level.getLevel());
-			if (!isNextMoveCanceld())
+			if (!isNextMoveCanceld()) {
 				y -= 1;
+				Block b = level.getLevel().getActiveStage().getBlock(x, y);
+				b.onWalk(x, y, level.getLevel());
+			}
 		} else if (dir == 1 && checkEastWalk()) {
-			Block b = level.getLevel().getActiveStage().getBlock(x + 1, y);
-			b.onWalk(x + 1, y, level.getLevel());
-			if (!isNextMoveCanceld())
+			if (!isNextMoveCanceld()) {
 				x += 1;
+				Block b = level.getLevel().getActiveStage().getBlock(x, y);
+				b.onWalk(x, y, level.getLevel());
+			}
 		} else if (dir == 2 && checkSouthWalk()) {
-			Block b = level.getLevel().getActiveStage().getBlock(x, y + 1);
-			b.onWalk(x, y + 1, level.getLevel());
-			if (!isNextMoveCanceld())
+			if (!isNextMoveCanceld()) {
 				y += 1;
+				Block b = level.getLevel().getActiveStage().getBlock(x, y);
+				b.onWalk(x, y, level.getLevel());
+			}
 		} else if (dir == 3 && checkWestWalk()) {
-			Block b = level.getLevel().getActiveStage().getBlock(x - 1, y);
-			b.onWalk(x - 1, y, level.getLevel());
-			if (!isNextMoveCanceld())
+			if (!isNextMoveCanceld()) {
 				x -= 1;
+				Block b = level.getLevel().getActiveStage().getBlock(x, y);
+				b.onWalk(x, y, level.getLevel());
+			}
 		} else if (dir == 0 && checkNorthPush()) {
 			Block b = level.getLevel().getActiveStage().getBlock(x, y - 1);
 			b.onPush(x, y - 1, x, y - 2, 2, level.getLevel());
