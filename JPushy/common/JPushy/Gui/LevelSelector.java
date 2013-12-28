@@ -11,11 +11,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
@@ -31,14 +32,17 @@ import JPushy.Listener.LevelSelectorListener;
 
 public class LevelSelector extends JFrame {
 
-	private Editor					editor;
-	private JPanel					contentPane;
-	private DefaultListModel		listModel	= new DefaultListModel();
-	public JList					levels		= new JList(listModel);
+	private Editor	              editor;
+	private JPanel	              contentPane;
+	private DefaultListModel	    listModel	  = new DefaultListModel();
+	public JList	                levels	    = new JList(listModel);
 	private LevelSelectorListener	selectionListener;
-	public Game						game;
-	public SettingsGui				settingsGui;
-	public LevelServerConnector		levelServerconnector;
+	public Game	                  game;
+	public SettingsGui	          settingsGui;
+	public LevelServerConnector	  levelServerconnector;
+
+	JMenuBar	                    mainMenuBar	= new JMenuBar();
+	JMenu	                        mainMenu	  = new JMenu("Game");
 
 	public LevelSelector(Game game) {
 		this.game = game;
@@ -52,39 +56,43 @@ public class LevelSelector extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 
 		contentPane.add(levels, BorderLayout.CENTER);
+		if (System.getProperty("os.name").contains("Mac")) {
 
-		JToolBar toolBar = new JToolBar();
-		contentPane.add(toolBar, BorderLayout.NORTH);
-
-		JButton btnStart = new JButton("Start");
+			System.out.println("It's a Mac o.O !");
+			this.setJMenuBar(mainMenuBar);
+		} else {
+			contentPane.add(mainMenuBar);
+		}
+		mainMenuBar.add(mainMenu);
+		JMenuItem btnStart = new JMenuItem("Start");
 		btnStart.addActionListener(selectionListener);
 
-		toolBar.add(btnStart);
+		mainMenu.add(btnStart);
 
-		JButton btnExit = new JButton("Exit");
-		toolBar.add(btnExit);
+		JMenuItem btnExit = new JMenuItem("Exit");
+		mainMenu.add(btnExit);
 
-		JButton btnConnectToServer = new JButton("Connect to Server");
+		JMenuItem btnConnectToServer = new JMenuItem("Connect to Server");
 		btnConnectToServer.addActionListener(selectionListener);
 		btnConnectToServer.setActionCommand("connect");
 
-		toolBar.add(btnConnectToServer);
+		mainMenu.add(btnConnectToServer);
 
-		JButton btnLevelServer = new JButton("Connect to LevelServer");
+		JMenuItem btnLevelServer = new JMenuItem("Connect to LevelServer");
 		btnLevelServer.addActionListener(selectionListener);
 		btnLevelServer.setActionCommand("levelserver");
 
-		toolBar.add(btnLevelServer);
+		mainMenu.add(btnLevelServer);
 
-		JButton btnLevelEditor = new JButton("Level Editor");
+		JMenuItem btnLevelEditor = new JMenuItem("Level Editor");
 		btnLevelEditor.addActionListener(selectionListener);
 		btnLevelEditor.setActionCommand("leveleditor");
-		toolBar.add(btnLevelEditor);
+		mainMenu.add(btnLevelEditor);
 
-		JButton btnSettings = new JButton("Settings");
+		JMenuItem btnSettings = new JMenuItem("Settings");
 		btnSettings.addActionListener(selectionListener);
 		btnSettings.setActionCommand("settings");
-		toolBar.add(btnSettings);
+		mainMenu.add(btnSettings);
 
 		btnExit.addActionListener(selectionListener);
 		getContentPane().add(levels);
