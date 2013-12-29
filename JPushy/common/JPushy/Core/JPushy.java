@@ -1,7 +1,5 @@
-package JPushy;
+package JPushy.Core;
 
-import JPushy.Core.Core;
-import JPushy.Core.Game;
 import JPushy.Core.Natives.MacOSX;
 import JPushy.Core.Natives.NativeHandler;
 import JPushy.Settings.Settings;

@@ -2,8 +2,8 @@ package JPushy.Core.Natives;
 
 import javax.swing.UIManager;
 
-import JPushy.JPushy;
 import JPushy.Core.Game;
+import JPushy.Core.JPushy;
 
 public class MacOSX extends NativeHandler {
 

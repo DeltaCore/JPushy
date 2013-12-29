@@ -390,22 +390,24 @@ public class LevelLoader {
 	private static int getItemForBlock(int stage, int x, int y, String filename) {
 		ArrayList<String> content = loadLevelConfig(filename);
 		String regex = "^item=([0-9]),([0-9]),([0-9])=([0-9]);";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher("");
 		for (int i = 0; i < content.size(); i++) {
 			String line = content.get(i);
-			if (line.matches(regex)) {
-				Pattern pattern = Pattern.compile(regex);
-				Matcher matcher = pattern.matcher(line);
-				if (matcher.matches()) {
-					int id = Integer.parseInt(matcher.group(1));
-					int x1 = Integer.parseInt(matcher.group(2));
-					int y1 = Integer.parseInt(matcher.group(3));
-					int itemid = Integer.parseInt(matcher.group(4));
-					if (x1 == x && y1 == y && stage == id) {
-						if(Core.getSettings().getSettings(Core.getSettings().debug))
-							System.out.println("ID : " + id + " X: " + x + "-" + x1 + " Y: " + y + "-" + y1 + " - " + itemid);
-						return itemid;
-					}
+			matcher = pattern.matcher(line);
+			if (matcher.matches()) {
+				int id = Integer.parseInt(matcher.group(1));
+				int x1 = Integer.parseInt(matcher.group(2));
+				int y1 = Integer.parseInt(matcher.group(3));
+				int itemid = Integer.parseInt(matcher.group(4));
+				if (x1 == x && y1 == y && stage == id) {
+					if (Core.getSettings().getSettings(Core.getSettings().debug))
+						System.out.println("ID : " + id + " X: " + x + "-" + x1 + " Y: " + y + "-" + y1 + " - " + itemid);
+					return itemid;
 				}
+			} else {
+				if (Core.getSettings().getSettings(Core.getSettings().debug))
+					System.out.println("No match for line: " + line);
 			}
 		}
 		return -1;

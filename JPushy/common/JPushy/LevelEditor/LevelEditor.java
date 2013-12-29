@@ -34,7 +34,10 @@ import javax.swing.JTextField;
 import JPushy.Gui.LevelSelector;
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
+import JPushy.Types.Items.Item;
+import JPushy.Types.Items.Items;
 import JPushy.gfx.GraphicUtils;
+
 /**
  * 
  * @author Julien
@@ -76,7 +79,7 @@ public class LevelEditor extends Canvas implements MouseListener, MouseMotionLis
 	private JTextField	      name;
 	JTextField	              cLayerF	         = new JTextField("0");
 	JComboBox	                comboBox	       = new JComboBox();
-	String[]	                model	           = new String[Blocks.blockRegistry.size()];
+	String[]	                model	           = new String[Blocks.blockRegistry.size() + Items.itemRegistry.size() - 1];
 
 	private int	              tile;
 	private String	          lastTile	       = Blocks.blockRegistry.get(0).getName();
@@ -89,7 +92,10 @@ public class LevelEditor extends Canvas implements MouseListener, MouseMotionLis
 		for (int i = 0; i < Blocks.blockRegistry.size(); i++) {
 			model[i] = Blocks.blockRegistry.get(i).getName();
 		}
-
+		Items.wakeUpDummy();
+		for (int i = Blocks.blockRegistry.size(); i < Blocks.blockRegistry.size() + Items.itemRegistry.size() - 1; i++) {
+			model[i] = Items.itemRegistry.get(i - Blocks.blockRegistry.size() + 1).getName();
+		}
 		setUpGUI();
 		running = true;
 		while (running) {
@@ -110,12 +116,12 @@ public class LevelEditor extends Canvas implements MouseListener, MouseMotionLis
 		frame.setLocationRelativeTo(null);
 		frame.getContentPane().setLayout(null);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
-		
+
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
 		this.addKeyListener(new KeyListener() {
-		
+
 			@Override
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyChar() == '+') {
@@ -271,8 +277,12 @@ public class LevelEditor extends Canvas implements MouseListener, MouseMotionLis
 				for (int y = 0; y < height; y++) {
 					for (int x = 0; x < width; x++) {
 						c = (char) tiles[x][y][z];
-						c += 48;
-						writer.write(c);
+						if (!(c >= Blocks.blockRegistry.size())) {
+							c += 48;
+							writer.write(c);
+						} else {
+							writer.write("0");
+						}
 					}
 					writer.newLine();
 				}
@@ -280,6 +290,20 @@ public class LevelEditor extends Canvas implements MouseListener, MouseMotionLis
 			}
 			writer.close();
 			writer = new BufferedWriter(new FileWriter(new File("Data/lvl/" + name.getText() + ".cfg")));
+			int id = 0;
+			for (int z = 0; z < length; z++) {
+				for (int y = 0; y < height; y++) {
+					for (int x = 0; x < width; x++) {
+						c = (char) tiles[x][y][z];
+						if (c >= Blocks.blockRegistry.size()) {
+							// item=StageID,X,Y=ItemID
+							id = Items.getIdByName(model[c]);
+							writer.write("item=" + (char) (z + 48) + "," + (char) (x + 48) + "," + (char) (y + 48) + "=" + id + ";\n");
+						}
+					}
+				}
+				writer.newLine();
+			}
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -317,6 +341,7 @@ public class LevelEditor extends Canvas implements MouseListener, MouseMotionLis
 			return;
 		}
 		Block b;
+		Item i;
 		Graphics2D g = (Graphics2D) bs.getDrawGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.WHITE);
@@ -326,13 +351,24 @@ public class LevelEditor extends Canvas implements MouseListener, MouseMotionLis
 		g.scale(zoom, zoom);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				b = Blocks.getBlockById(tiles[x][y][clayer]);
-				g.drawRect(x * 16, y * 16, 16, 16);
-				g.drawImage(GraphicUtils.getImageFromPicture(b.getTexture()), x * 16, y * 16, 16, 16, null);
-				g.setFont(new Font("Arial", 0, 15));
-				Rectangle2D r = g.getFontMetrics().getStringBounds("" + tiles[x][y][clayer], g);
-				if (showBlockIds)
-					g.drawString("" + tiles[x][y][clayer], (int) ((x * 16) + (16 - r.getWidth()) / 2), (int) ((y * 16) + (13 - r.getHeight()) / 2) + 16);
+				if (tiles[x][y][clayer] >= Blocks.blockRegistry.size()) {
+					i = Items.getItemById(tiles[x][y][clayer] - Blocks.blockRegistry.size());
+					g.drawRect(x * 16, y * 16, 16, 16);
+					g.drawImage(GraphicUtils.getImageFromPicture(Blocks.air.getTexture()), x * 16, y * 16, 16, 16, null);
+					g.drawImage(GraphicUtils.getImageFromPicture(i.getTexture()), x * 16, y * 16, 16, 16, null);
+					g.setFont(new Font("Arial", 0, 15));
+					Rectangle2D r = g.getFontMetrics().getStringBounds("" + tiles[x][y][clayer], g);
+					if (showBlockIds)
+						g.drawString("I" + tiles[x][y][clayer], (int) ((x * 16) + (16 - r.getWidth()) / 2), (int) ((y * 16) + (13 - r.getHeight()) / 2) + 16);
+				} else {
+					b = Blocks.getBlockById(tiles[x][y][clayer]);
+					g.drawRect(x * 16, y * 16, 16, 16);
+					g.drawImage(GraphicUtils.getImageFromPicture(b.getTexture()), x * 16, y * 16, 16, 16, null);
+					g.setFont(new Font("Arial", 0, 15));
+					Rectangle2D r = g.getFontMetrics().getStringBounds("" + tiles[x][y][clayer], g);
+					if (showBlockIds)
+						g.drawString("" + tiles[x][y][clayer], (int) ((x * 16) + (16 - r.getWidth()) / 2), (int) ((y * 16) + (13 - r.getHeight()) / 2) + 16);
+				}
 			}
 		}
 		g.dispose();

@@ -1,6 +1,6 @@
 package JPushy.Core.Natives;
 
-import JPushy.JPushy;
+import JPushy.Core.JPushy;
 
 public abstract class NativeHandler {
 
