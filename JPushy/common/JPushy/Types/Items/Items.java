@@ -17,7 +17,7 @@ public class Items {
 
 	public static final Item	    noitem	     = new Item("noitem", -1, PictureLoader.loadImageFromFile("base.png"));
 	public static final Item	    key	         = new ItemKey("Key", 0, PictureLoader.loadImageFromFile("item.key.png"));
-	public static final Item	    mining_gun	 = new MiningGun("Mining Gun", 1, PictureLoader.loadImageFromFile("item.mining.gun.png"));
+	public static final Item	    mining_gun	 = new MiningGun("Mining Gun", 1, PictureLoader.loadImageFromFile("item.mining.gun.png")).setMaxDMG(16);
 
 	public static void registerItem(Item t) {
 		if (!checkItemId(t.getId())) {

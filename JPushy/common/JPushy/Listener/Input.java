@@ -5,7 +5,6 @@ import java.awt.event.KeyListener;
 
 import JPushy.Core.Core;
 import JPushy.Core.Game;
-import JPushy.Core.LevelScheduler;
 import JPushy.Gui.GamePanel;
 import JPushy.MultiPlayer.MPClient;
 import JPushy.Types.Blocks.Block;
@@ -19,10 +18,10 @@ public class Input implements KeyListener {
 
 	GamePanel	panel;
 	MPClient	client;
-	boolean		enter	= false;
-	boolean		flag	= false;
-	boolean debug = Core.getSettings().getSettings(Core.getSettings().debug);
-	
+	boolean	  enter	= false;
+	boolean	  flag	= false;
+	boolean	  debug	= Core.getSettings().getSettings(Core.getSettings().debug);
+
 	public Input(GamePanel p, MPClient client) {
 		this.panel = p;
 		this.client = client;
@@ -31,7 +30,7 @@ public class Input implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent arg0) { // 0 north;1 east;2 south;3 west
 		debug = Core.getSettings().getSettings(Core.getSettings().debug);
-		if(debug)
+		if (debug)
 			System.out.println("[Key] : " + arg0.getKeyCode() + " - " + arg0.getID());
 		if (!Game.getPlayer().isNextMoveCanceld()) {
 			switch (arg0.getKeyCode()) {
@@ -98,6 +97,7 @@ public class Input implements KeyListener {
 		Block b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y);
 		if (enter) {
 			Game.getPlayer().getInventory().getSlots()[Game.getPlayer().getInventory().getSelectedSlot()].getItem().onUse(Game.gameThread.getLevel().getActiveStage(), dir);
+			Game.getPlayer().getInventory().update();
 			enter = false;
 		}
 		return enter;

@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import JPushy.Types.Items.Item;
 import JPushy.Types.Items.Items;
 import JPushy.gfx.GraphicUtils;
+
 /**
  * 
  * @author Marcel Benning
@@ -54,6 +55,16 @@ public class InventorySlot {
 				g.drawImage(GraphicUtils.getImageFromPicture(getItem().getTexture()), x + 4, y + 4, 60, 60, null);
 			}
 		}
+	}
+
+	public void clear() {
+		this.setItem(Items.noitem);
+		this.setAmount(0);
+	}
+
+	@Override
+	public String toString() {
+		return "[" + this.getItem().getName() + "|" + this.getItem().getId() + "|" + this.getAmount() + "]";
 	}
 
 }

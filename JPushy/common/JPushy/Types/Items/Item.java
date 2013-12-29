@@ -3,6 +3,7 @@ package JPushy.Types.Items;
 import JPushy.Core.Game;
 import JPushy.Types.Level.Stage;
 import JPushy.Types.gfx.Picture;
+
 /**
  * 
  * @author Marcel Benning
@@ -39,56 +40,63 @@ public class Item {
 		return name;
 	}
 
-	public void setName(String name) {
+	public Item setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	public int getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public Item setId(int id) {
 		this.id = id;
+		return this;
 	}
 
 	public Picture getTexture() {
 		return texture;
 	}
 
-	public void setTexture(Picture texture) {
+	public Item setTexture(Picture texture) {
 		this.texture = texture;
+		return this;
 	}
 
 	public boolean isDamageBar() {
 		return damageBar;
 	}
 
-	public void setDamageBar(boolean damageBar) {
+	public Item setDamageBar(boolean damageBar) {
 		this.damageBar = damageBar;
+		return this;
 	}
 
 	public int getMaxDMG() {
 		return maxDMG;
 	}
 
-	public void setMaxDMG(int maxDMG) {
+	public Item setMaxDMG(int maxDMG) {
 		this.maxDMG = maxDMG;
+		return this.setDamageBar(true);
 	}
 
 	public int getDmg() {
 		return dmg;
 	}
 
-	public void setDmg(int dmg) {
+	public Item setDmg(int dmg) {
 		this.dmg = dmg;
+		return this;
 	}
 
 	public int getMaxStackSize() {
 		return maxStackSize;
 	}
 
-	public void setMaxStackSize(int maxStackSize) {
+	public Item setMaxStackSize(int maxStackSize) {
 		this.maxStackSize = maxStackSize;
+		return this;
 	}
 
 	public void init() {

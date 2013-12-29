@@ -5,6 +5,7 @@ import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
 import JPushy.Types.Level.Stage;
 import JPushy.Types.gfx.Picture;
+
 /**
  * 
  * @author Marcel Benning
@@ -27,30 +28,41 @@ public class MiningGun extends Item {
 		super.onUse(stage, dir);
 		int y = Game.getPlayer().getY();
 		int x = Game.getPlayer().getX();
+		boolean flag = false;
 		Block b = Blocks.getBlockById(0);
 		if (dir == 0) {
 			b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y - 1);
 			if (b.isDestroyable()) {
 				stage.getBlock(x, y - 1).onDestroy();
 				stage.destroyBlock(x, y - 1);
+				flag = true;
 			}
 		} else if (dir == 1) {
 			b = Game.gameThread.getLevel().getActiveStage().getBlock(x + 1, y);
 			if (b.isDestroyable()) {
 				stage.getBlock(x + 1, y).onDestroy();
 				stage.destroyBlock(x + 1, y);
+				flag = true;
 			}
 		} else if (dir == 2) {
 			b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y + 1);
 			if (b.isDestroyable()) {
 				stage.getBlock(x, y + 1).onDestroy();
 				stage.destroyBlock(x, y + 1);
+				flag = true;
 			}
 		} else if (dir == 3) {
 			b = Game.gameThread.getLevel().getActiveStage().getBlock(x - 1, y);
 			if (b.isDestroyable()) {
 				stage.getBlock(x - 1, y).onDestroy();
 				stage.destroyBlock(x - 1, y);
+				flag = true;
+			}
+		}
+		if (flag) {
+			Game.getPlayer().getInventory().getItemInHand().setDmg(Game.getPlayer().getInventory().getItemInHand().getDmg() + 1);
+			if (this.getDmg() >= this.getMaxDMG()) {
+				Game.getPlayer().getInventory().removeItemInHand();
 			}
 		}
 	}
