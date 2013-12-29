@@ -126,7 +126,7 @@ public class GamePanel extends JPanel {
 		}
 		// Draw player
 		try {
-			ArrayList<Player> players = level.getMultiPlayerServer().cmdHandler.getPlayers();
+			ArrayList<Player> players = level.getGame().getMpServer().cmdHandler.getPlayers();
 			for (Player pl : players) {
 				g.drawImage(GraphicUtils.getImageFromPicture(pl.getTexture()), pl.getX() * 40, pl.getY() * 40, null);
 			}

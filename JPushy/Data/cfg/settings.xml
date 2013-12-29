@@ -4,5 +4,5 @@
 <comment>JPushy settings file</comment>
 <entry key="debug">false</entry>
 <entry key="defaultUpdateServer">http://devgensoft.de</entry>
-<entry key="defaultLevelServer">devgensoft.de</entry>
+<entry key="defaultLevelServer">localhost</entry>
 </properties>

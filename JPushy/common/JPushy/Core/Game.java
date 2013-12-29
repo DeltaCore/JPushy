@@ -3,6 +3,7 @@ package JPushy.Core;
 import JPushy.Gui.LevelSelector;
 import JPushy.LevelServer.LevelServer;
 import JPushy.MultiPlayer.MPClient;
+import JPushy.MultiPlayer.MPServer;
 import JPushy.Types.Level.Level;
 import JPushy.Types.Player.Player;
 
@@ -13,12 +14,14 @@ import JPushy.Types.Player.Player;
  */
 public class Game extends Thread {
 
-	public static final String		name	= "J-Pushy";
-	public static final String		version	= "0.0.3 b9";
+	public static final String	 name	   = "J-Pushy";
+	public static final String	 version	= "0.0.3 b9";
 
-	static LevelSelector			s;
+	static LevelSelector	       s;
 	public static LevelScheduler	gameThread;
-	public static LevelServer		levelServer;
+	public static LevelServer	   levelServer;
+	public MPServer	             mpServer;
+	public static MPClient	     client;
 
 	public Game(String[] args) {
 		for (int i = 0; i < args.length; i++)
@@ -34,11 +37,15 @@ public class Game extends Thread {
 						levelServer = new LevelServer();
 					}
 				} else {
+					this.setMpServer(new MPServer());
+					this.setClient(new MPClient(this.getMpServer()));
 					s = new LevelSelector(this);
 					s.setVisible(true);
 				}
 			}
-		}else{
+		} else {
+			this.setMpServer(new MPServer());
+			this.setClient(new MPClient(this.getMpServer()));
 			System.out.println("No arguments");
 			s = new LevelSelector(this);
 			s.setVisible(true);
@@ -79,10 +86,7 @@ public class Game extends Thread {
 	}
 
 	public void loadLevel(String level) {
-		try{
-			gameThread.multiPlayerServer.stop();
-		}catch(Exception e){}
-		gameThread = new LevelScheduler(level);
+		gameThread = new LevelScheduler(level, this.getMpServer(), this);
 		gameThread.start();
 	}
 
@@ -94,12 +98,28 @@ public class Game extends Thread {
 
 	public void loadLevel(String ip, int i) {
 		System.out.println("");
-		gameThread = new LevelScheduler(ip, i);
+		gameThread = new LevelScheduler(ip, i, this.getMpClient(), this.getMpServer(), this);
 		gameThread.start();
 	}
 
+	public MPServer getMpServer() {
+		return mpServer;
+	}
+
+	public void setMpServer(MPServer mpServer) {
+		this.mpServer = mpServer;
+	}
+
+	public void setClient(MPClient client) {
+		this.client = client;
+	}
+
+	public MPClient getMpClient() {
+		return this.client;
+	}
+
 	public static MPClient getClient() {
-		return gameThread.client;
+		return client;
 	}
 
 }
