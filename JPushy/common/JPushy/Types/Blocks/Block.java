@@ -18,23 +18,24 @@ import JPushy.Types.gfx.Picture;
  */
 public class Block extends Object implements Cloneable {
 
-	private int		id;
+	private int	    id;
 	private Picture	img;
 	private String	name;
 	private boolean	playerAbleToWalkOn;
 	private boolean	solid;
 	private boolean	visible;
-	private Block	invincebleBlock;
+	private Block	  invincebleBlock;
 	private boolean	switchable;
 	private boolean	lever;
 	private boolean	ocupied;
 	private boolean	destroyable;
 	private boolean	register;
-	private Block	occupiedByBlock;
-	private Item	keptItem		= Items.noitem;
-	private Sound	sound;
+	private Block	  occupiedByBlock;
+	private Item	  keptItem	    = Items.noitem;
+	private Sound	  sound;
 	private boolean	bSound;
 	private boolean	canGetocupied	= false;
+	private boolean	movable	      = false;
 
 	public Block(Block b) {
 		this.id = b.getId();
@@ -227,6 +228,14 @@ public class Block extends Object implements Cloneable {
 	public Block setCanGetocupied(boolean canGetocupied) {
 		this.canGetocupied = canGetocupied;
 		return this;
+	}
+
+	public boolean isMovable() {
+		return movable;
+	}
+
+	public void setMovable(boolean movable) {
+		this.movable = movable;
 	}
 
 	public void init() {

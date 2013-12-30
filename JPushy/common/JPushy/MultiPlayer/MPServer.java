@@ -151,6 +151,7 @@ public class MPServer extends Thread {
 					}
 				}
 			}
+			System.out.println("MpServer terminated.");
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}

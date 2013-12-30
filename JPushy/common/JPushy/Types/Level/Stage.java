@@ -3,6 +3,7 @@ package JPushy.Types.Level;
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
 import JPushy.Types.Player.Player;
+
 /**
  * 
  * @author Marcel Benning
@@ -10,14 +11,15 @@ import JPushy.Types.Player.Player;
  */
 public class Stage {
 
-	private int id = 0;
-	private int homeX = 0, homeY = 0;
-	private Block[][] blocks;
-	
+	private int	      id	= 0;
+	private int	      homeX	= 0, homeY = 0;
+	private Block[][]	blocks;
+	private Block[][]	movableBlocks;
+
 	public Stage(int id) {
 		this.id = id;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -33,19 +35,19 @@ public class Stage {
 	public void setBlocks(Block[][] blocks) {
 		this.blocks = blocks;
 	}
-	
-	public void setBlock(int x, int y, Block b){
+
+	public void setBlock(int x, int y, Block b) {
 		blocks[y][x] = b;
 	}
-	
-	public Block getBlock(int x, int y){
+
+	public Block getBlock(int x, int y) {
 		return blocks[y][x];
 	}
 
 	public int getHomeX() {
 		return homeX;
 	}
-	
+
 	public void setHomeX(int homeX) {
 		this.homeX = homeX;
 	}
@@ -57,14 +59,22 @@ public class Stage {
 	public void setHomeY(int homeY) {
 		this.homeY = homeY;
 	}
-	
-	public void init(Player p){
+
+	public Block[][] getMovableBlocks() {
+		return movableBlocks;
+	}
+
+	public void setMovableBlocks(Block[][] movableBlocks) {
+		this.movableBlocks = movableBlocks;
+	}
+
+	public void init(Player p) {
 		p.setX(homeX);
 		p.setY(homeY);
 	}
-	
-	public void destroyBlock(int x, int y){
+
+	public void destroyBlock(int x, int y) {
 		this.setBlock(x, y, Blocks.getBlockById(Blocks.air.getId()));
 	}
-	
+
 }

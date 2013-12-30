@@ -34,6 +34,8 @@ public class LevelScheduler extends Thread {
 	public LevelScheduler(String filename, MPServer server, Game game) {
 		this.setGame(game);
 		this.filename = filename;
+		this.getGame().setMpServer(new MPServer());
+		this.getGame().setClient(new MPClient(this.getGame().getMpServer()));
 		isRunning = true;
 		setLevel(LevelLoader.loadLevelFromFile(filename));
 		System.out.println("Levelfile : " + getFilename());
@@ -68,7 +70,6 @@ public class LevelScheduler extends Thread {
 	@Override
 	public void run() {
 		// l.update();
-		this.getGame().getMpServer().start();
 		mainFrame = new MainFrame(this.getGame(), this, p);
 		// mainFrame.setSize(l.getSize(10, 10, 18));
 		mainFrame.setTitle(getLevel().getName() + " V" + getLevel().getVersion());

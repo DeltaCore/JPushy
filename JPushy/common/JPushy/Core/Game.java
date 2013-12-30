@@ -37,15 +37,11 @@ public class Game extends Thread {
 						levelServer = new LevelServer();
 					}
 				} else {
-					this.setMpServer(new MPServer());
-					this.setClient(new MPClient(this.getMpServer()));
 					s = new LevelSelector(this);
 					s.setVisible(true);
 				}
 			}
 		} else {
-			this.setMpServer(new MPServer());
-			this.setClient(new MPClient(this.getMpServer()));
 			System.out.println("No arguments");
 			s = new LevelSelector(this);
 			s.setVisible(true);
@@ -91,13 +87,13 @@ public class Game extends Thread {
 	}
 
 	public static void stopGame() {
+		gameThread.getGame().getMpServer().setRunning(false);
 		gameThread.setRunning(false);
 		gameThread.dispose();
 		gameThread = new LevelScheduler();
 	}
 
 	public void loadLevel(String ip, int i) {
-		System.out.println("");
 		gameThread = new LevelScheduler(ip, i, this.getMpClient(), this.getMpServer(), this);
 		gameThread.start();
 	}

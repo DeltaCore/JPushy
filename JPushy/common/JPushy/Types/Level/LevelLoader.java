@@ -30,6 +30,7 @@ public class LevelLoader {
 		Blocks.wakeUpDummy();
 		String line;
 		Block[][] blocks = null;
+		Block[][] moveableBlocks = null;
 		Level l = new Level();
 		l.setFileName(filename);
 		ArrayList<String> lines = loadLevelFile(filename);
@@ -119,6 +120,7 @@ public class LevelLoader {
 					stageId = id;
 				}
 				blocks = new Block[levelSizes[stageId][1]][levelSizes[stageId][0]];
+				moveableBlocks = new Block[levelSizes[stageId][1]][levelSizes[stageId][0]];
 				System.out.println("Levelsize : x: " + levelSizes[stageId][0] + " y:" + levelSizes[stageId][1]);
 				stage = new Stage(stageId);
 				yCounter = -1;
@@ -193,6 +195,7 @@ public class LevelLoader {
 		String commentStart = "^<comment>";
 		String commentEnd = "^</comment>";
 		BlockList blocks = new BlockList();
+		BlockList secondLayer = new BlockList();
 
 		int currentStageId = 0;
 		boolean flag = false;
@@ -230,6 +233,7 @@ public class LevelLoader {
 				int width = getStageWidth(lines, currentStageId);
 				int height = getStageLength(lines, currentStageId);
 				blocks.init(width, height);
+				secondLayer.init(width, height);
 				if (debug)
 					System.out.println("Levelsize : x: " + width + " y:" + height);
 				currentStage = new Stage(currentStageId);
