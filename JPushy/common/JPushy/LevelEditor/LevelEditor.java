@@ -22,6 +22,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -46,45 +47,49 @@ import JPushy.gfx.GraphicUtils;
  * 
  */
 public class LevelEditor extends Canvas implements MouseListener, MouseMotionListener, MouseWheelListener {
-	private static final long	serialVersionUID	= 1L;
+	private static final long	    serialVersionUID	= 1L;
 
-	private JFrame	          frame;
-	private boolean	          running;
-	private JTextField	      xsize;
-	private JTextField	      ysize;
-	private JTextField	      layers;
+	private JFrame	              frame;
+	private boolean	              running;
+	private JTextField	          xsize;
+	private JTextField	          ysize;
+	private JTextField	          layers;
 
-	private static final Font	font	           = new Font("Verdana", 1, 18);
+	private static final Font	    font	           = new Font("Verdana", 1, 18);
 
-	private int	              width	           = 8;
-	private int	              height	         = 8;
-	private int	              length	         = 1;
+	private int	                  width	           = 8;
+	private int	                  height	         = 8;
+	private int	                  length	         = 1;
 
-	private double	          zoom	           = 1;
+	private double	              zoom	           = 1;
 
-	private float	            xOff;
-	private float	            yOff;
-	private int	              clayer	         = 0;
+	private float	                xOff;
+	private float	                yOff;
+	private int	                  clayer	         = 0;
 
-	private float	            lmx;
-	private float	            lmy;
+	private float	                lmx;
+	private float	                lmy;
 
-	private boolean[]	        mouse	           = new boolean[12];
+	private boolean[]	            mouse	           = new boolean[12];
 
-	private boolean	          showBlockIds	   = false;
+	private boolean	              showBlockIds	   = false;
 
-	private int[][][]	        tiles	           = new int[8][8][1];
+	private int[][][]	            tiles	           = new int[8][8][1];
+	private int	                  selectedTileX	   = 0;
+	private int	                  selectedTileY	   = 0;
+	private int	                  selectedTileZ	   = 0;
+	private HashMap<int[], int[]>	tileoptions	     = new HashMap<int[], int[]>();
 
-	private JButton	          save;
-	private JTextField	      name;
-	JTextField	              cLayerF	         = new JTextField("0");
-	JComboBox	                comboBox	       = new JComboBox();
-	String[]	                model	           = new String[Blocks.blockRegistry.size() + Items.itemRegistry.size() - 1];
+	private JButton	              save;
+	private JTextField	          name;
+	JTextField	                  cLayerF	         = new JTextField("0");
+	JComboBox	                    comboBox	       = new JComboBox();
+	String[]	                    model	           = new String[Blocks.blockRegistry.size() + Items.itemRegistry.size() - 1];
 
-	private int	              tile;
-	private String	          lastTile	       = Blocks.blockRegistry.get(0).getName();
+	private int	                  tile;
+	private String	              lastTile	       = Blocks.blockRegistry.get(0).getName();
 
-	private LevelSelector	    selector;
+	private LevelSelector	        selector;
 
 	public LevelEditor(LevelSelector selector) {
 		this.selector = selector;

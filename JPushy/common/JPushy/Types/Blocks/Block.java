@@ -8,7 +8,6 @@ import JPushy.Types.Items.Items;
 import JPushy.Types.Level.Level;
 import JPushy.Types.Level.Stage;
 import JPushy.Types.Player.Player;
-import JPushy.Types.Sound.Sound;
 import JPushy.Types.gfx.Picture;
 
 /**
@@ -19,7 +18,7 @@ import JPushy.Types.gfx.Picture;
 public class Block extends Object implements Cloneable {
 
 	private int	    id;
-	private Picture	img;
+	private Picture	texture;
 	private String	name;
 	private boolean	playerAbleToWalkOn;
 	private boolean	solid;
@@ -31,15 +30,14 @@ public class Block extends Object implements Cloneable {
 	private boolean	destroyable;
 	private boolean	register;
 	private Block	  occupiedByBlock;
-	private Item	  keptItem	    = Items.noitem;
-	private Sound	  sound;
-	private boolean	bSound;
-	private boolean	canGetocupied	= false;
-	private boolean	movable	      = false;
+	private Item	  keptItem	     = Items.noitem;
+	private boolean	canGetocupied	 = false;
+	private boolean	movable	       = false;
+	private boolean	optionRequired	= false;
 
 	public Block(Block b) {
 		this.id = b.getId();
-		this.img = b.getTexture();
+		this.texture = b.getTexture();
 		this.name = b.getName();
 		this.playerAbleToWalkOn = b.isPlayerAbleToWalkOn();
 		this.solid = b.isSolid();
@@ -55,7 +53,7 @@ public class Block extends Object implements Cloneable {
 
 	public Block(String name, int id, Picture img, boolean register) {
 		this.id = id;
-		this.img = img;
+		this.texture = img;
 		this.name = name;
 		this.playerAbleToWalkOn = true;
 		this.solid = true;
@@ -64,35 +62,7 @@ public class Block extends Object implements Cloneable {
 		this.destroyable = false;
 		this.register = register;
 		this.keptItem = Items.noitem;
-		this.bSound = false;
 		this.init();
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public Block setId(int id) {
-		this.id = id;
-		return this;
-	}
-
-	public Picture getTexture() {
-		return img;
-	}
-
-	public Block setTexture(Picture img) {
-		this.img = img;
-		return this;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public Block setName(String name) {
-		this.name = name;
-		return this;
 	}
 
 	@Override
@@ -101,141 +71,275 @@ public class Block extends Object implements Cloneable {
 		// return this.name + "[" + this.id + "]:" + super.toString() + ";";
 	}
 
-	public boolean isVisible() {
-		return visible;
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
 	}
 
-	public Block setVisible(boolean visible) {
-		this.visible = visible;
+	/**
+	 * @param id
+	 *          the id to set
+	 */
+	public Block setId(int id) {
+		this.id = id;
 		return this;
 	}
 
-	public Block getInvincebleBlock() {
-		return invincebleBlock;
+	/**
+	 * @return the texture
+	 */
+	public Picture getTexture() {
+		return texture;
 	}
 
-	public Block setInvincebleBlock(Block invincebleBlock) {
-		this.invincebleBlock = invincebleBlock;
+	/**
+	 * @param texture
+	 *          the texture to set
+	 */
+	public Block setTexture(Picture texture) {
+		this.texture = texture;
 		return this;
 	}
 
-	/* Interact methods */
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
+	/**
+	 * @param name
+	 *          the name to set
+	 */
+	public Block setName(String name) {
+		this.name = name;
+		return this;
+	}
+
+	/**
+	 * @return the playerAbleToWalkOn
+	 */
 	public boolean isPlayerAbleToWalkOn() {
 		return playerAbleToWalkOn;
 	}
 
+	/**
+	 * @param playerAbleToWalkOn
+	 *          the playerAbleToWalkOn to set
+	 */
 	public Block setPlayerAbleToWalkOn(boolean playerAbleToWalkOn) {
 		this.playerAbleToWalkOn = playerAbleToWalkOn;
 		return this;
 	}
 
+	/**
+	 * @return the solid
+	 */
 	public boolean isSolid() {
 		return solid;
 	}
 
+	/**
+	 * @param solid
+	 *          the solid to set
+	 */
 	public Block setSolid(boolean solid) {
 		this.solid = solid;
 		return this;
 	}
 
+	/**
+	 * @return the visible
+	 */
+	public boolean isVisible() {
+		return visible;
+	}
+
+	/**
+	 * @param visible
+	 *          the visible to set
+	 */
+	public Block setVisible(boolean visible) {
+		this.visible = visible;
+		return this;
+	}
+
+	/**
+	 * @return the invincebleBlock
+	 */
+	public Block getInvincebleBlock() {
+		return invincebleBlock;
+	}
+
+	/**
+	 * @param invincebleBlock
+	 *          the invincebleBlock to set
+	 */
+	public Block setInvincebleBlock(Block invincebleBlock) {
+		this.invincebleBlock = invincebleBlock;
+		return this;
+	}
+
+	/**
+	 * @return the switchable
+	 */
 	public boolean isSwitchable() {
 		return switchable;
 	}
 
+	/**
+	 * @param switchable
+	 *          the switchable to set
+	 */
 	public Block setSwitchable(boolean switchable) {
 		this.switchable = switchable;
 		return this;
 	}
 
+	/**
+	 * @return the lever
+	 */
 	public boolean isLever() {
 		return lever;
 	}
 
-	public Block setLever(boolean lever) {
+	/**
+	 * @param lever
+	 *          the lever to set
+	 */
+	public void setLever(boolean lever) {
 		this.lever = lever;
-		return this;
 	}
 
-	public Block getOccupiedByBlock() {
-		return occupiedByBlock;
-	}
-
+	/**
+	 * @return the ocupied
+	 */
 	public boolean isOcupied() {
 		return ocupied;
 	}
 
+	/**
+	 * @param ocupied
+	 *          the ocupied to set
+	 */
 	public Block setOcupied(boolean ocupied) {
 		this.ocupied = ocupied;
 		return this;
 	}
 
-	public Block setOccupiedByBlock(Block occupiedByBlock) {
-		this.occupiedByBlock = occupiedByBlock;
-		return this;
-	}
-
+	/**
+	 * @return the destroyable
+	 */
 	public boolean isDestroyable() {
 		return destroyable;
 	}
 
+	/**
+	 * @param destroyable
+	 *          the destroyable to set
+	 */
 	public Block setDestroyable(boolean destroyable) {
 		this.destroyable = destroyable;
 		return this;
 	}
 
-	public Item getKeptItem() {
-		return keptItem;
-	}
-
-	public void setKeptItem(Item keptItem) {
-		this.keptItem = keptItem;
-	}
-
+	/**
+	 * @return the register
+	 */
 	public boolean isRegister() {
 		return register;
 	}
 
+	/**
+	 * @param register
+	 *          the register to set
+	 */
 	public Block setRegister(boolean register) {
 		this.register = register;
 		return this;
 	}
 
-	public Sound getSound() {
-		return sound;
+	/**
+	 * @return the occupiedByBlock
+	 */
+	public Block getOccupiedByBlock() {
+		return occupiedByBlock;
 	}
 
-	public Block setSound(Sound sound) {
-		this.sound = sound;
-		this.bSound = true;
+	/**
+	 * @param occupiedByBlock
+	 *          the occupiedByBlock to set
+	 */
+	public Block setOccupiedByBlock(Block occupiedByBlock) {
+		this.occupiedByBlock = occupiedByBlock;
 		return this;
 	}
 
-	public boolean hasSound() {
-		return bSound;
+	/**
+	 * @return the keptItem
+	 */
+	public Item getKeptItem() {
+		return keptItem;
 	}
 
-	public void playSound() {
-		if (hasSound()) {
-			sound.play();
-		}
+	/**
+	 * @param keptItem
+	 *          the keptItem to set
+	 */
+	public Block setKeptItem(Item keptItem) {
+		this.keptItem = keptItem;
+		return this;
 	}
 
-	public boolean canGetocupied() {
+	/**
+	 * @return the canGetocupied
+	 */
+	public boolean isCanGetocupied() {
 		return canGetocupied;
 	}
 
+	/**
+	 * @param canGetocupied
+	 *          the canGetocupied to set
+	 */
 	public Block setCanGetocupied(boolean canGetocupied) {
 		this.canGetocupied = canGetocupied;
 		return this;
 	}
 
+	/**
+	 * @return the movable
+	 */
 	public boolean isMovable() {
 		return movable;
 	}
 
-	public void setMovable(boolean movable) {
+	/**
+	 * @param movable
+	 *          the movable to set
+	 */
+	public Block setMovable(boolean movable) {
 		this.movable = movable;
+		return this;
+	}
+
+	/**
+	 * @return the optionRequired
+	 */
+	public boolean isOptionRequired() {
+		return optionRequired;
+	}
+
+	/**
+	 * @param optionRequired
+	 *          the optionRequired to set
+	 */
+	public Block setOptionRequired(boolean optionRequired) {
+		this.optionRequired = optionRequired;
+		return this;
 	}
 
 	public void init() {
@@ -252,7 +356,6 @@ public class Block extends Object implements Cloneable {
 	}
 
 	public void onWalk(int x, int y, Level l) {
-		// System.out.println(this.toString());
 		Item item = this.getKeptItem();
 		if (item != null) {
 			boolean pickup = Game.getPlayer().getInventory().addItem(item);

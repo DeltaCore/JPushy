@@ -153,7 +153,7 @@ public class Launcher extends JFrame {
 		}
 	}
 
-	public void readLevel(String filename) {
+	public LevelItem readLevel(String filename) {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(new File(filename)));
 			String line = "";
@@ -165,16 +165,27 @@ public class Launcher extends JFrame {
 
 			Pattern commentEnd = Pattern.compile(commentEndRegEx);
 			Matcher commentEndMatcher = level.matcher("");
+			boolean flag = false;
 			while ((line = reader.readLine()) != null) {
 				levelMatcher = level.matcher(line);
 				commentStartMatcher = commentStart.matcher(line);
 				commentEndMatcher = commentEnd.matcher(line);
+				if (levelMatcher.matches()) {
+
+				}
+				if (commentStartMatcher.matches()) {
+					flag = true;
+				}
+				if (commentEndMatcher.matches()) {
+					flag = false;
+				}
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	public JMenuBar getMainBar() {
@@ -263,6 +274,42 @@ public class Launcher extends JFrame {
 
 	public void setGeneralUpdates(JMenuItem generalUpdates) {
 		this.generalUpdates = generalUpdates;
+	}
+
+	private class LevelItem {
+
+		String	name	= "", version = "", comment = "";
+
+		public LevelItem(String name, String version, String comment) {
+			this.setName(name);
+			this.setVersion(version);
+			this.setComment(comment);
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getVersion() {
+			return version;
+		}
+
+		public void setVersion(String version) {
+			this.version = version;
+		}
+
+		public String getComment() {
+			return comment;
+		}
+
+		public void setComment(String comment) {
+			this.comment = comment;
+		}
+
 	}
 
 }
