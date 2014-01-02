@@ -39,7 +39,7 @@ public class Blocks {
 	public static final Block	     TeleportExit	  = new Block("Teleporter", 21, PictureLoader.loadImageFromFile("teleportend.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true);
 	public static final Block	     bricks	        = new Block("BrickFloor", 22, PictureLoader.loadImageFromFile("brick.png")).setPlayerAbleToWalkOn(false).setSolid(true).setDestroyable(true).setVisible(true);
 	public static final Block	     blockDoor	    = new BlockDoor("Door", 23, PictureLoader.loadImageFromFile("door_close.png"));
-	public static final Block	     gate	          = new Gate("Gate", 24, PictureLoader.loadImageFromFile("gate.png")).setDestroyable(false).setPlayerAbleToWalkOn(false).setSolid(true).setInvincebleBlock(Blocks.getBlockById(0)).setVisible(true);
+	public static final Block	     gate	          = new Gate("Gate", 24, PictureLoader.loadImageFromFile("gate.png")).setDestroyable(true).setPlayerAbleToWalkOn(false).setSolid(true).setInvincebleBlock(Blocks.getBlockById(0)).setVisible(true);
 	public static final Block	     lever	        = new SwitchBlock("Lever", 25, PictureLoader.loadImageFromFile("leverOn.png"), PictureLoader.loadImageFromFile("leverOff.png")).setDestroyable(false).setSolid(true).setPlayerAbleToWalkOn(true);
 	public static final Block	     button	        = new Button("Button", 26, PictureLoader.loadImageFromFile("button.png")).setDestroyable(false).setSolid(true).setPlayerAbleToWalkOn(true).setCanGetocupied(true);
 
@@ -48,7 +48,7 @@ public class Blocks {
 	public static void registerBlock(Block b) {
 		if (!checkBlockId(b.getId())) {
 			blockRegistry.add(b);
-			System.out.println("[BlockRegistry] New block : " + b.getName() + ":" + b.getId());
+			System.out.println("[BlockRegistry] New block : " + b.getName() + ":" + b.getId() + " | Char : " + (char) (b.getId() + 48));
 		} else {
 			System.out.println("Could'n register block : " + b.getName() + " with id : " + b.getId());
 		}

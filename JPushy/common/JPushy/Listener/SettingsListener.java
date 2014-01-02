@@ -3,28 +3,28 @@ package JPushy.Listener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import JPushy.Core.Core;
 import JPushy.Gui.SettingsGui;
+
 /**
  * 
  * @author Marcel Benning
  * 
  */
 public class SettingsListener implements ActionListener {
-	
-	String cmd;
-	
-	public SettingsGui gui;
-	
+
+	String	           cmd;
+
+	public SettingsGui	gui;
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		cmd = e.getActionCommand();
-		if(cmd.equalsIgnoreCase("save")){
+		if (cmd.equalsIgnoreCase("save")) {
 			saveSettings();
-		}else if(cmd.equalsIgnoreCase("exit")){
+		} else if (cmd.equalsIgnoreCase("exit")) {
 			saveSettings();
 			gui.setVisible(false);
-		}else if(cmd.equalsIgnoreCase("exit_nosave")){
+		} else if (cmd.equalsIgnoreCase("exit_nosave")) {
 			gui.setVisible(false);
 		}
 	}
@@ -33,11 +33,14 @@ public class SettingsListener implements ActionListener {
 		this.gui = gui;
 	}
 
-	private void saveSettings(){
-		Core.getSettings().setSetting(Core.getSettings().debug, gui.chckbxDebugMode.isSelected());
-		Core.getSettings().setSetting(Core.getSettings().defaultLevelServer, gui.lvlServer.getText());
-		Core.getSettings().setSetting(Core.getSettings().defaultUpdateServer, gui.updateServer.getText());
-		Core.getSettings().save();
+	private void saveSettings() {
+		// Core.getSettings().setSetting(Core.getSettings().debug,
+		// gui.chckbxDebugMode.isSelected());
+		// Core.getSettings().setSetting(Core.getSettings().defaultLevelServer,
+		// gui.lvlServer.getText());
+		// Core.getSettings().setSetting(Core.getSettings().defaultUpdateServer,
+		// gui.updateServer.getText());
+		// Core.getSettings().save();
 	}
-	
+
 }

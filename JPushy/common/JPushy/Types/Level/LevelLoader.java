@@ -5,18 +5,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import JPushy.Core.Core;
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
-import JPushy.Types.Blocks.Button;
-import JPushy.Types.Blocks.TeleportBase;
 import JPushy.Types.Items.Items;
 import JPushy.Types.ProgammingRelated.BlockList;
-import JPushy.gfx.PictureLoader;
 
 /**
  * 
@@ -26,166 +21,12 @@ import JPushy.gfx.PictureLoader;
 
 public class LevelLoader {
 
-	public static Level loadLevelFromFile_old(String filename) {
-		Blocks.wakeUpDummy();
-		String line;
-		Block[][] blocks = null;
-		Block[][] moveableBlocks = null;
-		Level l = new Level();
-		l.setFileName(filename);
-		ArrayList<String> lines = loadLevelFile(filename);
-		ArrayList<String> cfgLines = loadLevelConfig(filename);
-		int x = 0, y = 0;
-
-		String start_regex = "^<stage id=([0-9])>$";
-		String end_regex = "^</stage>";
-		String levelRegEx = "^^<level name=\"([a-zA-Z\\s]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
-		String commentStart = "^<comment>";
-		String commentEnd = "^</comment>";
-
-		Random r = new Random();
-
-		int levelSizes[][] = new int[32][2];
-		int stageCid = 0;
-		boolean flag = false;
-		int startY = 0;
-		int bX = 0;
-		boolean comment = false;
-		String Comment = "";
-		for (int i = 0; i < lines.size(); i++) {
-			line = lines.get(i);
-			if (comment) {
-				if (line.matches(commentEnd)) {
-
-				} else {
-					l.addComment(line);
-					System.out.println("[Comment] New comment line : " + line);
-				}
-			}
-			if (line.matches(commentStart)) {
-				comment = true;
-			} else if (line.matches(commentEnd)) {
-				comment = false;
-			} else if (line.matches(levelRegEx)) {
-				System.out.println("Yes !!!");
-				Pattern pattern = Pattern.compile(levelRegEx);
-				Matcher matcher = pattern.matcher(line);
-				if (matcher.matches()) {
-					String name = matcher.group(1);
-					String version = matcher.group(2);
-					System.out.println("Level : " + line + String.format("%n") + "Name : " + name + " version : " + version);
-					l.setName(name);
-					l.setVersion(version);
-				}
-			} else if (line.matches(start_regex)) {
-				flag = true;
-				Pattern pattern = Pattern.compile(start_regex);
-				Matcher matcher = pattern.matcher(line);
-				if (matcher.matches()) {
-					int id = Integer.parseInt(matcher.group(1));
-					stageCid = id;
-				}
-			} else if (line.matches(end_regex)) {
-				flag = false;
-				levelSizes[stageCid][0] = bX;
-				levelSizes[stageCid][1] = startY;
-				startY = 0;
-				bX = 0;
-			}
-			bX = 0;
-			int le = line.length();
-			bX = le;
-			y++;
-			startY++;
-		}
-		blocks = new Block[1][1];
-		System.out.println("Level data : ");
-		// System.out.println("Lines : ");
-		// for(int i = 0;i<lines.size();i++) System.out.println(lines.get(i));
-		// System.out.println();
-		// http://rubular.com/r/ypQuk06b0u
-		flag = false;
-		int stageId = -1;
-		Stage stage = null;
-		int yCounter = 0;
-		Block b;
-		for (int i = 0; i < lines.size(); i++) {
-			line = lines.get(i);
-			if (line.matches(start_regex)) {
-				flag = true;
-				Pattern pattern = Pattern.compile(start_regex);
-				Matcher matcher = pattern.matcher(line);
-				if (matcher.matches()) {
-					int id = Integer.parseInt(matcher.group(1));
-					stageId = id;
-				}
-				blocks = new Block[levelSizes[stageId][1]][levelSizes[stageId][0]];
-				moveableBlocks = new Block[levelSizes[stageId][1]][levelSizes[stageId][0]];
-				System.out.println("Levelsize : x: " + levelSizes[stageId][0] + " y:" + levelSizes[stageId][1]);
-				stage = new Stage(stageId);
-				yCounter = -1;
-			} else if (line.matches(end_regex)) {
-				stage.setBlocks(blocks);
-				l.registerStage(stage);
-				flag = false;
-				yCounter = -1;
-			} else if (flag) {
-				int le = line.length();
-				// System.out.println("Line : " + line + " length : " + le);
-				for (int j = 0; j < le; j++) {
-					char c = line.charAt(j);
-					try {
-						int val = c - 48;
-						b = Blocks.getBlockById(0);
-						System.out.println("Block id : " + val);
-						if (val == Blocks.TeleportBase.getId()) {
-							TeleportBase base = (TeleportBase) new TeleportBase("Teleporter", Blocks.TeleportBase.getId(), PictureLoader.loadImageFromFile("teleportbase.png")).setDestroyable(false).setSolid(true).setPlayerAbleToWalkOn(true);
-							int[] cfgCords = checkCFGCords(cfgLines, stageId, j, yCounter);
-							if (cfgCords[0] == 0 && cfgCords[1] == 0) {
-							} else {
-								base.setEndX(cfgCords[0]);
-								base.setEndY(cfgCords[1]);
-								b = base;
-							}
-						} else if (val == Blocks.button.getId()) {
-							Button base = (Button) new Button("Button", Blocks.button.getId(), PictureLoader.loadImageFromFile("button.png"), false);
-							int[] cfgCords = checkCFGCords(cfgLines, stageId, j, yCounter);
-							if (cfgCords[0] == 0 && cfgCords[1] == 0) {
-							} else {
-								base.setX(cfgCords[0]);
-								base.setY(cfgCords[1]);
-								b = base;
-							}
-						} else if (val == Blocks.home.getId()) {
-							b = Blocks.home;
-							stage.setHomeY(yCounter);
-							stage.setHomeX(j);
-							System.out.println("Home coords for stage:" + stage.getId() + " x:" + i + " y:" + yCounter);
-						} else {
-							b = Blocks.getBlockById(val);
-						}
-						int itemForBlock = getItemForBlock(stageId, j, yCounter, filename);
-						if (itemForBlock != -1) {
-							b.setKeptItem(Items.getItemById(itemForBlock));
-						}
-						blocks[yCounter][j] = b;
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-				System.out.println();
-				yCounter++;
-			}
-		}
-		System.out.println("Level data end.");
-		return l;
-	}
-
 	public static Level loadLevelFromFile(String filename) {
-		boolean debug = Core.getSettings().getSettings(Core.getSettings().debug);
+		boolean debug = true; // Core.getSettings().getSettings(Core.getSettings().debug);
+		System.out.println("Loading level : " + filename);
 		Blocks.wakeUpDummy();
 		String line;
-		Level level = new Level();
+		Level level = new Level(filename);
 		level.setFileName(filename);
 		ArrayList<String> lines = loadLevelFile(filename);
 		ArrayList<String> cfgLines = loadLevelConfig(filename);
@@ -268,7 +109,7 @@ public class LevelLoader {
 	}
 
 	private static int getStageLength(ArrayList<String> lines, int stageId) {
-		boolean debug = Core.getSettings().getSettings(Core.getSettings().debug);
+		boolean debug = true;// Core.getSettings().getSettings(Core.getSettings().debug);
 		int length = 0;
 		String start_regex = "^<stage id=([0-9])>$";
 		String end_regex = "^</stage>";
@@ -405,13 +246,14 @@ public class LevelLoader {
 				int y1 = Integer.parseInt(matcher.group(3));
 				int itemid = Integer.parseInt(matcher.group(4));
 				if (x1 == x && y1 == y && stage == id) {
-					if (Core.getSettings().getSettings(Core.getSettings().debug))
-						System.out.println("ID : " + id + " X: " + x + "-" + x1 + " Y: " + y + "-" + y1 + " - " + itemid);
+					// if (Core.getSettings().getSettings(Core.getSettings().debug))
+					// System.out.println("ID : " + id + " X: " + x + "-" + x1 + " Y: " +
+					// y + "-" + y1 + " - " + itemid);
 					return itemid;
 				}
 			} else {
-				if (Core.getSettings().getSettings(Core.getSettings().debug))
-					System.out.println("No match for line: " + line);
+				// if (Core.getSettings().getSettings(Core.getSettings().debug))
+				// System.out.println("No match for line: " + line);
 			}
 		}
 		return -1;

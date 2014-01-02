@@ -1,6 +1,6 @@
 package JPushy.Types.Player;
 
-import JPushy.Core.LevelScheduler;
+import JPushy.Core.LevelThread;
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.gfx.Picture;
 
@@ -11,77 +11,78 @@ import JPushy.Types.gfx.Picture;
  */
 public class Player {
 
-	private int				x				= 1;
-	private int				y				= 1;
-	private LevelScheduler	level;
-	private Picture			img;
-	private boolean			freezed;
-	private String			name			= "Player";
-	private Inventory		inventory;
-	private boolean			cancelnextmove	= false;
+	private int	        x	             = 1;
+	private int	        y	             = 1;
+	private LevelThread	thread;
+	private Picture	    img;
+	private boolean	    freezed;
+	private String	    name	         = "Player";
+	private Inventory	  inventory;
+	private boolean	    cancelnextmove	= false;
+	private int	        currentStage	 = 0;
 
-	public Player(LevelScheduler l, Picture img, String name) {
-		this.level = l;
+	public Player(LevelThread levelThread, Picture img, String name) {
+		this.thread = levelThread;
 		this.img = img;
 		this.name = name;
 		this.inventory = new Inventory();
 	}
 
-	public void movePlayer(int dir) {// Sides : 0 = north ; 1 = east ; 2 = south
-										// ; 3 = west
+	public void movePlayer(int dir) {// Sides : 0 = north ; 1 = east ; 2 = south ;
+																	 // 3 = west
 		if (isFreezed()) {
 			setCancelnextmove(false);
 			return;
 		}
-		Block bo = level.getLevel().getActiveStage().getBlock(x, y);
+		Block bo = thread.getLevel().getActiveStage().getBlock(x, y);
 		if (dir == 0 && checkNorthWalk()) {
 			if (!isNextMoveCanceld()) {
 				y -= 1;
-				Block b = level.getLevel().getActiveStage().getBlock(x, y);
-				b.onWalk(x, y, level.getLevel());
+				Block b = thread.getLevel().getActiveStage().getBlock(x, y);
+				b.onWalk(x, y, thread.getLevel());
 			}
 		} else if (dir == 1 && checkEastWalk()) {
 			if (!isNextMoveCanceld()) {
 				x += 1;
-				Block b = level.getLevel().getActiveStage().getBlock(x, y);
-				b.onWalk(x, y, level.getLevel());
+				Block b = thread.getLevel().getActiveStage().getBlock(x, y);
+				b.onWalk(x, y, thread.getLevel());
 			}
 		} else if (dir == 2 && checkSouthWalk()) {
 			if (!isNextMoveCanceld()) {
 				y += 1;
-				Block b = level.getLevel().getActiveStage().getBlock(x, y);
-				b.onWalk(x, y, level.getLevel());
+				Block b = thread.getLevel().getActiveStage().getBlock(x, y);
+				b.onWalk(x, y, thread.getLevel());
 			}
 		} else if (dir == 3 && checkWestWalk()) {
 			if (!isNextMoveCanceld()) {
 				x -= 1;
-				Block b = level.getLevel().getActiveStage().getBlock(x, y);
-				b.onWalk(x, y, level.getLevel());
+				Block b = thread.getLevel().getActiveStage().getBlock(x, y);
+				b.onWalk(x, y, thread.getLevel());
 			}
 		} else if (dir == 0 && checkNorthPush()) {
-			Block b = level.getLevel().getActiveStage().getBlock(x, y - 1);
-			b.onPush(x, y - 1, x, y - 2, 2, level.getLevel());
-			if (level.getLevel().moveBlock(x, y - 1, dir)) {
+			Block b = thread.getLevel().getActiveStage().getBlock(x, y - 1);
+			b.onPush(x, y - 1, x, y - 2, 2, thread.getLevel());
+			if (thread.getLevel().moveBlock(x, y - 1, dir)) {
 				if (!isNextMoveCanceld())
 					y -= 1;
 			}
 		} else if (dir == 1 && checkEastPush()) {
-			Block b = level.getLevel().getActiveStage().getBlock(x + 1, y);
-			b.onPush(x + 1, y, x + 2, y, 3, level.getLevel());
-			if (level.getLevel().moveBlock(x + 1, y, dir)) {
+			Block b = thread.getLevel().getActiveStage().getBlock(x + 1, y);
+			b.onPush(x + 1, y, x + 2, y, 3, thread.getLevel());
+			if (thread.getLevel().moveBlock(x + 1, y, dir)) {
 				if (!isNextMoveCanceld())
 					x += 1;
 			}
 		} else if (dir == 2 && checkSouthPush()) {
-			Block b = level.getLevel().getActiveStage().getBlock(x, y + 1);
-			b.onPush(x, y + 1, x, y + 2, 0, level.getLevel());
-			if (level.getLevel().moveBlock(x, y + 1, dir)) {
+			Block b = thread.getLevel().getActiveStage().getBlock(x, y + 1);
+			b.onPush(x, y + 1, x, y + 2, 0, thread.getLevel());
+			if (thread.getLevel().moveBlock(x, y + 1, dir)) {
 				if (!isNextMoveCanceld())
 					y += 1;
 			}
 		} else if (dir == 3 && checkWestPush()) {
-			Block b = level.getLevel().getActiveStage().getBlock(x - 1, y);
-			if (level.getLevel().moveBlock(x - 1, y, dir)) {
+			Block b = thread.getLevel().getActiveStage().getBlock(x - 1, y);
+			if (thread.getLevel().moveBlock(x - 1, y, dir)) {
 				if (!isNextMoveCanceld())
 					x -= 1;
 			}
@@ -93,25 +94,25 @@ public class Player {
 		if (y - 1 <= 0) {
 			return false;
 		} else {
-			Block b = level.getLevel().getActiveStage().getBlocks()[y - 1][x];
+			Block b = thread.getLevel().getActiveStage().getBlocks()[y - 1][x];
 			return b.isPlayerAbleToWalkOn();
 		}
 	}
 
 	public boolean checkEastWalk() {
-		if (x + 1 > level.getLevel().getActiveStage().getBlocks()[0].length) {
+		if (x + 1 > thread.getLevel().getActiveStage().getBlocks()[0].length) {
 			return false;
 		} else {
-			Block b = level.getLevel().getActiveStage().getBlocks()[y][x + 1];
+			Block b = thread.getLevel().getActiveStage().getBlocks()[y][x + 1];
 			return b.isPlayerAbleToWalkOn();
 		}
 	}
 
 	public boolean checkSouthWalk() {
-		if (y + 1 > level.getLevel().getActiveStage().getBlocks().length) {
+		if (y + 1 > thread.getLevel().getActiveStage().getBlocks().length) {
 			return false;
 		} else {
-			Block b = level.getLevel().getActiveStage().getBlocks()[y + 1][x];
+			Block b = thread.getLevel().getActiveStage().getBlocks()[y + 1][x];
 			return b.isPlayerAbleToWalkOn();
 		}
 	}
@@ -120,7 +121,7 @@ public class Player {
 		if (x - 1 <= 0) {
 			return false;
 		} else {
-			Block b = level.getLevel().getActiveStage().getBlocks()[y][x - 1];
+			Block b = thread.getLevel().getActiveStage().getBlocks()[y][x - 1];
 			return b.isPlayerAbleToWalkOn();
 		}
 	}
@@ -129,25 +130,25 @@ public class Player {
 		if (y - 1 <= 0) {
 			return false;
 		} else {
-			Block b = level.getLevel().getActiveStage().getBlocks()[y - 1][x];
+			Block b = thread.getLevel().getActiveStage().getBlocks()[y - 1][x];
 			return !b.isSolid();
 		}
 	}
 
 	public boolean checkEastPush() {
-		if (x + 1 > level.getLevel().getActiveStage().getBlocks()[0].length) {
+		if (x + 1 > thread.getLevel().getActiveStage().getBlocks()[0].length) {
 			return false;
 		} else {
-			Block b = level.getLevel().getActiveStage().getBlocks()[y][x + 1];
+			Block b = thread.getLevel().getActiveStage().getBlocks()[y][x + 1];
 			return !b.isSolid();
 		}
 	}
 
 	public boolean checkSouthPush() {
-		if (y + 1 > level.getLevel().getActiveStage().getBlocks().length) {
+		if (y + 1 > thread.getLevel().getActiveStage().getBlocks().length) {
 			return false;
 		} else {
-			Block b = level.getLevel().getActiveStage().getBlocks()[y + 1][x];
+			Block b = thread.getLevel().getActiveStage().getBlocks()[y + 1][x];
 			return !b.isSolid();
 		}
 	}
@@ -156,7 +157,7 @@ public class Player {
 		if (x - 1 <= 0) {
 			return false;
 		} else {
-			Block b = level.getLevel().getActiveStage().getBlocks()[y][x - 1];
+			Block b = thread.getLevel().getActiveStage().getBlocks()[y][x - 1];
 			return !b.isSolid();
 		}
 	}
@@ -175,14 +176,6 @@ public class Player {
 
 	public void setY(int y) {
 		this.y = y;
-	}
-
-	public LevelScheduler getLevel() {
-		return level;
-	}
-
-	public void setLevel(LevelScheduler level) {
-		this.level = level;
 	}
 
 	public Picture getTexture() {

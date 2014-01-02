@@ -32,7 +32,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import JPushy.Gui.LevelSelector;
+import JPushy.Core.Game;
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
 import JPushy.Types.Items.Item;
@@ -46,7 +46,7 @@ import JPushy.gfx.GraphicUtils;
  * @original Editor.java
  * 
  */
-public class LevelEditor extends Canvas implements MouseListener, MouseMotionListener, MouseWheelListener {
+public class OldLevelEditorGui extends Canvas implements MouseListener, MouseMotionListener, MouseWheelListener {
 	private static final long	    serialVersionUID	= 1L;
 
 	private JFrame	              frame;
@@ -89,9 +89,9 @@ public class LevelEditor extends Canvas implements MouseListener, MouseMotionLis
 	private int	                  tile;
 	private String	              lastTile	       = Blocks.blockRegistry.get(0).getName();
 
-	private LevelSelector	        selector;
+	private Game	                selector;
 
-	public LevelEditor(LevelSelector selector) {
+	public OldLevelEditorGui(Game selector) {
 		this.selector = selector;
 		Blocks.wakeUpDummy();
 		for (int i = 0; i < Blocks.blockRegistry.size(); i++) {

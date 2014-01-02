@@ -12,8 +12,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -26,7 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import JPushy.Gui.LevelSelector;
+import JPushy.Core.Game;
 
 /**
  * 
@@ -35,46 +33,46 @@ import JPushy.Gui.LevelSelector;
  */
 
 public class Editor extends Canvas implements MouseListener, MouseMotionListener, MouseWheelListener {
-	private static final long serialVersionUID = 1L;
-	
-	private JFrame frame;
-	private boolean running;
-	private JTextField xsize;
-	private JTextField ysize;
-	private JTextField layers;
-	
-	private static final Font font = new Font("Verdana", 1, 18);
-	
-	private int width = 8;
-	private int height = 8;
-	private int length = 1;
-	
-	private double zoom = 1;
-	
-	private float xOff;
-	private float yOff;
-	private int clayer = 0;
-	
-	private float lmx;
-	private float lmy;
-	
-	private boolean[] mouse = new boolean[12];
-	
-	private int[][][] tiles = new int[8][8][1];
-	
-	private int tile;
-	private JTextField s;
-	
-	private JButton save;
-	private JTextField name;
-	
-	private LevelSelector selector;
-	
-	public Editor(LevelSelector selector) {
+	private static final long	serialVersionUID	= 1L;
+
+	private JFrame	          frame;
+	private boolean	          running;
+	private JTextField	      xsize;
+	private JTextField	      ysize;
+	private JTextField	      layers;
+
+	private static final Font	font	           = new Font("Verdana", 1, 18);
+
+	private int	              width	           = 8;
+	private int	              height	         = 8;
+	private int	              length	         = 1;
+
+	private double	          zoom	           = 1;
+
+	private float	            xOff;
+	private float	            yOff;
+	private int	              clayer	         = 0;
+
+	private float	            lmx;
+	private float	            lmy;
+
+	private boolean[]	        mouse	           = new boolean[12];
+
+	private int[][][]	        tiles	           = new int[8][8][1];
+
+	private int	              tile;
+	private JTextField	      s;
+
+	private JButton	          save;
+	private JTextField	      name;
+
+	private Game	            selector;
+
+	public Editor(Game selector) {
 		this.selector = selector;
 		setUpGUI();
 		running = true;
-		while(running) {
+		while (running) {
 			update();
 			render();
 			try {
@@ -84,7 +82,7 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 			}
 		}
 	}
-	
+
 	private void setUpGUI() {
 		frame = new JFrame("Level Editor");
 		frame.setSize(1280, 720);
@@ -93,15 +91,15 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 		frame.setLayout(null);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		
+
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
-		
+
 		setBounds(0, 0, 900, 720);
 		setBackground(Color.WHITE);
 		frame.add(this);
-		
+
 		JLabel sizeX = new JLabel("X Size:");
 		sizeX.setBounds(920, 10, 200, 20);
 		applyFont(sizeX);
@@ -109,7 +107,7 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 		xsize = new JTextField("8");
 		xsize.setBounds(1000, 10, 200, 25);
 		frame.add(xsize);
-		
+
 		JLabel sizeY = new JLabel("Y Size:");
 		sizeY.setBounds(920, 40, 200, 20);
 		applyFont(sizeY);
@@ -117,7 +115,7 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 		ysize = new JTextField("8");
 		ysize.setBounds(1000, 40, 200, 25);
 		frame.add(ysize);
-		
+
 		JLabel layersL = new JLabel("Layers:");
 		layersL.setBounds(920, 70, 200, 20);
 		applyFont(layersL);
@@ -125,7 +123,7 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 		layers = new JTextField("1");
 		layers.setBounds(1000, 70, 200, 25);
 		frame.add(layers);
-		
+
 		JButton applySize = new JButton("Apply");
 		applySize.setBounds(1000, 100, 200, 25);
 		frame.add(applySize);
@@ -138,7 +136,7 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 				createWalls();
 			}
 		});
-		
+
 		JLabel cLayerL = new JLabel("Current Layer:");
 		cLayerL.setBounds(920, 160, 200, 20);
 		applyFont(cLayerL);
@@ -151,7 +149,7 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 				clayer = Integer.parseInt(((JTextField) e.getSource()).getText());
 			}
 		});
-		
+
 		JLabel stile = new JLabel("Selected tile:");
 		stile.setBounds(920, 190, 200, 20);
 		applyFont(stile);
@@ -164,11 +162,11 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 				tile = Integer.parseInt(((JTextField) e.getSource()).getText());
 			}
 		});
-		
+
 		save = new JButton("Save");
 		save.setBounds(1000, 600, 200, 25);
 		frame.add(save);
-		
+
 		JLabel nameL = new JLabel("Name:");
 		nameL.setBounds(920, 570, 200, 20);
 		applyFont(nameL);
@@ -176,26 +174,26 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 		name = new JTextField("Untitled");
 		name.setBounds(1000, 570, 200, 25);
 		frame.add(name);
-		
+
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				save();
 			}
 		});
-		
+
 		frame.setVisible(true);
-		
+
 		createWalls();
 	}
-	
+
 	private void save() {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File("Data/lvl/" + name.getText() + ".lvl")));
 			writer.write("<level name=\"" + name.getText() + "\" version='0.1'>\n");
-			for(int z = 0; z < length; z++) {
+			for (int z = 0; z < length; z++) {
 				writer.write("<stage id=" + z + ">\n");
-				for(int y = 0; y < height; y++) {
-					for(int x = 0; x < width; x++) {
+				for (int y = 0; y < height; y++) {
+					for (int x = 0; x < width; x++) {
 						writer.write("" + tiles[x][y][z]);
 					}
 					writer.newLine();
@@ -210,31 +208,32 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 		}
 		selector.updateLevels();
 	}
-	
+
 	private void createWalls() {
-		for(int x = 0; x < width; x++) {
-			for(int y = 0; y < height; y++) {
-				for(int z = 0; z < length; z++) {
-					if(x == 0 || y == 0 || x == width - 1 || y == height - 1) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				for (int z = 0; z < length; z++) {
+					if (x == 0 || y == 0 || x == width - 1 || y == height - 1) {
 						tiles[x][y][z] = 1;
 					}
 				}
 			}
 		}
 	}
-	
+
 	public void update() {
-		if(mouse[3]) {
+		if (mouse[3]) {
 			int ax = (int) ((lmx - xOff) / zoom) / 16;
 			int ay = (int) ((lmy - yOff) / zoom) / 16;
-			if(ax < 0 || ax >= width || ay < 0 || ay >= height) return;
+			if (ax < 0 || ax >= width || ay < 0 || ay >= height)
+				return;
 			tiles[ax][ay][clayer] = tile;
 		}
 	}
-	
+
 	public void render() {
 		BufferStrategy bs = getBufferStrategy();
-		if(bs == null) {
+		if (bs == null) {
 			createBufferStrategy(2);
 			requestFocus();
 			return;
@@ -246,8 +245,8 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 		g.setColor(Color.BLACK);
 		g.translate(xOff, yOff);
 		g.scale(zoom, zoom);
-		for(int x = 0; x < width; x++) {
-			for(int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
 				g.drawRect(x * 16, y * 16, 16, 16);
 				g.setFont(new Font("Arial", 0, 15));
 				g.drawString("" + tiles[x][y][clayer], x * 16 + 3, y * 16 + 13);
@@ -256,7 +255,7 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 		g.dispose();
 		bs.show();
 	}
-	
+
 	private void applyFont(JLabel l) {
 		l.setFont(font);
 		l.setForeground(Color.WHITE);
@@ -264,11 +263,12 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		zoom += e.getWheelRotation() / 5.0;
-		if(zoom < 0) zoom = 0;
+		if (zoom < 0)
+			zoom = 0;
 	}
 
 	public void mouseDragged(MouseEvent e) {
-		if(!mouse[1]) {
+		if (!mouse[1]) {
 			lmx = e.getX();
 			lmy = e.getY();
 			return;
@@ -280,17 +280,18 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 	}
 
 	public void mouseMoved(MouseEvent e) {
-		if(e.getButton() != 0) return;
+		if (e.getButton() != 0)
+			return;
 		lmx = e.getX();
 		lmy = e.getY();
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		
+
 	}
-	
+
 	public void mouseEntered(MouseEvent e) {
-		
+
 	}
 
 	public void mouseExited(MouseEvent e) {
@@ -298,15 +299,17 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 
 	public void mousePressed(MouseEvent e) {
 		mouse[e.getButton()] = true;
-		if(e.getButton() == 2) {
+		if (e.getButton() == 2) {
 			int ax = (int) ((lmx - xOff) / zoom) / 16;
 			int ay = (int) ((lmy - yOff) / zoom) / 16;
-			if(ax < 0 || ax >= width || ay < 0 || ay >= height) return;
+			if (ax < 0 || ax >= width || ay < 0 || ay >= height)
+				return;
 			tile = tiles[ax][ay][clayer];
-			s.setText(tile + "");;
+			s.setText(tile + "");
+			;
 		}
 	}
-	
+
 	public void mouseReleased(MouseEvent e) {
 		mouse[e.getButton()] = false;
 	}
@@ -318,7 +321,5 @@ public class Editor extends Canvas implements MouseListener, MouseMotionListener
 	public void setRunning(boolean running) {
 		this.running = running;
 	}
-	
-	
-	
+
 }

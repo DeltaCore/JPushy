@@ -6,15 +6,17 @@ package JPushy.Gui;
  * 
  */
 public class Chat {
-	
-	GamePanel gamePanel;
-	
+
+	GamePanel	              gamePanel;
+
+	public static final int	MAX_LINES	= 10;
+
 	public Chat(GamePanel panel) {
 		this.gamePanel = panel;
 	}
 
-	public void sendMessage(String msg){
-		gamePanel.consoleLines.add(msg);
+	public void sendMessage(String msg) {
+		gamePanel.getConsoleLines().add(msg);
 	}
-	
+
 }

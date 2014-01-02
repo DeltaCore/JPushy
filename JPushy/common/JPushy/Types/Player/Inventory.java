@@ -54,27 +54,25 @@ public class Inventory {
 						}
 					}
 				}
-				Game.sendMessage("No Inv. space.");
 			}
+			Game.sendMessage("No Inv. space.");
 			return false;
 		}
 		return false;
 	}
 
-	public boolean removeItem(Item item) {
-		boolean key = false;
+	public void removeItem(Item item) {
 		for (int i = 0; i < this.getSlots().length; i++) {
-			if (this.getSlots()[i].getItem().getName().equalsIgnoreCase("Key") && !key) {
+			if (this.getSlots()[i].getItem().getName().equalsIgnoreCase(item.getName())) {
 				if (this.getSlots()[i].getAmount() >= 1) {
-					key = true;
 					this.getSlots()[i].setAmount(this.getSlots()[i].getAmount() - 1);
+					break;
 				} else {
-					key = true;
 					this.getSlots()[i].setItem(Items.noitem);
+					break;
 				}
 			}
 		}
-		return key;
 	}
 
 	public InventorySlot[] getSlots() {
@@ -106,7 +104,11 @@ public class Inventory {
 	}
 
 	public void removeItemInHand() {
-		this.getSlots()[getSelectedSlot()].setItem(Items.noitem);
+		if (this.getSlots()[getSelectedSlot()].getAmount() >= 1) {
+			this.getSlots()[getSelectedSlot()].setAmount(this.getSlots()[getSelectedSlot()].getAmount() - 1);
+		} else {
+			this.getSlots()[getSelectedSlot()].setItem(Items.noitem);
+		}
 	}
 
 	public void update() {

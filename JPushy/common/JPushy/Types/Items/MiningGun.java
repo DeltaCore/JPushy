@@ -31,28 +31,28 @@ public class MiningGun extends Item {
 		boolean flag = false;
 		Block b = Blocks.getBlockById(0);
 		if (dir == 0) {
-			b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y - 1);
+			b = Game.getLevel().getActiveStage().getBlock(x, y - 1);
 			if (b.isDestroyable()) {
 				stage.getBlock(x, y - 1).onDestroy();
 				stage.destroyBlock(x, y - 1);
 				flag = true;
 			}
 		} else if (dir == 1) {
-			b = Game.gameThread.getLevel().getActiveStage().getBlock(x + 1, y);
+			b = Game.getLevel().getActiveStage().getBlock(x + 1, y);
 			if (b.isDestroyable()) {
 				stage.getBlock(x + 1, y).onDestroy();
 				stage.destroyBlock(x + 1, y);
 				flag = true;
 			}
 		} else if (dir == 2) {
-			b = Game.gameThread.getLevel().getActiveStage().getBlock(x, y + 1);
+			b = Game.getLevel().getActiveStage().getBlock(x, y + 1);
 			if (b.isDestroyable()) {
 				stage.getBlock(x, y + 1).onDestroy();
 				stage.destroyBlock(x, y + 1);
 				flag = true;
 			}
 		} else if (dir == 3) {
-			b = Game.gameThread.getLevel().getActiveStage().getBlock(x - 1, y);
+			b = Game.getLevel().getActiveStage().getBlock(x - 1, y);
 			if (b.isDestroyable()) {
 				stage.getBlock(x - 1, y).onDestroy();
 				stage.destroyBlock(x - 1, y);

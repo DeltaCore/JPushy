@@ -1,23 +1,24 @@
 package JPushy.LevelEditor;
 
-import JPushy.Gui.LevelSelector;
+import JPushy.Core.Game;
+
 /**
  * 
  * @author Marcel Benning
  * 
  */
-public class EditorThread implements Runnable{
+public class EditorThread implements Runnable {
 
-	public LevelEditor editor;
-	private LevelSelector selector;
-	
-	public void setLevelSelector(LevelSelector s){
+	public OldLevelEditorGui	editor;
+	private Game	           selector;
+
+	public void setLevelSelector(Game s) {
 		this.selector = s;
 	}
-	
+
 	@Override
 	public void run() {
-		editor = new LevelEditor(selector);	
+		editor = new OldLevelEditorGui(selector);
 	}
 
 }

@@ -11,7 +11,8 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import JPushy.Core.LevelScheduler;
+import JPushy.Core.Game;
+import JPushy.Core.LevelThread;
 
 /**
  * 
@@ -20,7 +21,7 @@ import JPushy.Core.LevelScheduler;
  */
 public class MPServer extends Thread {
 
-	private LevelScheduler	levelHandler;
+	private LevelThread	    launcher;
 
 	private int	            port	      = 11941;
 	private boolean	        running	    = true;
@@ -30,25 +31,9 @@ public class MPServer extends Thread {
 
 	ArrayList<Connection>	  connections	= new ArrayList<Connection>();
 
-	public MPServer(int port, LevelScheduler levelHandler, int mode) {
-		this.port = port;
-		this.levelHandler = levelHandler;
-		cmdHandler = new MPCommandHandler(levelHandler, this);
-		this.mode = mode;
-	}
-
-	public MPServer() {
-	}
-
-	public void init(LevelScheduler levelHandler, int mode, int port) {
-		this.port = port;
-		this.levelHandler = levelHandler;
-		cmdHandler = new MPCommandHandler(levelHandler, this);
-		this.mode = mode;
-	}
-
-	public MPServer(LevelScheduler levelHandler, int mode) {
-		this(11941, levelHandler, mode);
+	public MPServer(LevelThread gui) {
+		cmdHandler = new MPCommandHandler(launcher, this);
+		this.launcher = gui;
 	}
 
 	private void newConnection(DatagramPacket packet) {
@@ -130,7 +115,7 @@ public class MPServer extends Thread {
 		try {
 			socket = new DatagramSocket(port); // open port
 			byte[] data = new byte[1024];
-			cmdHandler = new MPCommandHandler(levelHandler, this);
+			// cmdHandler = new MPCommandHandler(levelHandler, this);
 			DatagramPacket packet;
 			String msg;
 			socket.setSoTimeout(1000);
@@ -151,6 +136,7 @@ public class MPServer extends Thread {
 					}
 				}
 			}
+			socket.close();
 			System.out.println("MpServer terminated.");
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -163,12 +149,12 @@ public class MPServer extends Thread {
 
 	private boolean connectionMsg(String msg, DatagramPacket packet) {
 		if (msg.equalsIgnoreCase("--getLevel")) {
-			String fileContent = packFile(levelHandler.getFilename());
+			String fileContent = packFile(Game.getLevel().getFileName());
 			Connection c = getConnection(packet);
 			sendTo(fileContent, c);
 			return true;
 		} else if (msg.equalsIgnoreCase("--getLevelCFG")) {
-			String fileContent = packFile(levelHandler.getFilename().replace(".lvl", ".cfg"));
+			String fileContent = packFile(Game.getLevel().getFileName().replace(".lvl", ".cfg"));
 			Connection c = getConnection(packet);
 			sendTo(fileContent, c);
 			return true;
@@ -243,20 +229,20 @@ public class MPServer extends Thread {
 		return key;
 	}
 
-	public LevelScheduler getLevelHandler() {
-		return levelHandler;
-	}
-
-	public void setLevelHandler(LevelScheduler levelHandler) {
-		this.levelHandler = levelHandler;
-	}
-
 	public int getPort() {
 		return port;
 	}
 
 	public void setPort(int port) {
 		this.port = port;
+	}
+
+	public LevelThread getLauncher() {
+		return launcher;
+	}
+
+	public void setLauncher(LevelThread launcher) {
+		this.launcher = launcher;
 	}
 
 }

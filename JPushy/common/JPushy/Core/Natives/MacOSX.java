@@ -14,6 +14,7 @@ public class MacOSX extends NativeHandler {
 	}
 
 	public void setupSystemProperties() {
+		System.out.println("Setting props");
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name", Game.name + " V" + Game.version);
 		System.setProperty("apple.awt.brushMetalLook", "true");
