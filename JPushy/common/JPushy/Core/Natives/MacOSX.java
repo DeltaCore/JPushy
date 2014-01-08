@@ -29,4 +29,9 @@ public class MacOSX extends NativeHandler {
 
 	}
 
+	@Override
+	public void setTitle(String name) {
+		System.setProperty("com.apple.mrj.application.apple.menu.about.name", Game.name + " V" + Game.version + " - " + name);
+	}
+
 }

@@ -24,61 +24,28 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import JPushy.Core.Natives.MacOSX;
-import JPushy.Core.Natives.NativeHandler;
 import JPushy.MultiPlayer.MPClient;
-import JPushy.Settings.Settings;
 import JPushy.Types.Level.Level;
 import JPushy.Types.Level.LevelItem;
 import JPushy.Types.Player.Player;
 
 public class Game extends JFrame {
 
-	private JPanel	                    contentPane;
+	private JPanel	               contentPane;
 
 	/**
 	 * Launch the application.
 	 */
 
-	public static final String	        name	        = "JPushy";
-	public static final String	        version	      = "0.1";
+	public static final String	   name	                    = "JPushy";
+	public static final String	   version	                = "0.1";
 
-	public static Settings	            settings;
-
-	public static final NativeHandler[]	nativeHandler	= new NativeHandler[] { new MacOSX("OS X") };
-
-	LevelThread	                        thread;
-
-	private static Game	                launcher;
-
-	public static void main(String[] args) {
-		String osName = System.getProperty("os.name");
-		for (int i = 0; i < nativeHandler.length; i++) {
-			if (osName.contains(nativeHandler[i].getOsName())) {
-				System.out.println(nativeHandler[i].getOsName() + " deteced. Running Native handler for this system.");
-				nativeHandler[i].setupSystemProperties();
-			}
-		}
-		System.out.println("Loading Settings ...");
-		settings = new Settings();
-		System.out.println(name + " V" + version + " is starting ...");
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					launcher = new Game();
-					launcher.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	LevelThread	                   thread;
 
 	private DefaultListModel	     levelModel	              = new DefaultListModel();
 
@@ -351,19 +318,19 @@ public class Game extends JFrame {
 	}
 
 	public static Player getPlayer() {
-		return launcher.thread.getPlayer();
+		return Launcher.getInstance().thread.getPlayer();
 	}
 
 	public static void pushUpdate() {
-		launcher.thread.update();
+		Launcher.getInstance().thread.update();
 	}
 
 	public static void sendMessage(String msg) {
-		launcher.thread.sendMessage(msg);
+		Launcher.getInstance().thread.sendMessage(msg);
 	}
 
 	public static Level getLevel() {
-		return launcher.thread.getLevel();
+		return Launcher.getInstance().thread.getLevel();
 	}
 
 	public JList getLevelList() {
@@ -405,7 +372,7 @@ public class Game extends JFrame {
 	}
 
 	public static Level getActiveLevel() {
-		return launcher.thread.getLevel();
+		return Launcher.getInstance().thread.getLevel();
 	}
 
 	public void connect(String ip) {
@@ -413,21 +380,21 @@ public class Game extends JFrame {
 	}
 
 	public static void selectLevel(int id) {
-		launcher.thread.getLevel().setActiveStage(id);
+		Launcher.getInstance().thread.getLevel().setActiveStage(id);
 	}
 
 	public static MPClient getClient() {
-		return launcher.thread.getClient();
+		return Launcher.getInstance().thread.getClient();
 	}
 
 	public static void stopGame() {
-		launcher.thread.getServer().setRunning(false);
+		Launcher.getInstance().thread.getServer().setRunning(false);
 		try {
 			Thread.sleep(1000);
 		} catch (Exception e) {
 
 		}
-		launcher.thread.dispose();
+		Launcher.getInstance().thread.dispose();
 	}
 
 }

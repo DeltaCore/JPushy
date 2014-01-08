@@ -81,6 +81,18 @@ public class Blocks {
 		return air.copy(air);
 	}
 
+	public static Block getBlockByName(String name) {
+		for (int i = 0; i < blockRegistry.size(); i++) {
+			if (blockRegistry.get(i) == null) {
+			} else {
+				if (blockRegistry.get(i).getName().equalsIgnoreCase(name)) {
+					return blockRegistry.get(i).copy(blockRegistry.get(i));
+				}
+			}
+		}
+		return air.copy(air);
+	}
+
 	public static void wakeUpDummy() {
 
 	}

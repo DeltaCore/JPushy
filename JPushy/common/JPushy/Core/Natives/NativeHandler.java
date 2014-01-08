@@ -22,4 +22,6 @@ public abstract class NativeHandler {
 		this.osName = osName;
 	}
 
+	public abstract void setTitle(String name);
+
 }

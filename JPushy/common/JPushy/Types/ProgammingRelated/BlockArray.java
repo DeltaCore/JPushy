@@ -10,14 +10,14 @@ public class BlockArray {
 
 	private int	             width, height;
 
-	private ArrayList<Block>	blocks	    = new ArrayList<Block>();
+	private ArrayList<Block>	blocks	= new ArrayList<Block>();
 
-	private int	             wallHori	    = 2;
-	private int	             wallVert	    = 3;
-	private int	             wallCornerrd	= 9;
-	private int	             wallCornerld	= 10;
-	private int	             wallCornerul	= 11;
-	private int	             wallCornerur	= 12;
+	// wallHori = 2;
+	// wallVert = 3;
+	// wallCornerrd = 9;
+	// wallCornerld = 10;
+	// wallCornerul = 11;
+	// wallCornerur = 12;
 
 	private void buildWall() {
 		for (int y = 0; y < this.getHeight(); y++) {
@@ -128,6 +128,7 @@ public class BlockArray {
 			for (int y = 0; y < this.getHeight(); y++) {
 				if (this.get(x, y) != null) {
 					g.drawImage(this.get(x, y).getTexture().getImg(), x * 40, y * 40, 40, 40, null);
+					g.drawRect(x * 40, y * 40, 40, 40);
 				}
 			}
 		}
