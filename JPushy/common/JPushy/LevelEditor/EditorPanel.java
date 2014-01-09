@@ -365,6 +365,8 @@ public class EditorPanel extends JPanel {
 
 		private boolean		  shift		 = false;
 
+		private boolean btns[] = new boolean[]{false,false,false,false}; 
+		
 		public InputListener(EditorPanel gui) {
 			this.setGui(gui);
 		}
@@ -378,15 +380,15 @@ public class EditorPanel extends JPanel {
 			gui.repaint();
 		}
 
-		@Override
+		@Override // -> on windows the drag event won't work with e.getButton()
 		public void mouseDragged(MouseEvent e) {
-			if (e.getButton() == 3) {
+			if (btns[3]) {
 				gui.originX += e.getX() - lastX;
 				gui.originY += e.getY() - lastY;
 				lastX = e.getX();
 				lastY = e.getY();
 				gui.repaint();
-			} else if (e.getButton() == 1) {
+			} else if (btns[1]) {
 				if ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0)) {
 					gui.onClick(e.getX() - gui.originX, e.getY() - gui.originY);
 					gui.repaint();
@@ -416,10 +418,24 @@ public class EditorPanel extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if (e.getButton() == 3) {
+			switch(e.getButton()){
+				case 1:{
+					btns[1] = true;
+					break;
+				}
+				case 2:{
+					btns[2] = true;
+					break;
+				}
+				case 3:{
+					btns[3] = true;
+					break;
+				}
+			}
+			if (btns[3]) {
 				gui.lastX = e.getX();
 				gui.lastY = e.getY();
-			} else if (e.getButton() == 2) {
+			} else if (btns[2]) {
 				if ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0)) {
 					int cx = (e.getX() - gui.originX) / 40;
 					int cy = (e.getY() - gui.originY) / 40;
@@ -443,7 +459,7 @@ public class EditorPanel extends JPanel {
 						}
 					}
 				}
-			} else if (e.getButton() == 1) {
+			} else if (btns[1]) {
 				if (shift) {
 					this.selTileX = (e.getX() - gui.originX) / 40;
 					this.selTileY = (e.getY() - gui.originY) / 40;
@@ -458,9 +474,21 @@ public class EditorPanel extends JPanel {
 		}
 
 		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
+		public void mouseReleased(MouseEvent e) {
+			switch(e.getButton()){
+				case 1:{
+					btns[1] = false;
+					break;
+				}
+				case 2:{
+					btns[2] = false;
+					break;
+				}
+				case 3:{
+					btns[3] = false;
+					break;
+				}
+			}
 		}
 
 		@Override
