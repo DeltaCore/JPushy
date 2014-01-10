@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import JPushy.Types.Coord2D;
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
 import JPushy.Types.Items.Item;
@@ -49,6 +50,8 @@ public class EditorPanel extends JPanel {
 	private int	                  originX	          = 0;
 	private int	                  originY	          = 0;
 	private float	                scale	            = 1.0f;
+	private int opX = 0;
+	private int opY = 0;
 
 	private InputListener	        listener;
 
@@ -78,6 +81,13 @@ public class EditorPanel extends JPanel {
 		this.repaint();
 	}
 
+	public void updateCoords(int x, int y){
+		this.setOpX(x);
+		this.setOpY(y);
+		this.getBlockLayers().get(currentLayer).setOption(this.listener.selTileX, this.listener.selTileY, new Coord2D(x, y));
+		this.repaint();
+	}
+	
 	public void onClick(int x, int y) {
 		int cx = x / 40;
 		int cy = y / 40;
@@ -87,10 +97,10 @@ public class EditorPanel extends JPanel {
 			if (seli >= Blocks.blockRegistry.size()) {
 				Item i = Items.getItemById(Items.getIdByName(sel));
 				this.getItemLayers().get(this.getCurrentLayer()).set(cx, cy, i);
-				this.getBlockLayers().get(this.getCurrentLayer()).set(cx, cy, Blocks.getBlockByName("Air"));
+				this.getBlockLayers().get(this.getCurrentLayer()).setBlock(cx, cy, Blocks.getBlockByName("Air"));
 			} else {
 				Block b = Blocks.getBlockByName(sel);
-				this.getBlockLayers().get(this.getCurrentLayer()).set(cx, cy, b);
+				this.getBlockLayers().get(this.getCurrentLayer()).setBlock(cx, cy, b);
 			}
 		}
 	}
@@ -110,9 +120,13 @@ public class EditorPanel extends JPanel {
 		if (this.getItemLayers().size() != 0) {
 			this.getItemLayers().get(currentLayer).render(g);
 		}
-		if (this.listener.getSelTileX() != 0 && this.listener.getSelTileY() != 0) {
-			g.setColor(Color.blue);
+		if (this.listener.getSelTileX() != -1 && this.listener.getSelTileY() != -1) {
+			g.setColor(Color.red);
 			g.drawRect(this.listener.getSelTileX() * 40, this.listener.getSelTileY() * 40, 40, 40);
+			g.setColor(Color.blue);
+			if(this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() != -1 && this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() != -1){
+				g.drawRect(this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() * 40, this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getY() * 40, 40, 40);
+			}
 		}
 	}
 
@@ -356,6 +370,22 @@ public class EditorPanel extends JPanel {
 		this.listener = listener;
 	}
 
+	public int getOpX() {
+		return opX;
+	}
+
+	public void setOpX(int opX) {
+		this.opX = opX;
+	}
+
+	public int getOpY() {
+		return opY;
+	}
+
+	public void setOpY(int opY) {
+		this.opY = opY;
+	}
+
 	private class InputListener implements MouseListener, MouseWheelListener, MouseMotionListener, KeyListener {
 
 		private EditorPanel	gui;
@@ -363,10 +393,8 @@ public class EditorPanel extends JPanel {
 		private int		      selTileX	= 0;
 		private int		      selTileY	= 0;
 
-		private boolean		  shift		 = false;
+		private boolean		  btns[]		= new boolean[] { false, false, false, false };
 
-		private boolean btns[] = new boolean[]{false,false,false,false}; 
-		
 		public InputListener(EditorPanel gui) {
 			this.setGui(gui);
 		}
@@ -380,7 +408,8 @@ public class EditorPanel extends JPanel {
 			gui.repaint();
 		}
 
-		@Override // -> on windows the drag event won't work with e.getButton()
+		@Override
+		// -> on windows the drag event won't work with e.getButton()
 		public void mouseDragged(MouseEvent e) {
 			if (btns[3]) {
 				gui.originX += e.getX() - lastX;
@@ -401,9 +430,15 @@ public class EditorPanel extends JPanel {
 		}
 
 		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
+		public void mouseClicked(MouseEvent e) {
+			if (e.isShiftDown() && ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0))) {
+				this.selTileX = (e.getX() - gui.originX) / 40;
+				this.selTileY = (e.getY() - gui.originY) / 40;
+			} else {
+				this.selTileX = -1;
+				this.selTileY = -1;
+			}
+			gui.repaint();
 		}
 
 		@Override
@@ -412,22 +447,21 @@ public class EditorPanel extends JPanel {
 
 		@Override
 		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
+			
 		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			switch(e.getButton()){
-				case 1:{
+			switch (e.getButton()) {
+				case 1: {
 					btns[1] = true;
 					break;
 				}
-				case 2:{
+				case 2: {
 					btns[2] = true;
 					break;
 				}
-				case 3:{
+				case 3: {
 					btns[3] = true;
 					break;
 				}
@@ -451,7 +485,7 @@ public class EditorPanel extends JPanel {
 									}
 								}
 							} else {
-								String blockName = this.gui.getBlockLayers().get(gui.getCurrentLayer()).get(cx, cy).getName();
+								String blockName = this.gui.getBlockLayers().get(gui.getCurrentLayer()).getBlock(cx, cy).getName();
 								if (blockName.equalsIgnoreCase(name)) {
 									this.gui.getGui().getCurrentBlock().setSelectedIndex(i);
 								}
@@ -460,31 +494,25 @@ public class EditorPanel extends JPanel {
 					}
 				}
 			} else if (btns[1]) {
-				if (shift) {
-					this.selTileX = (e.getX() - gui.originX) / 40;
-					this.selTileY = (e.getY() - gui.originY) / 40;
-				} else {
-					this.selTileX = this.selTileY = 0;
-					if ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0)) {
-						gui.onClick(e.getX() - gui.originX, e.getY() - gui.originY);
-						gui.repaint();
-					}
+				if ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0)) {
+					gui.onClick(e.getX() - gui.originX, e.getY() - gui.originY);
+					gui.repaint();
 				}
 			}
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			switch(e.getButton()){
-				case 1:{
+			switch (e.getButton()) {
+				case 1: {
 					btns[1] = false;
 					break;
 				}
-				case 2:{
+				case 2: {
 					btns[2] = false;
 					break;
 				}
-				case 3:{
+				case 3: {
 					btns[3] = false;
 					break;
 				}
@@ -493,18 +521,11 @@ public class EditorPanel extends JPanel {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			System.out.println("down");
-			if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-				this.shift = true;
-			}
 		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			System.out.println("up");
-			if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-				this.shift = false;
-			}
+
 		}
 
 		@Override
@@ -525,13 +546,6 @@ public class EditorPanel extends JPanel {
 		}
 
 		/**
-		 * @return the gui
-		 */
-		public EditorPanel getGui() {
-			return gui;
-		}
-
-		/**
 		 * @param gui
 		 *          the gui to set
 		 */
@@ -545,28 +559,11 @@ public class EditorPanel extends JPanel {
 		public int getSelTileX() {
 			return selTileX;
 		}
-
-		/**
-		 * @param selTileX
-		 *          the selTileX to set
-		 */
-		public void setSelTileX(int selTileX) {
-			this.selTileX = selTileX;
-		}
-
 		/**
 		 * @return the selTileY
 		 */
 		public int getSelTileY() {
 			return selTileY;
-		}
-
-		/**
-		 * @param selTileY
-		 *          the selTileY to set
-		 */
-		public void setSelTileY(int selTileY) {
-			this.selTileY = selTileY;
 		}
 
 	}

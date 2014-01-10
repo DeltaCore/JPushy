@@ -56,13 +56,14 @@ public class LevelEditorGui extends JFrame {
 	private JLabel	          layerLabel	      = new JLabel("Layers :");
 	private JSpinner	        layerVal	        = new JSpinner();
 	private JLabel	          labelCurrentBlock	= new JLabel("Current block :");
-	private JComboBox	        currentBlock	    = new JComboBox();
+	private JComboBox<String>	currentBlock	    = new JComboBox<String>();
 	private JCheckBox	        showBlockIDs	    = new JCheckBox("Show block ID's");
 	private JProgressBar	    progressbar	      = new JProgressBar();
 	private JLabel	          optionsLabelX	    = new JLabel("X :");
 	private JSpinner	        optionsLabelXVal	= new JSpinner();
 	private JLabel	          optionsLabelY	    = new JLabel("Y :");
 	private JSpinner	        optionsLabelYVal	= new JSpinner();
+	private JButton	          optionsApply	    = new JButton("Apply");
 	private JLabel	          labelInfo1	      = new JLabel("Coordinates are shown in");
 	private JLabel	          labelInfo2	      = new JLabel(" form of a blue box");
 	private JTextField	      levelNameText	    = new JTextField("Name");
@@ -134,16 +135,16 @@ public class LevelEditorGui extends JFrame {
 		this.getProgressbar().setBounds(6, 626, 178, 20);
 
 		this.getSettingsPanel().add(this.getProgressbar());
-		this.getOptionsLabelXVal().setBounds(6, 423, 61, 28);
+		this.getOptionsLabelXVal().setBounds(6, 423, 58, 28);
 
 		this.getSettingsPanel().add(this.getOptionsLabelXVal());
-		this.getOptionsLabelYVal().setBounds(79, 423, 61, 28);
+		this.getOptionsLabelYVal().setBounds(74, 423, 58, 28);
 
 		this.getSettingsPanel().add(this.getOptionsLabelYVal());
-		this.getOptionsLabelX().setBounds(16, 406, 61, 16);
+		this.getOptionsLabelX().setBounds(6, 406, 61, 16);
 
 		this.getSettingsPanel().add(this.getOptionsLabelX());
-		this.getOptionsLabelY().setBounds(89, 406, 61, 16);
+		this.getOptionsLabelY().setBounds(74, 406, 61, 16);
 
 		this.getSettingsPanel().add(this.getOptionsLabelY());
 		this.getLabelInfo1().setBounds(6, 463, 178, 16);
@@ -172,7 +173,7 @@ public class LevelEditorGui extends JFrame {
 
 		this.getEditorPanel().updateLayer((Integer) this.getLayerVal().getValue(), (Integer) this.getxSizeVal().getValue(), (Integer) this.getySizeVal().getValue());
 
-		DefaultComboBoxModel blockModel = new DefaultComboBoxModel();
+		DefaultComboBoxModel<String> blockModel = new DefaultComboBoxModel<String>();
 		Blocks.wakeUpDummy();
 		for (Block b : Blocks.blockRegistry) {
 			blockModel.addElement(b.getName());
@@ -204,6 +205,12 @@ public class LevelEditorGui extends JFrame {
 		this.getSelectLayer().addActionListener(this.getListener());
 
 		this.getSettingsPanel().add(this.getSelectLayer());
+
+		this.getOptionsApply().setBounds(142, 426, 76, 23);
+		this.getOptionsApply().setActionCommand("applyOptions");
+		this.getOptionsApply().addActionListener(listener);
+		this.getSettingsPanel().add(this.getOptionsApply());
+
 		this.getApplyXSize().addActionListener(this.getListener());
 		this.addKeyListener(this.getEditorPanel().getListener());
 		this.getSettingsPanel().addKeyListener(this.getEditorPanel().getListener());
@@ -329,11 +336,11 @@ public class LevelEditorGui extends JFrame {
 		this.labelCurrentBlock = labelCurrentBlock;
 	}
 
-	public JComboBox getCurrentBlock() {
+	public JComboBox<String> getCurrentBlock() {
 		return currentBlock;
 	}
 
-	public void setCurrentBlock(JComboBox currentBlock) {
+	public void setCurrentBlock(JComboBox<String> currentBlock) {
 		this.currentBlock = currentBlock;
 	}
 
@@ -494,6 +501,12 @@ public class LevelEditorGui extends JFrame {
 		this.applyLayer = applyLayer;
 	}
 
+	public void updateOptionsCoords(int x, int y){
+		this.getOptionsLabelXVal().setValue(x);
+		this.getOptionsLabelYVal().setValue(y);
+		this.repaint();
+	}
+		
 	private class buttonListener implements ActionListener {
 
 		private LevelEditorGui	gui;
@@ -516,6 +529,8 @@ public class LevelEditorGui extends JFrame {
 			} else if (cmd.equalsIgnoreCase("selectLayer")) {
 				this.getGui().getEditorPanel().setCurrentLayer((Integer) this.getGui().getCurrentLayerBox().getValue());
 				this.getGui().getEditorPanel().repaint();
+			} else if(cmd.equalsIgnoreCase("applyOpions")){
+				this.getGui().updateOptionsCoords(((Integer) this.getGui().getOptionsLabelXVal().getValue()) - 1, ((Integer) this.getGui().getOptionsLabelYVal().getValue()) - 1);
 			}
 		}
 
@@ -566,4 +581,11 @@ public class LevelEditorGui extends JFrame {
 		this.selectLayer = selectLayer;
 	}
 
+	public JButton getOptionsApply() {
+		return optionsApply;
+	}
+
+	public void setOptionsApply(JButton optionsApply) {
+		this.optionsApply = optionsApply;
+	}
 }
