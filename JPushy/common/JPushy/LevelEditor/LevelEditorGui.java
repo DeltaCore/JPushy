@@ -56,7 +56,7 @@ public class LevelEditorGui extends JFrame {
 	private JLabel	          layerLabel	      = new JLabel("Layers :");
 	private JSpinner	        layerVal	        = new JSpinner();
 	private JLabel	          labelCurrentBlock	= new JLabel("Current block :");
-	private JComboBox<String>	currentBlock	    = new JComboBox<String>();
+	private JComboBox	        currentBlock	    = new JComboBox();
 	private JCheckBox	        showBlockIDs	    = new JCheckBox("Show block ID's");
 	private JProgressBar	    progressbar	      = new JProgressBar();
 	private JLabel	          optionsLabelX	    = new JLabel("X :");
@@ -84,6 +84,9 @@ public class LevelEditorGui extends JFrame {
 		super("Level editor");
 		this.setJMenuBar(this.getMainMenuBar());
 		this.getMainMenuBar().add(this.getMainMenu());
+
+		this.getLevelSave().setActionCommand("save");
+		this.getLevelSave().addActionListener(this.getListener());
 
 		this.getMainMenu().add(this.getLevelLoad());
 		this.getMainMenu().add(this.getLevelSave());
@@ -161,9 +164,7 @@ public class LevelEditorGui extends JFrame {
 		this.getLevelVersionText().setBounds(6, 555, 134, 28);
 
 		this.getSettingsPanel().add(this.getLevelVersionText());
-		this.getLevelSaveBtn().setBounds(6, 595, 178, 29);
 
-		this.getSettingsPanel().add(this.getLevelSaveBtn());
 		this.getCurrentLayerBox().setBounds(6, 261, 83, 28);
 
 		this.getSettingsPanel().add(this.getCurrentLayerBox());
@@ -173,7 +174,7 @@ public class LevelEditorGui extends JFrame {
 
 		this.getEditorPanel().updateLayer((Integer) this.getLayerVal().getValue(), (Integer) this.getxSizeVal().getValue(), (Integer) this.getySizeVal().getValue());
 
-		DefaultComboBoxModel<String> blockModel = new DefaultComboBoxModel<String>();
+		DefaultComboBoxModel blockModel = new DefaultComboBoxModel();
 		Blocks.wakeUpDummy();
 		for (Block b : Blocks.blockRegistry) {
 			blockModel.addElement(b.getName());
@@ -212,6 +213,13 @@ public class LevelEditorGui extends JFrame {
 		this.getSettingsPanel().add(this.getOptionsApply());
 
 		this.getApplyXSize().addActionListener(this.getListener());
+
+		this.getLevelSaveBtn().setBounds(6, 595, 178, 29);
+		this.getLevelSaveBtn().setActionCommand("save");
+		this.getLevelSaveBtn().addActionListener(this.getListener());
+
+		this.getSettingsPanel().add(this.getLevelSaveBtn());
+
 		this.addKeyListener(this.getEditorPanel().getListener());
 		this.getSettingsPanel().addKeyListener(this.getEditorPanel().getListener());
 	}
@@ -336,11 +344,11 @@ public class LevelEditorGui extends JFrame {
 		this.labelCurrentBlock = labelCurrentBlock;
 	}
 
-	public JComboBox<String> getCurrentBlock() {
+	public JComboBox getCurrentBlock() {
 		return currentBlock;
 	}
 
-	public void setCurrentBlock(JComboBox<String> currentBlock) {
+	public void setCurrentBlock(JComboBox currentBlock) {
 		this.currentBlock = currentBlock;
 	}
 
@@ -501,12 +509,12 @@ public class LevelEditorGui extends JFrame {
 		this.applyLayer = applyLayer;
 	}
 
-	public void updateOptionsCoords(int x, int y){
+	public void updateOptionsCoords(int x, int y) {
 		this.getOptionsLabelXVal().setValue(x);
 		this.getOptionsLabelYVal().setValue(y);
 		this.repaint();
 	}
-		
+
 	private class buttonListener implements ActionListener {
 
 		private LevelEditorGui	gui;
@@ -518,6 +526,7 @@ public class LevelEditorGui extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String cmd = e.getActionCommand();
+			System.out.println("CMD : " + cmd);
 			if (cmd.equalsIgnoreCase("applyx")) {
 				this.getGui().getEditorPanel().updateLayer((Integer) this.getGui().getLayerVal().getValue(), (Integer) this.getGui().getxSizeVal().getValue(), (Integer) this.getGui().getySizeVal().getValue());
 			} else if (cmd.equalsIgnoreCase("applyy")) {
@@ -525,11 +534,11 @@ public class LevelEditorGui extends JFrame {
 			} else if (cmd.equalsIgnoreCase("applylayer")) {
 				this.getGui().getEditorPanel().updateLayer((Integer) this.getGui().getLayerVal().getValue(), (Integer) this.getGui().getxSizeVal().getValue(), (Integer) this.getGui().getySizeVal().getValue());
 			} else if (cmd.equalsIgnoreCase("save")) {
-
+				this.getGui().getEditorPanel().saveLevel(this.getGui().getLevelNameText().getText(), this.getGui().getLevelVersionText().getText());
 			} else if (cmd.equalsIgnoreCase("selectLayer")) {
 				this.getGui().getEditorPanel().setCurrentLayer((Integer) this.getGui().getCurrentLayerBox().getValue());
 				this.getGui().getEditorPanel().repaint();
-			} else if(cmd.equalsIgnoreCase("applyOpions")){
+			} else if (cmd.equalsIgnoreCase("applyOpions")) {
 				this.getGui().updateOptionsCoords(((Integer) this.getGui().getOptionsLabelXVal().getValue()) - 1, ((Integer) this.getGui().getOptionsLabelYVal().getValue()) - 1);
 			}
 		}

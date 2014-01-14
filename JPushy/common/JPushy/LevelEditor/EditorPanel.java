@@ -10,8 +10,13 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import JPushy.Types.Coord2D;
@@ -50,8 +55,8 @@ public class EditorPanel extends JPanel {
 	private int	                  originX	          = 0;
 	private int	                  originY	          = 0;
 	private float	                scale	            = 1.0f;
-	private int opX = 0;
-	private int opY = 0;
+	private int	                  opX	              = 0;
+	private int	                  opY	              = 0;
 
 	private InputListener	        listener;
 
@@ -81,13 +86,13 @@ public class EditorPanel extends JPanel {
 		this.repaint();
 	}
 
-	public void updateCoords(int x, int y){
+	public void updateCoords(int x, int y) {
 		this.setOpX(x);
 		this.setOpY(y);
 		this.getBlockLayers().get(currentLayer).setOption(this.listener.selTileX, this.listener.selTileY, new Coord2D(x, y));
 		this.repaint();
 	}
-	
+
 	public void onClick(int x, int y) {
 		int cx = x / 40;
 		int cy = y / 40;
@@ -124,9 +129,47 @@ public class EditorPanel extends JPanel {
 			g.setColor(Color.red);
 			g.drawRect(this.listener.getSelTileX() * 40, this.listener.getSelTileY() * 40, 40, 40);
 			g.setColor(Color.blue);
-			if(this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() != -1 && this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() != -1){
+			if (this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() != -1 && this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() != -1) {
 				g.drawRect(this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() * 40, this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getY() * 40, 40, 40);
 			}
+		}
+	}
+
+	public void saveLevel(String name, String version) {
+		System.out.println("Blueh !");
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File("Data/lvl/" + name + ".lvl")));
+			writer.write("<level name=\"" + name + "\" version='" + version + "'>\n");
+			int c = 0;
+			for (int l = 0; l < this.getLayer() + 1; l++) {
+				writer.write("<stage id=" + l + ">\n");
+				for (int y = 0; y < this.getLevelHeight(); y++) {
+					for (int x = 0; x < this.getLevelWidth(); x++) {
+						writer.write((char) (this.getBlockLayers().get(l).getBlock(x, y).getId() + 48));
+					}
+					writer.write("\n");
+				}
+				writer.write("</stage>\n");
+			}
+			writer.close();
+			writer = new BufferedWriter(new FileWriter(new File("Data/lvl/" + name + ".cfg")));
+			for (int l = 0; l < this.getLayer() + 1; l++) {
+				for (int y = 0; y < this.getLevelHeight(); y++) {
+					for (int x = 0; x < this.getLevelWidth(); x++) {
+						c = this.getItemLayers().get(l).get(x, y).getId();
+						// System.out.println("Item : " + this.getItemLayers().get(l).get(x,
+						// y).toString() + " id : " + c);
+						if (c != Items.noitem.getId()) {
+							c += 48;
+							writer.write("item=" + l + "," + x + "," + y + "=" + (char) c + ";\n");
+						}
+					}
+				}
+			}
+			writer.close();
+			JOptionPane.showMessageDialog(this, "Level " + name + " V" + version + " was saved to Data/lvl/" + name + ".lvl / .cfg");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -447,7 +490,7 @@ public class EditorPanel extends JPanel {
 
 		@Override
 		public void mouseExited(MouseEvent arg0) {
-			
+
 		}
 
 		@Override
@@ -559,6 +602,7 @@ public class EditorPanel extends JPanel {
 		public int getSelTileX() {
 			return selTileX;
 		}
+
 		/**
 		 * @return the selTileY
 		 */
