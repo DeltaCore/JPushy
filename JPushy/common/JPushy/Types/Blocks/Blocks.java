@@ -35,8 +35,8 @@ public class Blocks {
 	public static final Block	     chest	        = new MoveableBlock("Chest", 17, PictureLoader.loadImageFromFile("chest.png")).setPlayerAbleToWalkOn(false).setSolid(false).setDestroyable(true).setVisible(true);
 	public static final Block	     home	          = new BlockHome("Home", 18, PictureLoader.loadImageFromFile("home.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true);
 	public static final Block	     finish	        = new Finish("Finish", 19, PictureLoader.loadImageFromFile("finish.png"));
-	public static final Block	     TeleportBase	  = new TeleportBase("Teleporter", 20, PictureLoader.loadImageFromFile("teleportbase.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true);
-	public static final Block	     TeleportExit	  = new Block("Teleporter", 21, PictureLoader.loadImageFromFile("teleportend.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true);
+	public static final Block	     TeleportBase	  = new TeleportBase("Teleporter Entrance", 20, PictureLoader.loadImageFromFile("teleportbase.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true);
+	public static final Block	     TeleportExit	  = new Block("Teleporter Exit", 21, PictureLoader.loadImageFromFile("teleportend.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true);
 	public static final Block	     bricks	        = new Block("BrickFloor", 22, PictureLoader.loadImageFromFile("brick.png")).setPlayerAbleToWalkOn(false).setSolid(true).setDestroyable(true).setVisible(true);
 	public static final Block	     blockDoor	    = new BlockDoor("Door", 23, PictureLoader.loadImageFromFile("door_close.png"));
 	public static final Block	     gate	          = new Gate("Gate", 24, PictureLoader.loadImageFromFile("gate.png")).setDestroyable(true).setPlayerAbleToWalkOn(false).setSolid(true).setInvincebleBlock(Blocks.getBlockById(0)).setVisible(true);

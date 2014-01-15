@@ -41,6 +41,7 @@ public class LevelThread extends JFrame implements Runnable {
 		this.setClient(new MPClient(this.getServer()));
 		this.getServer().cmdHandler.addPlayer(this.getPlayer());
 		loadLevel(level.getFile());
+		this.getLevel().init(this.getPlayer());
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setPreferredSize(new Dimension(1000, 700));
 		this.setSize(new Dimension(1000, 700));

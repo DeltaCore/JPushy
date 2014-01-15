@@ -1,15 +1,17 @@
 package JPushy.LevelEditor;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -18,6 +20,8 @@ import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
@@ -36,7 +40,7 @@ public class LevelEditorGui extends JFrame {
 	 */
 
 	private boolean	          running	          = true;
-	private buttonListener	  listener;
+	private GuiListener	      listener;
 
 	// JMenu
 
@@ -57,7 +61,7 @@ public class LevelEditorGui extends JFrame {
 	private JSpinner	        layerVal	        = new JSpinner();
 	private JLabel	          labelCurrentBlock	= new JLabel("Current block :");
 	private JComboBox	        currentBlock	    = new JComboBox();
-	private JCheckBox	        showBlockIDs	    = new JCheckBox("Show block ID's");
+	private BlockPreviewPanel	blockPanel	      = new BlockPreviewPanel();
 	private JProgressBar	    progressbar	      = new JProgressBar();
 	private JLabel	          optionsLabelX	    = new JLabel("X :");
 	private JSpinner	        optionsLabelXVal	= new JSpinner();
@@ -91,7 +95,7 @@ public class LevelEditorGui extends JFrame {
 		this.getMainMenu().add(this.getLevelLoad());
 		this.getMainMenu().add(this.getLevelSave());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setBounds(100, 100, 1000, 700);
+		this.setBounds(100, 100, 1000, 753);
 		this.getMainSplitPane().setResizeWeight(0.225);
 
 		this.getContentPane().add(this.getMainSplitPane(), BorderLayout.CENTER);
@@ -129,39 +133,29 @@ public class LevelEditorGui extends JFrame {
 		this.getLabelCurrentBlock().setBounds(6, 301, 107, 16);
 
 		this.getSettingsPanel().add(this.getLabelCurrentBlock());
-		this.getCurrentBlock().setBounds(6, 329, 154, 27);
 
-		this.getSettingsPanel().add(this.getCurrentBlock());
-		this.getShowBlockIDs().setBounds(6, 368, 154, 23);
-
-		this.getSettingsPanel().add(this.getShowBlockIDs());
-		this.getProgressbar().setBounds(6, 626, 178, 20);
+		this.getProgressbar().setBounds(6, 662, 178, 20);
 
 		this.getSettingsPanel().add(this.getProgressbar());
-		this.getOptionsLabelXVal().setBounds(6, 423, 58, 28);
 
-		this.getSettingsPanel().add(this.getOptionsLabelXVal());
-		this.getOptionsLabelYVal().setBounds(74, 423, 58, 28);
-
-		this.getSettingsPanel().add(this.getOptionsLabelYVal());
-		this.getOptionsLabelX().setBounds(6, 406, 61, 16);
+		this.getOptionsLabelX().setBounds(6, 442, 61, 16);
 
 		this.getSettingsPanel().add(this.getOptionsLabelX());
-		this.getOptionsLabelY().setBounds(74, 406, 61, 16);
+		this.getOptionsLabelY().setBounds(74, 442, 61, 16);
 
 		this.getSettingsPanel().add(this.getOptionsLabelY());
-		this.getLabelInfo1().setBounds(6, 463, 178, 16);
+		this.getLabelInfo1().setBounds(6, 499, 178, 16);
 
 		this.getSettingsPanel().add(this.getLabelInfo1());
-		this.getLabelInfo2().setBounds(6, 481, 178, 16);
+		this.getLabelInfo2().setBounds(6, 517, 178, 16);
 
 		this.getSettingsPanel().add(this.getLabelInfo2());
 		this.getLevelNameText().setColumns(10);
-		this.getLevelNameText().setBounds(6, 525, 134, 28);
+		this.getLevelNameText().setBounds(6, 561, 134, 28);
 
 		this.getSettingsPanel().add(this.getLevelNameText());
 		this.getLevelVersionText().setColumns(10);
-		this.getLevelVersionText().setBounds(6, 555, 134, 28);
+		this.getLevelVersionText().setBounds(6, 591, 134, 28);
 
 		this.getSettingsPanel().add(this.getLevelVersionText());
 
@@ -182,7 +176,7 @@ public class LevelEditorGui extends JFrame {
 		for (Item i : Items.itemRegistry) {
 			blockModel.addElement(i.getName());
 		}
-		this.getCurrentBlock().setModel(blockModel);
+		this.getCurrentBlock().setBounds(6, 329, 117, 27);
 
 		this.getApplyLayer().setBounds(101, 176, 117, 29);
 		this.getSettingsPanel().add(this.getApplyLayer());
@@ -193,7 +187,7 @@ public class LevelEditorGui extends JFrame {
 		this.getApplyXSize().setBounds(101, 54, 117, 29);
 		this.getSettingsPanel().add(this.getApplyXSize());
 
-		this.setListener(new buttonListener(this));
+		this.setListener(new GuiListener(this));
 		this.getApplyLayer().setActionCommand("applylayer");
 		this.getApplyLayer().addActionListener(this.getListener());
 
@@ -207,19 +201,40 @@ public class LevelEditorGui extends JFrame {
 
 		this.getSettingsPanel().add(this.getSelectLayer());
 
-		this.getOptionsApply().setBounds(142, 426, 76, 23);
+		this.getOptionsApply().setBounds(138, 461, 76, 27);
 		this.getOptionsApply().setActionCommand("applyOptions");
 		this.getOptionsApply().addActionListener(listener);
 		this.getSettingsPanel().add(this.getOptionsApply());
 
 		this.getApplyXSize().addActionListener(this.getListener());
 
-		this.getLevelSaveBtn().setBounds(6, 595, 178, 29);
+		this.getLevelSaveBtn().setBounds(6, 631, 178, 29);
 		this.getLevelSaveBtn().setActionCommand("save");
 		this.getLevelSaveBtn().addActionListener(this.getListener());
 
 		this.getSettingsPanel().add(this.getLevelSaveBtn());
 
+		this.getOptionsLabelXVal().setBounds(6, 459, 58, 28);
+		this.getOptionsLabelXVal().setName("optionx");
+		this.getOptionsLabelXVal().addChangeListener(this.getListener());
+
+		this.getSettingsPanel().add(this.getOptionsLabelXVal());
+		this.getOptionsLabelYVal().setBounds(74, 459, 58, 28);
+		this.getOptionsLabelYVal().setName("optiony");
+		this.getOptionsLabelYVal().addChangeListener(this.getListener());
+
+		this.getSettingsPanel().add(this.getOptionsLabelYVal());
+
+		this.getBlockPanel().setBounds(134, 303, 80, 80);
+		this.getBlockPanel().setGui(this);
+
+		this.getCurrentBlock().setModel(blockModel);
+		this.getCurrentBlock().setName("currentBlock");
+		this.getCurrentBlock().setRenderer(this.getListener());
+
+		this.getSettingsPanel().add(this.getCurrentBlock());
+
+		this.getSettingsPanel().add(this.getBlockPanel());
 		this.addKeyListener(this.getEditorPanel().getListener());
 		this.getSettingsPanel().addKeyListener(this.getEditorPanel().getListener());
 	}
@@ -350,14 +365,6 @@ public class LevelEditorGui extends JFrame {
 
 	public void setCurrentBlock(JComboBox currentBlock) {
 		this.currentBlock = currentBlock;
-	}
-
-	public JCheckBox getShowBlockIDs() {
-		return showBlockIDs;
-	}
-
-	public void setShowBlockIDs(JCheckBox showBlockIDs) {
-		this.showBlockIDs = showBlockIDs;
 	}
 
 	public JProgressBar getProgressbar() {
@@ -509,24 +516,18 @@ public class LevelEditorGui extends JFrame {
 		this.applyLayer = applyLayer;
 	}
 
-	public void updateOptionsCoords(int x, int y) {
-		this.getOptionsLabelXVal().setValue(x);
-		this.getOptionsLabelYVal().setValue(y);
-		this.repaint();
-	}
+	private class GuiListener extends DefaultListCellRenderer implements ActionListener, ChangeListener {
 
-	private class buttonListener implements ActionListener {
+		private static final long	serialVersionUID	= 1L;
+		private LevelEditorGui		gui;
 
-		private LevelEditorGui	gui;
-
-		public buttonListener(LevelEditorGui gui) {
+		public GuiListener(LevelEditorGui gui) {
 			this.setGui(gui);
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String cmd = e.getActionCommand();
-			System.out.println("CMD : " + cmd);
 			if (cmd.equalsIgnoreCase("applyx")) {
 				this.getGui().getEditorPanel().updateLayer((Integer) this.getGui().getLayerVal().getValue(), (Integer) this.getGui().getxSizeVal().getValue(), (Integer) this.getGui().getySizeVal().getValue());
 			} else if (cmd.equalsIgnoreCase("applyy")) {
@@ -538,8 +539,8 @@ public class LevelEditorGui extends JFrame {
 			} else if (cmd.equalsIgnoreCase("selectLayer")) {
 				this.getGui().getEditorPanel().setCurrentLayer((Integer) this.getGui().getCurrentLayerBox().getValue());
 				this.getGui().getEditorPanel().repaint();
-			} else if (cmd.equalsIgnoreCase("applyOpions")) {
-				this.getGui().updateOptionsCoords(((Integer) this.getGui().getOptionsLabelXVal().getValue()) - 1, ((Integer) this.getGui().getOptionsLabelYVal().getValue()) - 1);
+			} else if (cmd.equalsIgnoreCase("applyOptions")) {
+				this.getGui().getEditorPanel().updateCoords(((Integer) this.getGui().getOptionsLabelXVal().getValue()) - 1, ((Integer) this.getGui().getOptionsLabelYVal().getValue()) - 1);
 			}
 		}
 
@@ -558,12 +559,28 @@ public class LevelEditorGui extends JFrame {
 			this.gui = gui;
 		}
 
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			String name = ((JSpinner) e.getSource()).getName();
+			if (name.equalsIgnoreCase("optionx") || name.equalsIgnoreCase("optiony")) {
+				this.getGui().getEditorPanel().updateCoords(((Integer) this.getGui().getOptionsLabelXVal().getValue()) - 1, ((Integer) this.getGui().getOptionsLabelYVal().getValue()) - 1);
+			}
+		}
+
+		@Override
+		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+			if (isSelected) {
+				this.getGui().getBlockPanel().setSelectedIndex(index);
+				this.getGui().getBlockPanel().repaint();
+			}
+			return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+		}
 	}
 
 	/**
 	 * @return the listener
 	 */
-	public buttonListener getListener() {
+	public GuiListener getListener() {
 		return listener;
 	}
 
@@ -571,7 +588,7 @@ public class LevelEditorGui extends JFrame {
 	 * @param listener
 	 *          the listener to set
 	 */
-	public void setListener(buttonListener listener) {
+	public void setListener(GuiListener listener) {
 		this.listener = listener;
 	}
 
@@ -596,5 +613,20 @@ public class LevelEditorGui extends JFrame {
 
 	public void setOptionsApply(JButton optionsApply) {
 		this.optionsApply = optionsApply;
+	}
+
+	/**
+	 * @return the blockPanel
+	 */
+	public BlockPreviewPanel getBlockPanel() {
+		return blockPanel;
+	}
+
+	/**
+	 * @param blockPanel
+	 *          the blockPanel to set
+	 */
+	public void setBlockPanel(BlockPreviewPanel blockPanel) {
+		this.blockPanel = blockPanel;
 	}
 }

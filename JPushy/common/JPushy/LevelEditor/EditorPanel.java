@@ -13,7 +13,6 @@ import java.awt.event.MouseWheelListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -30,7 +29,8 @@ import JPushy.Types.ProgammingRelated.ItemArray;
 public class EditorPanel extends JPanel {
 
 	/**
-	 * 
+	 * This Editor Panel is the panel where you can push your level around and set
+	 * blocks
 	 */
 	private static final long	    serialVersionUID	= 1L;
 
@@ -87,10 +87,14 @@ public class EditorPanel extends JPanel {
 	}
 
 	public void updateCoords(int x, int y) {
-		this.setOpX(x);
-		this.setOpY(y);
-		this.getBlockLayers().get(currentLayer).setOption(this.listener.selTileX, this.listener.selTileY, new Coord2D(x, y));
-		this.repaint();
+		System.out.println("update !");
+		if (listener.getSelTileX() != -1 && listener.getSelTileY() != -1) {
+			this.setOpX(x);
+			this.setOpY(y);
+			this.getBlockLayers().get(currentLayer).setOption(this.listener.selTileX, this.listener.selTileY, new Coord2D(x, y));
+			this.repaint();
+			System.out.println("Option X : " + this.getBlockLayers().get(currentLayer).getOption(this.listener.selTileX, this.listener.selTileX).getX() + " ; Option Y : " + this.getBlockLayers().get(currentLayer).getOption(this.listener.selTileX, this.listener.selTileX).getY());
+		}
 	}
 
 	public void onClick(int x, int y) {
@@ -136,6 +140,8 @@ public class EditorPanel extends JPanel {
 	}
 
 	public void saveLevel(String name, String version) {
+		this.getGui().getProgressbar().setMaximum((this.getLayer() * this.getLevelHeight() * this.getLevelWidth()) * 2);
+		this.getGui().getProgressbar().setEnabled(true);
 		System.out.println("Blueh !");
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File("Data/lvl/" + name + ".lvl")));
@@ -146,6 +152,13 @@ public class EditorPanel extends JPanel {
 				for (int y = 0; y < this.getLevelHeight(); y++) {
 					for (int x = 0; x < this.getLevelWidth(); x++) {
 						writer.write((char) (this.getBlockLayers().get(l).getBlock(x, y).getId() + 48));
+						this.getGui().getProgressbar().setValue(this.getGui().getProgressbar().getValue() + 1);
+						this.getGui().getProgressbar().repaint();
+						this.getGui().repaint();
+						try {
+							Thread.sleep(10);
+						} catch (Exception e) {
+						}
 					}
 					writer.write("\n");
 				}
@@ -157,19 +170,27 @@ public class EditorPanel extends JPanel {
 				for (int y = 0; y < this.getLevelHeight(); y++) {
 					for (int x = 0; x < this.getLevelWidth(); x++) {
 						c = this.getItemLayers().get(l).get(x, y).getId();
-						// System.out.println("Item : " + this.getItemLayers().get(l).get(x,
-						// y).toString() + " id : " + c);
 						if (c != Items.noitem.getId()) {
 							c += 48;
 							writer.write("item=" + l + "," + x + "," + y + "=" + (char) c + ";\n");
+						}
+						if (this.getBlockLayers().get(l).getOption(x, y).getX() != -1 && this.getBlockLayers().get(l).getOption(x, y).getY() != -1) {
+							writer.write(l + "," + x + "," + y + "=" + this.getBlockLayers().get(l).getOption(x, y).getX() + "," + this.getBlockLayers().get(l).getOption(x, y).getY());
+						}
+						this.getGui().getProgressbar().setValue(this.getGui().getProgressbar().getValue() + 1);
+
+						this.getGui().getProgressbar().repaint();
+						this.getGui().repaint();
+						try {
+							Thread.sleep(10);
+						} catch (Exception e) {
 						}
 					}
 				}
 			}
 			writer.close();
 			JOptionPane.showMessageDialog(this, "Level " + name + " V" + version + " was saved to Data/lvl/" + name + ".lvl / .cfg");
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
 		}
 	}
 
@@ -189,30 +210,30 @@ public class EditorPanel extends JPanel {
 	}
 
 	/**
-	 * @return the gui
+	 * @return the parent gui
 	 */
 	public LevelEditorGui getGui() {
 		return gui;
 	}
 
 	/**
-	 * @param gui
-	 *          the gui to set
+	 * @param parent
+	 *          gui the parent gui to set
 	 */
 	public void setGui(LevelEditorGui gui) {
 		this.gui = gui;
 	}
 
 	/**
-	 * @return the layer
+	 * @return the amount of layers
 	 */
 	public int getLayer() {
 		return layer;
 	}
 
 	/**
-	 * @param layer
-	 *          the layer to set
+	 * @param layers
+	 *          the amount of layers to set
 	 */
 	public void setLayer(int layer) {
 		this.layer = layer;
@@ -249,7 +270,7 @@ public class EditorPanel extends JPanel {
 	}
 
 	/**
-	 * @return the layerUp
+	 * @return the layerUp <- character for keyboard
 	 */
 	public char getLayerUp() {
 		return layerUp;
@@ -257,14 +278,14 @@ public class EditorPanel extends JPanel {
 
 	/**
 	 * @param layerUp
-	 *          the layerUp to set
+	 *          the layerUp to set <- character for keyboard
 	 */
 	public void setLayerUp(char layerUp) {
 		this.layerUp = layerUp;
 	}
 
 	/**
-	 * @return the layerDown
+	 * @return the layerDown <- character for keyboard
 	 */
 	public char getLayerDown() {
 		return layerDown;
@@ -272,7 +293,7 @@ public class EditorPanel extends JPanel {
 
 	/**
 	 * @param layerDown
-	 *          the layerDown to set
+	 *          the layerDown to set <- character for keyboard
 	 */
 	public void setLayerDown(char layerDown) {
 		this.layerDown = layerDown;
@@ -433,8 +454,8 @@ public class EditorPanel extends JPanel {
 
 		private EditorPanel	gui;
 
-		private int		      selTileX	= 0;
-		private int		      selTileY	= 0;
+		private int		      selTileX	= -1;
+		private int		      selTileY	= -1;
 
 		private boolean		  btns[]		= new boolean[] { false, false, false, false };
 
@@ -474,14 +495,7 @@ public class EditorPanel extends JPanel {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if (e.isShiftDown() && ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0))) {
-				this.selTileX = (e.getX() - gui.originX) / 40;
-				this.selTileY = (e.getY() - gui.originY) / 40;
-			} else {
-				this.selTileX = -1;
-				this.selTileY = -1;
-			}
-			gui.repaint();
+
 		}
 
 		@Override
@@ -495,53 +509,61 @@ public class EditorPanel extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			switch (e.getButton()) {
-				case 1: {
-					btns[1] = true;
-					break;
+			if (e.isShiftDown() && ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0))) {
+				this.selTileX = (e.getX() - gui.originX) / 40;
+				this.selTileY = (e.getY() - gui.originY) / 40;
+			} else {
+				this.selTileX = -1;
+				this.selTileY = -1;
+				switch (e.getButton()) {
+					case 1: {
+						btns[1] = true;
+						break;
+					}
+					case 2: {
+						btns[2] = true;
+						break;
+					}
+					case 3: {
+						btns[3] = true;
+						break;
+					}
 				}
-				case 2: {
-					btns[2] = true;
-					break;
-				}
-				case 3: {
-					btns[3] = true;
-					break;
-				}
-			}
-			if (btns[3]) {
-				gui.lastX = e.getX();
-				gui.lastY = e.getY();
-			} else if (btns[2]) {
-				if ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0)) {
-					int cx = (e.getX() - gui.originX) / 40;
-					int cy = (e.getY() - gui.originY) / 40;
-					if (cx < this.gui.getWidth() && cy < this.gui.getHeight()) {
-						System.out.println("Block : " + cx + ":" + cy);
-						for (int i = 0; i < this.gui.getGui().getCurrentBlock().getModel().getSize(); i++) {
-							String name = this.gui.getGui().getCurrentBlock().getModel().getElementAt(i).toString();
-							if (i >= Blocks.blockRegistry.size()) {
-								String itemName = this.gui.getItemLayers().get(gui.getCurrentLayer()).get(cx, cy).getName();
-								if (!itemName.equalsIgnoreCase("noitem")) {
-									if (itemName.equalsIgnoreCase(name)) {
+				if (btns[3]) {
+					gui.lastX = e.getX();
+					gui.lastY = e.getY();
+				} else if (btns[2]) {
+					if ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0)) {
+						int cx = (e.getX() - gui.originX) / 40;
+						int cy = (e.getY() - gui.originY) / 40;
+						if (cx < this.gui.getWidth() && cy < this.gui.getHeight()) {
+							System.out.println("Block : " + cx + ":" + cy);
+							for (int i = 0; i < this.gui.getGui().getCurrentBlock().getModel().getSize(); i++) {
+								String name = this.gui.getGui().getCurrentBlock().getModel().getElementAt(i).toString();
+								if (i >= Blocks.blockRegistry.size()) {
+									String itemName = this.gui.getItemLayers().get(gui.getCurrentLayer()).get(cx, cy).getName();
+									if (!itemName.equalsIgnoreCase("noitem")) {
+										if (itemName.equalsIgnoreCase(name)) {
+											this.gui.getGui().getCurrentBlock().setSelectedIndex(i);
+										}
+									}
+								} else {
+									String blockName = this.gui.getBlockLayers().get(gui.getCurrentLayer()).getBlock(cx, cy).getName();
+									if (blockName.equalsIgnoreCase(name)) {
 										this.gui.getGui().getCurrentBlock().setSelectedIndex(i);
 									}
-								}
-							} else {
-								String blockName = this.gui.getBlockLayers().get(gui.getCurrentLayer()).getBlock(cx, cy).getName();
-								if (blockName.equalsIgnoreCase(name)) {
-									this.gui.getGui().getCurrentBlock().setSelectedIndex(i);
 								}
 							}
 						}
 					}
-				}
-			} else if (btns[1]) {
-				if ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0)) {
-					gui.onClick(e.getX() - gui.originX, e.getY() - gui.originY);
-					gui.repaint();
+				} else if (btns[1]) {
+					if ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0)) {
+						gui.onClick(e.getX() - gui.originX, e.getY() - gui.originY);
+						gui.repaint();
+					}
 				}
 			}
+			gui.repaint();
 		}
 
 		@Override

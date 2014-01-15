@@ -7,6 +7,7 @@ import JPushy.Core.Game;
 import JPushy.Types.Coord2D;
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
+import JPushy.Types.Player.Player;
 import JPushy.gfx.PictureLoader;
 
 /**
@@ -228,11 +229,11 @@ public class Level {
 		comment.add(s);
 	}
 
-	public void init() {
+	public void init(Player p) {
 		for (String s : comment) {
 			Game.sendMessage(s);
 		}
-		getActiveStage().init(Game.getPlayer());
+		getActiveStage().init(p);
 	}
 
 	public String getFileName() {

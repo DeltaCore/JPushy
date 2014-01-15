@@ -32,7 +32,7 @@ public class LevelLoader {
 		ArrayList<String> cfgLines = loadLevelConfig(filename);
 		String start_regex = "^<stage id=([0-9])>$";
 		String end_regex = "^</stage>";
-		String levelRegEx = "^^<level name=\"([a-zA-Z\\s]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
+		String levelRegEx = "^<level name=\"([a-zA-Z\\s0-9[-]]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
 		String commentStart = "^<comment>";
 		String commentEnd = "^</comment>";
 		BlockList blocks = new BlockList();

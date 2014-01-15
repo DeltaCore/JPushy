@@ -136,7 +136,7 @@ public class Game extends JFrame {
 		updateLevels();
 	}
 
-	String	levelRegEx	      = "<level name=\"([a-zA-Z0-9\\s]{1,})\" version='([a-zA-Z0-9.,\\s]{1,})'>";
+	String	levelRegEx	      = "^<level name=\"([a-zA-Z\\s0-9[-]]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
 	String	commentStartRegEx	= "^<comment>";
 	String	commentEndRegEx	  = "^</comment>";
 
