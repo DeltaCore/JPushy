@@ -3,7 +3,6 @@ package JPushy.Types.Level;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
-import JPushy.Core.Game;
 import JPushy.Types.Coord2D;
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
@@ -61,45 +60,27 @@ public class Level {
 		return new Dimension(width, height * 40 + 39 + addMargin);
 	}
 
-	/*
-	 * public boolean notifyPlayerMove(int x, int y, int dir) { // �ber gibt die
-	 * neue position und gibt ja/nein zur�ck ob es geht //Bl�cke die n/e/s/w von
-	 * neuen block sind Block bN = getBlock(x, y - 1); Block bS = getBlock(x, y +
-	 * 1); Block bE = getBlock(x + 1, y); Block bW = getBlock(x - 1, y); Block
-	 * block = getBlock(x, y); if (dir == 0) { if(block.isSolid()){ return false;
-	 * }else if(block.isPlayerAbleToWalkOn()){ block.onWalk(x, y, this);
-	 * block.onOccupied(true, this); bS.onOccupied(false, this); setBlock(x, y -
-	 * 1, block); return true; }else if(!block.isSolid()){ if(bN.isSolid()){
-	 * return false; } block.onPush(x, y, x, y-1, 2, this); setBlock(x, y - 1,
-	 * block); setBlock(x,y, Blocks.air); bN.setOccupiedByBlock(block);
-	 * bN.setOcupied(true); bN.onOccupied(true, this);
-	 * block.setOccupiedByBlock(Blocks.air); block.setOcupied(false);
-	 * block.onOccupied(false, this); return true; } } else if (dir == 1) {
-	 * if(block.isSolid()){ return false; }else if(block.isPlayerAbleToWalkOn()){
-	 * block.onWalk(x, y, this); block.onOccupied(true, this);
-	 * bW.onOccupied(false, this); return true; }else if(!block.isSolid()){
-	 * if(bW.isSolid()){ return false; } block.onPush(x, y, x, y-1, 3, this);
-	 * setBlock(x + 1, y, block); setBlock(x,y, Blocks.air);
-	 * bW.setOccupiedByBlock(block); bW.setOcupied(true); bW.onOccupied(true,
-	 * this); block.setOccupiedByBlock(Blocks.air); block.setOcupied(false);
-	 * block.onOccupied(false, this); return true; } } else if (dir == 2) {
-	 * if(block.isSolid()){ return false; }else if(block.isPlayerAbleToWalkOn()){
-	 * block.onWalk(x, y, this); block.onOccupied(true, this);
-	 * bS.onOccupied(false, this); return true; }else if(!block.isSolid()){
-	 * if(bS.isSolid()){ return false; } block.onPush(x, y, x, y-1, 0, this);
-	 * setBlock(x, y + 1, block); setBlock(x,y, Blocks.air);
-	 * bS.setOccupiedByBlock(block); bS.setOcupied(true); bS.onOccupied(true,
-	 * this); block.setOccupiedByBlock(Blocks.air); block.setOcupied(false);
-	 * block.onOccupied(false, this); return true; } } else if (dir == 3) {
-	 * if(block.isSolid()){ return false; }else if(block.isPlayerAbleToWalkOn()){
-	 * block.onWalk(x, y, this); block.onOccupied(true, this);
-	 * bE.onOccupied(false, this); return true; }else if(!block.isSolid()){
-	 * if(bE.isSolid()){ return false; } block.onPush(x, y, x, y-1, 1, this);
-	 * setBlock(x - 1, y, block); setBlock(x,y, Blocks.air);
-	 * bE.setOccupiedByBlock(block); bE.setOcupied(true); bE.onOccupied(true,
-	 * this); block.setOccupiedByBlock(Blocks.air); block.setOcupied(false);
-	 * block.onOccupied(false, this); return true; } } return false; }
-	 */
+	public void moveBlockTo(int x, int y, int dir) {
+		switch (dir) {
+			case 0:
+				stages.get(activeStage).setMoveableBlock(stages.get(activeStage).getMoveableBlock(x, y).copy(), x, y - 1);
+				stages.get(activeStage).setMoveableBlock(null, x, y);
+				break;
+			case 1:
+				stages.get(activeStage).setMoveableBlock(stages.get(activeStage).getMoveableBlock(x, y).copy(), x + 1, y);
+				stages.get(activeStage).setMoveableBlock(null, x, y);
+				break;
+			case 2:
+				stages.get(activeStage).setMoveableBlock(stages.get(activeStage).getMoveableBlock(x, y).copy(), x, y + 1);
+				stages.get(activeStage).setMoveableBlock(null, x, y);
+				break;
+			case 3:
+				stages.get(activeStage).setMoveableBlock(stages.get(activeStage).getMoveableBlock(x, y).copy(), x - 1, y);
+				stages.get(activeStage).setMoveableBlock(null, x, y);
+				break;
+		}
+	}
+
 	public boolean moveBlock(int x, int y, int dir) {
 		Block b = stages.get(activeStage).getBlocks()[y][x];
 		// System.out.println(b.toString() + ":" + b.isOcupied());
@@ -231,7 +212,7 @@ public class Level {
 
 	public void init(Player p) {
 		for (String s : comment) {
-			Game.sendMessage(s);
+			// Game.sendMessage(s);
 		}
 		getActiveStage().init(p);
 	}

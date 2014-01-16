@@ -28,8 +28,12 @@ public class Finish extends Block {
 			Game.getPlayer().setFreezed(false);
 			Game.getPlayer().cancelNextMove();
 		} else {
-			Game.sendMessage("Yay ! You won this easy game for Elementary kids :DD");
-			Game.stopGame();
+			if (l.getActiveStage().getWinconditions().allCompleted()) {
+				Game.sendMessage("Yay ! You won this easy game for Elementary kids :DD");
+				Game.stopGame();
+			} else {
+				Game.sendMessage("Sorry, you are not done yet :/");
+			}
 		}
 		Game.pushUpdate();
 	}

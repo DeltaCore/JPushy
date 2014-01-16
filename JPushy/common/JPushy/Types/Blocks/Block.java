@@ -366,6 +366,10 @@ public class Block extends Object implements Cloneable {
 		}
 	}
 
+	public Block onLoaded(int x, int y, int stageId, Stage stage) {
+		return this;
+	}
+
 	public void onPush(int oldX, int oldY, int newX, int newY, int side, Level l) {
 	}
 
@@ -384,9 +388,12 @@ public class Block extends Object implements Cloneable {
 	public void onBlockActivated(Stage stage, Player p) {
 	}
 
-	public Block copy(Block c) {
+	public void onBlockPushedOnMe(Block b, Level l) {
+	}
+
+	public Block copy() {
 		try {
-			return (Block) c.clone();
+			return (Block) this.clone();
 		} catch (CloneNotSupportedException err) {
 			throw new RuntimeException(err);
 		}

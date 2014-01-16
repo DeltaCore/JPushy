@@ -11,10 +11,12 @@ import JPushy.Types.Player.Player;
  */
 public class Stage {
 
-	private int	      id	= 0;
-	private int	      homeX	= 0, homeY = 0;
-	private Block[][]	blocks;
-	private Block[][]	movableBlocks;
+	private Winconditions	winconditions	= new Winconditions();
+
+	private int	          id	          = 0;
+	private int	          homeX	        = 0, homeY = 0;
+	private Block[][]	    blocks;
+	private Block[][]	    moveableBlocks;
 
 	public Stage(int id) {
 		this.id = id;
@@ -60,12 +62,20 @@ public class Stage {
 		this.homeY = homeY;
 	}
 
-	public Block[][] getMovableBlocks() {
-		return movableBlocks;
+	public Block[][] getMoveableBlocks() {
+		return moveableBlocks;
 	}
 
-	public void setMovableBlocks(Block[][] movableBlocks) {
-		this.movableBlocks = movableBlocks;
+	public void setMoveableBlocks(Block[][] moveableBlocks) {
+		this.moveableBlocks = moveableBlocks;
+	}
+
+	public void setMoveableBlock(Block b, int x, int y) {
+		this.getMoveableBlocks()[y][x] = b;
+	}
+
+	public Block getMoveableBlock(int x, int y) {
+		return this.getMoveableBlocks()[y][x];
 	}
 
 	public void init(Player p) {
@@ -75,6 +85,21 @@ public class Stage {
 
 	public void destroyBlock(int x, int y) {
 		this.setBlock(x, y, Blocks.getBlockById(Blocks.air.getId()));
+	}
+
+	/**
+	 * @return the winconditions
+	 */
+	public Winconditions getWinconditions() {
+		return winconditions;
+	}
+
+	/**
+	 * @param winconditions
+	 *          the winconditions to set
+	 */
+	public void setWinconditions(Winconditions winconditions) {
+		this.winconditions = winconditions;
 	}
 
 }

@@ -1,5 +1,6 @@
 package JPushy.Types.Blocks;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import JPushy.gfx.PictureLoader;
@@ -15,7 +16,7 @@ public class Blocks {
 
 	public static final int	       maxBlocks	    = 32;
 
-	public static final Block	     air	          = new Block("Air", 0, PictureLoader.loadImageFromFile("base.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true);
+	public static final Block	     air	          = new Block("Air", 0, PictureLoader.loadImageFromFile("base.png")).setPlayerAbleToWalkOn(true).setSolid(true).setDestroyable(false).setVisible(true).setCanGetocupied(true);
 	public static final Block	     wall	          = new Block("Wall - Base", 1, PictureLoader.loadImageFromFile("wall.png")).setPlayerAbleToWalkOn(false).setSolid(true).setDestroyable(false).setVisible(true);
 	public static final Block	     wall1	        = new Block("Wall 1", 2, PictureLoader.loadImageFromFile("wall1.png")).setPlayerAbleToWalkOn(false).setSolid(true).setDestroyable(false).setVisible(true);
 	public static final Block	     wall2	        = new Block("Wall 2", 3, PictureLoader.loadImageFromFile("wall2.png")).setPlayerAbleToWalkOn(false).setSolid(true).setDestroyable(false).setVisible(true);
@@ -42,6 +43,12 @@ public class Blocks {
 	public static final Block	     gate	          = new Gate("Gate", 24, PictureLoader.loadImageFromFile("gate.png")).setDestroyable(true).setPlayerAbleToWalkOn(false).setSolid(true).setInvincebleBlock(Blocks.getBlockById(0)).setVisible(true);
 	public static final Block	     lever	        = new SwitchBlock("Lever", 25, PictureLoader.loadImageFromFile("leverOn.png"), PictureLoader.loadImageFromFile("leverOff.png")).setDestroyable(false).setSolid(true).setPlayerAbleToWalkOn(true);
 	public static final Block	     button	        = new Button("Button", 26, PictureLoader.loadImageFromFile("button.png")).setDestroyable(false).setSolid(true).setPlayerAbleToWalkOn(true).setCanGetocupied(true);
+	public static final Block	     blueBallBox	  = new ColoredBallBox("Blue ball box", 27, PictureLoader.loadImageFromFile("blueBallBox.png"), Color.blue);
+	public static final Block	     greenBallBox	  = new ColoredBallBox("Green ball box", 28, PictureLoader.loadImageFromFile("greenBallBox.png"), Color.green);
+	public static final Block	     redBallBox	    = new ColoredBallBox("Red ball box", 29, PictureLoader.loadImageFromFile("redBallBox.png"), Color.red);
+	public static final Block	     blueBall	      = new ColoredBall("Blue ball", 30, PictureLoader.loadImageFromFile("blueBall.png"), Color.blue);
+	public static final Block	     greenBall	    = new ColoredBall("Green ball", 31, PictureLoader.loadImageFromFile("greenBall.png"), Color.green);
+	public static final Block	     redBall	      = new ColoredBall("Red ball", 32, PictureLoader.loadImageFromFile("redBall.png"), Color.red);
 
 	// continue with id 19
 
@@ -74,11 +81,11 @@ public class Blocks {
 			if (blockRegistry.get(i) == null) {
 			} else {
 				if (blockRegistry.get(i).getId() == id) {
-					return b = blockRegistry.get(i).copy(blockRegistry.get(i));
+					return b = blockRegistry.get(i).copy();
 				}
 			}
 		}
-		return air.copy(air);
+		return air.copy();
 	}
 
 	public static Block getBlockByName(String name) {
@@ -86,11 +93,11 @@ public class Blocks {
 			if (blockRegistry.get(i) == null) {
 			} else {
 				if (blockRegistry.get(i).getName().equalsIgnoreCase(name)) {
-					return blockRegistry.get(i).copy(blockRegistry.get(i));
+					return blockRegistry.get(i).copy();
 				}
 			}
 		}
-		return air.copy(air);
+		return air.copy();
 	}
 
 	public static void wakeUpDummy() {

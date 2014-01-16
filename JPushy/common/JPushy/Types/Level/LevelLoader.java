@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
+import JPushy.Types.Blocks.MoveableBlock;
 import JPushy.Types.Items.Items;
 import JPushy.Types.ProgammingRelated.BlockList;
 
@@ -81,6 +82,7 @@ public class LevelLoader {
 				yCounter = 0;
 			} else if (line.matches(end_regex)) {
 				currentStage.setBlocks(blocks.getBlocks());
+				currentStage.setMoveableBlocks(secondLayer.getBlocks());
 				level.registerStage(currentStage);
 				flag = false;
 				yCounter = 0;
@@ -100,7 +102,14 @@ public class LevelLoader {
 					if (itemForBlock != -1) {
 						b.setKeptItem(Items.getItemById(itemForBlock));
 					}
-					blocks.setBlock(xCounter, yCounter, b);
+					if (b instanceof MoveableBlock) {
+						System.out.println("MOVEABLE BLOCK ! : " + b.toString());
+						blocks.setBlock(xCounter, yCounter, Blocks.getBlockById(0));
+						secondLayer.setBlock(xCounter, yCounter, b);
+					} else {
+						blocks.setBlock(xCounter, yCounter, b);
+						secondLayer.setBlock(xCounter, yCounter, null);
+					}
 				}
 				yCounter++;
 			}

@@ -24,11 +24,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import JPushy.Gui.LevelServerConnector;
 import JPushy.MultiPlayer.MPClient;
 import JPushy.Types.Level.Level;
 import JPushy.Types.Level.LevelItem;
@@ -89,6 +91,8 @@ public class Game extends JFrame {
 		this.getMainBar().add(this.getServerMenu());
 		this.getServerMenu().add(this.getConnectToServer());
 		this.getServerMenu().add(this.getConnectToLevelServer());
+		this.getConnectToLevelServer().setActionCommand("connecttolevelserver");
+		this.getConnectToLevelServer().addActionListener(listener);
 
 		this.getConnectToServer().setActionCommand("connectToServer");
 		this.getConnectToServer().addActionListener(listener);
@@ -109,7 +113,7 @@ public class Game extends JFrame {
 		// Main splitpane
 
 		JSplitPane mainSplitPane = new JSplitPane();
-		mainSplitPane.setResizeWeight(0.2);
+		mainSplitPane.setResizeWeight(0.4);
 		contentPane.add(mainSplitPane, BorderLayout.CENTER);
 
 		// Level list
@@ -361,6 +365,14 @@ public class Game extends JFrame {
 				Game.getPlayer().setName(username);
 				gui.thread.getClient().loadPlayer();
 				gui.openConnection();
+			} else if (arg0.getActionCommand().equals("connecttolevelserver")) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						LevelServerConnector con = new LevelServerConnector(gui);
+						con.setVisible(true);
+					}
+				});
 			}
 		}
 

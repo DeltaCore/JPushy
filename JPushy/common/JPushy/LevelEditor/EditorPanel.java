@@ -98,8 +98,8 @@ public class EditorPanel extends JPanel {
 	}
 
 	public void onClick(int x, int y) {
-		int cx = x / 40;
-		int cy = y / 40;
+		int cx = (int) (x / (40 * this.getScale()));
+		int cy = (int) (y / (40 * this.getScale()));
 		if (cy < this.getLevelHeight() && cx < this.getLevelWidth()) {
 			String sel = this.getGui().getCurrentBlock().getSelectedItem().toString();
 			int seli = this.getGui().getCurrentBlock().getSelectedIndex();
@@ -175,7 +175,7 @@ public class EditorPanel extends JPanel {
 							writer.write("item=" + l + "," + x + "," + y + "=" + (char) c + ";\n");
 						}
 						if (this.getBlockLayers().get(l).getOption(x, y).getX() != -1 && this.getBlockLayers().get(l).getOption(x, y).getY() != -1) {
-							writer.write(l + "," + x + "," + y + "=" + this.getBlockLayers().get(l).getOption(x, y).getX() + "," + this.getBlockLayers().get(l).getOption(x, y).getY());
+							writer.write(l + "," + x + "," + y + "=" + this.getBlockLayers().get(l).getOption(x, y).getX() + "," + this.getBlockLayers().get(l).getOption(x, y).getY() + "\n");
 						}
 						this.getGui().getProgressbar().setValue(this.getGui().getProgressbar().getValue() + 1);
 
@@ -510,8 +510,8 @@ public class EditorPanel extends JPanel {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			if (e.isShiftDown() && ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0))) {
-				this.selTileX = (e.getX() - gui.originX) / 40;
-				this.selTileY = (e.getY() - gui.originY) / 40;
+				this.selTileX = (e.getX() - gui.originX) / (int) (40 * this.gui.getScale());
+				this.selTileY = (e.getY() - gui.originY) / (int) (40 * this.gui.getScale());
 			} else {
 				this.selTileX = -1;
 				this.selTileY = -1;
@@ -534,8 +534,8 @@ public class EditorPanel extends JPanel {
 					gui.lastY = e.getY();
 				} else if (btns[2]) {
 					if ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0)) {
-						int cx = (e.getX() - gui.originX) / 40;
-						int cy = (e.getY() - gui.originY) / 40;
+						int cx = (e.getX() - gui.originX) / (int) (40 * this.gui.getScale());
+						int cy = (e.getY() - gui.originY) / (int) (40 * this.gui.getScale());
 						if (cx < this.gui.getWidth() && cy < this.gui.getHeight()) {
 							System.out.println("Block : " + cx + ":" + cy);
 							for (int i = 0; i < this.gui.getGui().getCurrentBlock().getModel().getSize(); i++) {

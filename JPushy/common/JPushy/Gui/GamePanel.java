@@ -94,6 +94,10 @@ public class GamePanel extends JPanel {
 							this.tempTexture = GraphicUtils.getImageFromPicture(this.tempBlock.getTexture());
 							g.drawImage(this.tempTexture, ((x * 40)), ((y * 40)), null);
 						}
+						if (this.level.getActiveStage().getMoveableBlock(x, y) != null) {
+							this.tempTexture = GraphicUtils.getImageFromPicture(this.level.getActiveStage().getMoveableBlock(x, y).getTexture());
+							g.drawImage(this.tempTexture, ((x * 40)), ((y * 40)), null);
+						}
 						if (this.tempBlock.getKeptItem() != null) {
 							if (!(this.tempBlock.getKeptItem() == Items.noitem))
 								g.drawImage(GraphicUtils.getImageFromPicture(this.tempBlock.getKeptItem().getTexture()), ((x * 40)), ((y * 40)), null);
