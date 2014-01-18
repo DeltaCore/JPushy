@@ -24,8 +24,7 @@ public class MiningGun extends Item {
 	}
 
 	@Override
-	public void onUse(Stage stage, int dir) {
-		super.onUse(stage, dir);
+	public void onUse(Stage stage, int dir, ItemUseEvent e) {
 		int y = Game.getPlayer().getY();
 		int x = Game.getPlayer().getX();
 		boolean flag = false;
@@ -65,5 +64,7 @@ public class MiningGun extends Item {
 				Game.getPlayer().getInventory().removeItemInHand();
 			}
 		}
+		e.setHandled(true);
+		super.onUse(stage, dir, e);
 	}
 }

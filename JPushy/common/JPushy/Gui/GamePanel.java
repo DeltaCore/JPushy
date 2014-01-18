@@ -86,28 +86,30 @@ public class GamePanel extends JPanel {
 				try {
 					if (this.tempBlock.isVisible()) {
 						this.tempTexture = GraphicUtils.getImageFromPicture(Blocks.air.getTexture());
-						g.drawImage(this.tempTexture, ((x * 40)), ((y * 40)), null);
+						g.drawImage(this.tempTexture, ((x * 40)), ((y * 40)), 40, 40, null);
 						if (this.tempBlock.isOcupied()) {
 							this.tempTexture = GraphicUtils.getImageFromPicture(this.tempBlock.getOccupiedByBlock().getTexture());
-							g.drawImage(this.tempTexture, ((x * 40)), ((y * 40)), null);
+							g.drawImage(this.tempTexture, ((x * 40)), ((y * 40)), 40, 40, null);
 						} else {
 							this.tempTexture = GraphicUtils.getImageFromPicture(this.tempBlock.getTexture());
-							g.drawImage(this.tempTexture, ((x * 40)), ((y * 40)), null);
+							g.drawImage(this.tempTexture, ((x * 40)), ((y * 40)), 40, 40, null);
 						}
 						if (this.level.getActiveStage().getMoveableBlock(x, y) != null) {
 							this.tempTexture = GraphicUtils.getImageFromPicture(this.level.getActiveStage().getMoveableBlock(x, y).getTexture());
-							g.drawImage(this.tempTexture, ((x * 40)), ((y * 40)), null);
+							g.drawImage(this.tempTexture, ((x * 40)), ((y * 40)), 40, 40, null);
 						}
+
 						if (this.tempBlock.getKeptItem() != null) {
 							if (!(this.tempBlock.getKeptItem() == Items.noitem))
 								g.drawImage(GraphicUtils.getImageFromPicture(this.tempBlock.getKeptItem().getTexture()), ((x * 40)), ((y * 40)), null);
 						}
+
 					} else {
 						this.tempTexture = GraphicUtils.getImageFromPicture(this.tempBlock.getInvincebleBlock().getTexture());
-						g.drawImage(this.tempTexture, ((x * 40)), ((y * 40)), null);
+						g.drawImage(this.tempTexture, ((x * 40)), ((y * 40)), 40, 40, null);
 					}
 				} catch (Exception e) {
-
+					e.printStackTrace();
 				}
 			}
 			this.setSizeY(y);

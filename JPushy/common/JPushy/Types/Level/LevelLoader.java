@@ -98,6 +98,7 @@ public class LevelLoader {
 					blockId = charValue - 48;
 					Block b = Blocks.getBlockById(blockId);
 					b = b.onConfigLoaded(xCounter, yCounter, currentStageId, cfgLines, currentStage);
+					b.onLoaded(xCounter, yCounter, currentStageId, currentStage);
 					itemForBlock = getItemForBlock(currentStageId, xCounter, yCounter, filename);
 					if (itemForBlock != -1) {
 						b.setKeptItem(Items.getItemById(itemForBlock));
@@ -117,7 +118,7 @@ public class LevelLoader {
 		return level;
 	}
 
-	private static int getStageLength(ArrayList<String> lines, int stageId) {
+	public static int getStageLength(ArrayList<String> lines, int stageId) {
 		boolean debug = true;// Core.getSettings().getSettings(Core.getSettings().debug);
 		int length = 0;
 		String start_regex = "^<stage id=([0-9])>$";
@@ -154,7 +155,7 @@ public class LevelLoader {
 		return length;
 	}
 
-	private static int getStageWidth(ArrayList<String> lines, int stageId) {
+	public static int getStageWidth(ArrayList<String> lines, int stageId) {
 		int width = 0;
 		String start_regex = "^<stage id=([0-9])>$";
 		String end_regex = "^</stage>";
@@ -180,6 +181,21 @@ public class LevelLoader {
 		return width;
 	}
 
+	public static int getLevelStages(ArrayList<String> lines) {
+		int layers = 0;
+		String start_regex = "^<stage id=([0-9])>$";
+		for (int i = 0; i < lines.size(); i++) {
+			if (lines.get(i).matches(start_regex)) {
+				Pattern pattern = Pattern.compile(start_regex);
+				Matcher matcher = pattern.matcher(lines.get(i));
+				if (matcher.matches()) {
+					layers++;
+				}
+			}
+		}
+		return layers;
+	}
+
 	public static int[] checkCFGCords(ArrayList<String> cfg, int stageId, int x, int y) {
 		String regex = "^([0-9]{1,}),([0-9]{1,}),([0-9]{1,})=([0-9]{1,}),([0-9]{1,})$";
 		for (String line : cfg) {
@@ -202,7 +218,7 @@ public class LevelLoader {
 		return new int[] { 0, 0 };
 	}
 
-	private static ArrayList<String> loadLevelFile(String filename) {
+	public static ArrayList<String> loadLevelFile(String filename) {
 		ArrayList<String> returnString = new ArrayList<String>();
 		if (!filename.startsWith("Data/lvl/")) {
 			filename = "Data/lvl/" + filename;
@@ -221,7 +237,7 @@ public class LevelLoader {
 		return returnString;
 	}
 
-	private static ArrayList<String> loadLevelConfig(String filename) {
+	public static ArrayList<String> loadLevelConfig(String filename) {
 		ArrayList<String> returnString = new ArrayList<String>();
 		String modPath = filename.replace(".lvl", ".cfg");
 		if (!modPath.startsWith("Data/lvl/")) {
@@ -241,7 +257,7 @@ public class LevelLoader {
 		return returnString;
 	}
 
-	private static int getItemForBlock(int stage, int x, int y, String filename) {
+	public static int getItemForBlock(int stage, int x, int y, String filename) {
 		ArrayList<String> content = loadLevelConfig(filename);
 		String regex = "^item=([0-9]),([0-9]),([0-9])=([0-9]);";
 		Pattern pattern = Pattern.compile(regex);

@@ -14,6 +14,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -23,6 +25,7 @@ import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
 import JPushy.Types.Items.Item;
 import JPushy.Types.Items.Items;
+import JPushy.Types.Level.LevelLoader;
 import JPushy.Types.ProgammingRelated.BlockArray;
 import JPushy.Types.ProgammingRelated.ItemArray;
 
@@ -191,6 +194,116 @@ public class EditorPanel extends JPanel {
 			writer.close();
 			JOptionPane.showMessageDialog(this, "Level " + name + " V" + version + " was saved to Data/lvl/" + name + ".lvl / .cfg");
 		} catch (Exception e) {
+		}
+	}
+
+	public void loadLevel(String filename) {
+		File lvlFile = new File("Data/lvl/" + filename + ".lvl");
+		File cfgFile = new File("Data/lvl/" + filename + ".cfg");
+		if (!lvlFile.exists() || !cfgFile.exists()) {
+			System.out.println("File not found :/");
+		} else {
+			System.out.println("Loading level : " + filename);
+			Blocks.wakeUpDummy();
+			String line;
+			ArrayList<String> lines = LevelLoader.loadLevelFile(lvlFile.getName());
+			String start_regex = "^<stage id=([0-9])>$";
+			String end_regex = "^</stage>";
+			String levelRegEx = "^<level name=\"([a-zA-Z\\s0-9[-]]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
+			String commentStart = "^<comment>";
+			String commentEnd = "^</comment>";
+
+			int currentStageId = 0;
+			boolean flag = false;
+			int xCounter = 0;
+			int yCounter = 0;
+			char charValue = '0';
+			int blockId = 0;
+			int itemForBlock = -1;
+
+			boolean commentFlag = false;
+
+			int layers = LevelLoader.getLevelStages(lines);
+			int width = LevelLoader.getStageWidth(lines, currentStageId);
+			int height = LevelLoader.getStageLength(lines, currentStageId);
+			for (int i = 0; i < layers; i++) {
+				int x = LevelLoader.getStageWidth(lines, i);
+				if (x > width) {
+					width = x;
+				}
+				int y = LevelLoader.getStageLength(lines, i);
+				if (y > height) {
+					height = y;
+				}
+			}
+			this.setBlockLayers(new ArrayList<BlockArray>());
+			this.updateLayer(layers, width, height);
+			System.out.println("Levelsize : x: " + width + " y:" + height);
+			this.gui.getxSizeVal().setValue(width);
+			this.gui.getySizeVal().setValue(height);
+			this.gui.getLayerVal().setValue(layers);
+
+			for (int linesY = 0; linesY < lines.size(); linesY++) {
+				line = lines.get(linesY);
+				if (line.matches(levelRegEx)) {
+					Pattern pattern = Pattern.compile(levelRegEx);
+					Matcher matcher = pattern.matcher(line);
+					if (matcher.matches()) {
+						String name = matcher.group(1);
+						String version = matcher.group(2);
+						this.gui.getLevelNameText().setText(name);
+						this.gui.getLevelVersionText().setText(version);
+						this.gui.repaint();
+					}
+				} else if (line.matches(start_regex)) {
+					flag = true;
+					Pattern pattern = Pattern.compile(start_regex);
+					Matcher matcher = pattern.matcher(line);
+					if (matcher.matches()) {
+						int id = Integer.parseInt(matcher.group(1));
+						currentStageId = id;
+					}
+					yCounter = 0;
+				} else if (line.matches(end_regex)) {
+					flag = false;
+					yCounter = 0;
+				} else if (line.matches(commentStart)) {
+					commentFlag = true;
+				} else if (line.matches(commentEnd)) {
+					commentFlag = false;
+				} else if (commentFlag) {
+				} else if (flag) {
+					for (xCounter = 0; xCounter < line.length(); xCounter++) {
+						charValue = line.charAt(xCounter);
+						blockId = charValue - 48;
+						Block b = Blocks.getBlockById(blockId);
+						this.getBlockLayers().get(currentStageId).setBlock(xCounter, yCounter, b);
+
+						itemForBlock = LevelLoader.getItemForBlock(currentStageId, xCounter, yCounter, cfgFile.getName());
+						if (itemForBlock != -1) {
+							this.getItemLayers().get(currentStageId).set(xCounter, yCounter, Items.getItemById(itemForBlock));
+						}
+					}
+					yCounter++;
+				}
+			}
+		}
+		ArrayList<String> lines = LevelLoader.loadLevelConfig(cfgFile.getName());
+		ArrayList<String> levelLines = LevelLoader.loadLevelFile(lvlFile.getName());
+		for (String line : lines) {
+			String regex = "^([0-9]{1,}),([0-9]{1,}),([0-9]{1,})=([0-9]{1,}),([0-9]{1,})$";
+			if (line.matches(regex)) {
+				Pattern pattern = Pattern.compile(regex);
+				Matcher matcher = pattern.matcher(line);
+				if (matcher.matches()) {
+					int id = Integer.parseInt(matcher.group(1));
+					int x1 = Integer.parseInt(matcher.group(2));
+					int y1 = Integer.parseInt(matcher.group(3));
+					int x2 = Integer.parseInt(matcher.group(4));
+					int y2 = Integer.parseInt(matcher.group(5));
+					this.getBlockLayers().get(id).setOption(x1, y1, new Coord2D(x2, y2));
+				}
+			}
 		}
 	}
 

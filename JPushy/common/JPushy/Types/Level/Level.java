@@ -64,19 +64,39 @@ public class Level {
 		switch (dir) {
 			case 0:
 				stages.get(activeStage).setMoveableBlock(stages.get(activeStage).getMoveableBlock(x, y).copy(), x, y - 1);
+				stages.get(activeStage).getBlock(x, y - 1).setOcupied(true);
+				stages.get(activeStage).getBlock(x, y - 1).setOccupiedByBlock(stages.get(activeStage).getMoveableBlock(x, y));
 				stages.get(activeStage).setMoveableBlock(null, x, y);
+				stages.get(activeStage).getBlock(x, y).setOcupied(false);
+				stages.get(activeStage).getBlock(x, y).onOccupied(false, this);
+				stages.get(activeStage).getBlock(x, y - 1).onOccupied(true, this);
 				break;
 			case 1:
 				stages.get(activeStage).setMoveableBlock(stages.get(activeStage).getMoveableBlock(x, y).copy(), x + 1, y);
+				stages.get(activeStage).getBlock(x + 1, y).setOcupied(true);
+				stages.get(activeStage).getBlock(x + 1, y).setOccupiedByBlock(stages.get(activeStage).getMoveableBlock(x, y));
 				stages.get(activeStage).setMoveableBlock(null, x, y);
+				stages.get(activeStage).getBlock(x, y).setOcupied(false);
+				stages.get(activeStage).getBlock(x, y).onOccupied(false, this);
+				stages.get(activeStage).getBlock(x + 1, y).onOccupied(true, this);
 				break;
 			case 2:
 				stages.get(activeStage).setMoveableBlock(stages.get(activeStage).getMoveableBlock(x, y).copy(), x, y + 1);
+				stages.get(activeStage).getBlock(x, y + 1).setOcupied(true);
+				stages.get(activeStage).getBlock(x, y + 1).setOccupiedByBlock(stages.get(activeStage).getMoveableBlock(x, y));
 				stages.get(activeStage).setMoveableBlock(null, x, y);
+				stages.get(activeStage).getBlock(x, y).setOcupied(false);
+				stages.get(activeStage).getBlock(x, y).onOccupied(false, this);
+				stages.get(activeStage).getBlock(x, y + 1).onOccupied(true, this);
 				break;
 			case 3:
 				stages.get(activeStage).setMoveableBlock(stages.get(activeStage).getMoveableBlock(x, y).copy(), x - 1, y);
+				stages.get(activeStage).getBlock(x - 1, y).setOcupied(true);
+				stages.get(activeStage).getBlock(x - 1, y).setOccupiedByBlock(stages.get(activeStage).getMoveableBlock(x, y));
 				stages.get(activeStage).setMoveableBlock(null, x, y);
+				stages.get(activeStage).getBlock(x, y).setOcupied(false);
+				stages.get(activeStage).getBlock(x, y).onOccupied(false, this);
+				stages.get(activeStage).getBlock(x - 1, y).onOccupied(true, this);
 				break;
 		}
 	}

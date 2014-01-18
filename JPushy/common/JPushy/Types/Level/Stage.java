@@ -2,6 +2,7 @@ package JPushy.Types.Level;
 
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
+import JPushy.Types.Level.LV.LVDataList;
 import JPushy.Types.Player.Player;
 
 /**
@@ -11,12 +12,13 @@ import JPushy.Types.Player.Player;
  */
 public class Stage {
 
-	private Winconditions	winconditions	= new Winconditions();
-
 	private int	          id	          = 0;
 	private int	          homeX	        = 0, homeY = 0;
 	private Block[][]	    blocks;
 	private Block[][]	    moveableBlocks;
+
+	private Winconditions	winConditions	= new Winconditions();
+	private LVDataList	  dataList	    = new LVDataList();
 
 	public Stage(int id) {
 		this.id = id;
@@ -88,18 +90,33 @@ public class Stage {
 	}
 
 	/**
-	 * @return the winconditions
+	 * @return the winConditions
 	 */
-	public Winconditions getWinconditions() {
-		return winconditions;
+	public Winconditions getWinConditions() {
+		return winConditions;
 	}
 
 	/**
-	 * @param winconditions
-	 *          the winconditions to set
+	 * @param winConditions
+	 *          the winConditions to set
 	 */
-	public void setWinconditions(Winconditions winconditions) {
-		this.winconditions = winconditions;
+	public void setWinConditions(Winconditions winConditions) {
+		this.winConditions = winConditions;
+	}
+
+	/**
+	 * @return the dataList
+	 */
+	public LVDataList getDataList() {
+		return dataList;
+	}
+
+	/**
+	 * @param dataList
+	 *          the dataList to set
+	 */
+	public void setDataList(LVDataList dataList) {
+		this.dataList = dataList;
 	}
 
 }

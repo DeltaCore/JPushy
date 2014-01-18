@@ -102,15 +102,19 @@ public class Item {
 	public void init() {
 	}
 
-	public void onUse(Stage stage, int dir) {
-		System.out.println("On use !");
-		if (this.isDamageBar()) {
-			this.setDmg(this.getDmg() + 1);
-			if (this.getDmg() >= this.getMaxDMG()) {
-				Game.getPlayer().getInventory().removeItemInHand();
+	public void onUse(Stage stage, int dir, ItemUseEvent e) {
+		if (!e.isHandled()) {
+			if (!e.isCanceled()) {
+				System.out.println("On use !");
+				if (this.isDamageBar()) {
+					this.setDmg(this.getDmg() + 1);
+					if (this.getDmg() >= this.getMaxDMG()) {
+						Game.getPlayer().getInventory().removeItemInHand();
+					}
+				} else {
+					Game.getPlayer().getInventory().removeItemInHand();
+				}
 			}
-		} else {
-			Game.getPlayer().getInventory().removeItemInHand();
 		}
 	}
 

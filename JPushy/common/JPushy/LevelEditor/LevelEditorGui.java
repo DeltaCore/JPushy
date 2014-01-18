@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -15,6 +16,7 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
@@ -92,7 +94,6 @@ public class LevelEditorGui extends JFrame {
 		this.getLevelSave().setActionCommand("save");
 		this.getLevelSave().addActionListener(this.getListener());
 
-		this.getMainMenu().add(this.getLevelLoad());
 		this.getMainMenu().add(this.getLevelSave());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setBounds(100, 100, 1000, 753);
@@ -231,6 +232,10 @@ public class LevelEditorGui extends JFrame {
 		this.getCurrentBlock().setModel(blockModel);
 		this.getCurrentBlock().setName("currentBlock");
 		this.getCurrentBlock().setRenderer(this.getListener());
+
+		this.getMainMenu().add(this.getLevelLoad());
+		this.getLevelLoad().addActionListener(this.getListener());
+		this.getLevelLoad().setActionCommand("load");
 
 		this.getSettingsPanel().add(this.getCurrentBlock());
 
@@ -541,6 +546,18 @@ public class LevelEditorGui extends JFrame {
 				this.getGui().getEditorPanel().repaint();
 			} else if (cmd.equalsIgnoreCase("applyOptions")) {
 				this.getGui().getEditorPanel().updateCoords(((Integer) this.getGui().getOptionsLabelXVal().getValue()) - 1, ((Integer) this.getGui().getOptionsLabelYVal().getValue()) - 1);
+			} else if (cmd.equalsIgnoreCase("load")) {
+				String filename = JOptionPane.showInputDialog(null, "Level auswählen", "Bitte nur den datein namen des levels angeben (z.b. Beginners.cfg)");
+				boolean flag = false;
+				while (flag) {
+					File f = new File("Data/lvl/" + filename + ".lvl");
+					if (f.exists()) {
+						flag = true;
+					} else {
+						filename = JOptionPane.showInputDialog(null, "Level auswählen", "Bitte nur den datein namen des levels angeben (z.b. Beginners.cfg)");
+					}
+				}
+				this.getGui().getEditorPanel().loadLevel(filename);
 			}
 		}
 

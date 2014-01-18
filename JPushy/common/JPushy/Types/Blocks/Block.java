@@ -366,8 +366,7 @@ public class Block extends Object implements Cloneable {
 		}
 	}
 
-	public Block onLoaded(int x, int y, int stageId, Stage stage) {
-		return this;
+	public void onLoaded(int x, int y, int stageId, Stage stage) {
 	}
 
 	public void onPush(int oldX, int oldY, int newX, int newY, int side, Level l) {
@@ -400,7 +399,9 @@ public class Block extends Object implements Cloneable {
 	}
 
 	public void onDestroy() {
+	}
 
+	public void onSpecialAction() {
 	}
 
 }

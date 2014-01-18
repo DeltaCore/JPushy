@@ -8,6 +8,7 @@ import JPushy.Core.LevelThread;
 import JPushy.Gui.GamePanel;
 import JPushy.MultiPlayer.MPClient;
 import JPushy.Types.Blocks.Block;
+import JPushy.Types.Items.ItemUseEvent;
 
 /**
  * 
@@ -98,7 +99,7 @@ public class Input implements KeyListener {
 		int y = thread.getPlayer().getY();
 		Block b = thread.getLevel().getActiveStage().getBlock(x, y);
 		if (enter) {
-			thread.getPlayer().getInventory().getSlots()[thread.getPlayer().getInventory().getSelectedSlot()].getItem().onUse(thread.getLevel().getActiveStage(), dir);
+			thread.getPlayer().getInventory().getSlots()[thread.getPlayer().getInventory().getSelectedSlot()].getItem().onUse(thread.getLevel().getActiveStage(), dir, new ItemUseEvent());
 			thread.getPlayer().getInventory().update();
 			enter = false;
 		}

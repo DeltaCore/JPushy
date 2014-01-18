@@ -31,6 +31,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import JPushy.Gui.LevelServerConnector;
+import JPushy.LevelEditor.LevelEditorThread;
 import JPushy.MultiPlayer.MPClient;
 import JPushy.Types.Level.Level;
 import JPushy.Types.Level.LevelItem;
@@ -55,6 +56,7 @@ public class Game extends JFrame {
 
 	private JMenu	                 levelMenu	              = new JMenu("Level");
 	private JMenuItem	             startLevel	              = new JMenuItem("Start");
+	private JMenuItem	             createLevel	            = new JMenuItem("Open Leveleditor");
 
 	private JMenu	                 serverMenu	              = new JMenu("Server");
 	private JMenuItem	             connectToServer	        = new JMenuItem("Connect to server");
@@ -87,6 +89,9 @@ public class Game extends JFrame {
 
 		this.getMainBar().add(this.getLevelMenu());
 		this.getLevelMenu().add(this.getStartLevel());
+		this.getLevelMenu().add(this.getCreateLevel());
+		this.getCreateLevel().setActionCommand("createLevel");
+		this.getCreateLevel().addActionListener(listener);
 
 		this.getMainBar().add(this.getServerMenu());
 		this.getServerMenu().add(this.getConnectToServer());
@@ -373,6 +378,8 @@ public class Game extends JFrame {
 						con.setVisible(true);
 					}
 				});
+			} else if (arg0.getActionCommand().equals("createLevel")) {
+				new LevelEditorThread();
 			}
 		}
 
@@ -407,6 +414,21 @@ public class Game extends JFrame {
 
 		}
 		Launcher.getInstance().thread.dispose();
+	}
+
+	/**
+	 * @return the createLevel
+	 */
+	public JMenuItem getCreateLevel() {
+		return createLevel;
+	}
+
+	/**
+	 * @param createLevel
+	 *          the createLevel to set
+	 */
+	public void setCreateLevel(JMenuItem createLevel) {
+		this.createLevel = createLevel;
 	}
 
 }

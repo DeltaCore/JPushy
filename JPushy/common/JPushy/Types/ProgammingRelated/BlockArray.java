@@ -9,10 +9,10 @@ import JPushy.Types.Blocks.Blocks;
 
 public class BlockArray {
 
-	private int	             width, height;
+	private int	               width, height;
 
-	private ArrayList<Block>	blocks	= new ArrayList<Block>();
-	private ArrayList<Coord2D> options = new ArrayList<Coord2D>();
+	private ArrayList<Block>	 blocks	  = new ArrayList<Block>();
+	private ArrayList<Coord2D>	options	= new ArrayList<Coord2D>();
 
 	// wallHori = 2;
 	// wallVert = 3;
@@ -75,7 +75,7 @@ public class BlockArray {
 	public void initArray() {
 		for (int i = 0; i < this.getHeight() * this.getWidth(); i++) {
 			this.getBlocks().add(Blocks.air);
-			this.getOptions().add(new Coord2D(-1,-1));
+			this.getOptions().add(new Coord2D(-1, -1));
 		}
 	}
 
@@ -84,6 +84,11 @@ public class BlockArray {
 		this.setHeight(height);
 		initArray();
 		buildWall();
+	}
+
+	public BlockArray(int width, int height, int dummy) {
+		this.setWidth(width);
+		this.setHeight(height);
 	}
 
 	private ArrayList<Block> getBlocks() {
@@ -118,14 +123,14 @@ public class BlockArray {
 		}
 	}
 
-	public Coord2D getOption(int x, int y){
+	public Coord2D getOption(int x, int y) {
 		if ((x <= this.getWidth() && x >= 0) && (y <= this.getHeight() && y >= 0)) {
 			return this.getOptions().get(this.getWidth() * y + x);
 		} else {
 			return null;
 		}
 	}
-	
+
 	public void setBlock(int x, int y, Block block) {
 		if ((x <= this.getWidth() && x >= 0) && (y <= this.getHeight() && y >= 0)) {
 			this.getBlocks().set(this.getWidth() * y + x, block);
@@ -141,7 +146,7 @@ public class BlockArray {
 			return;
 		}
 	}
-	
+
 	public ArrayList<Coord2D> getOptions() {
 		return options;
 	}
