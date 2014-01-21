@@ -65,7 +65,7 @@ public class EditorPanel extends JPanel {
 	private InputListener	        listener;
 
 	private final Font	          inPanelFont	      = new Font("Arial", Font.PLAIN, 18);
-
+	
 	public EditorPanel() {
 		super();
 		this.listener = new InputListener(this);
@@ -152,61 +152,17 @@ public class EditorPanel extends JPanel {
 	}
 
 	public void saveLevel(String name, String version) {
-		this.getGui().getProgressbar().setMaximum((this.getLayer() * this.getLevelHeight() * this.getLevelWidth()) * 2);
+		this.getGui().getProgressbar().setMaximum((this.getLayer() * this.getLevelHeight() * this.getLevelWidth()));
 		this.getGui().getProgressbar().setEnabled(true);
-		System.out.println("Blueh !");
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(new File("Data/lvl/" + name + ".lvl")));
-			writer.write("<level name=\"" + name + "\" version='" + version + "'>\n");
-			int c = 0;
-			for (int l = 0; l < this.getLayer() + 1; l++) {
-				writer.write("<stage id=" + l + ">\n");
-				for (int y = 0; y < this.getLevelHeight(); y++) {
-					for (int x = 0; x < this.getLevelWidth(); x++) {
-						writer.write((char) (this.getBlockLayers().get(l).getBlock(x, y).getId() + 48));
-						this.getGui().getProgressbar().setValue(this.getGui().getProgressbar().getValue() + 1);
-						this.getGui().getProgressbar().repaint();
-						this.getGui().repaint();
-						try {
-							Thread.sleep(10);
-						} catch (Exception e) {
-						}
-					}
-					writer.write("\n");
-				}
-				writer.write("</stage>\n");
-			}
-			writer.close();
-			writer = new BufferedWriter(new FileWriter(new File("Data/lvl/" + name + ".cfg")));
-			for (int l = 0; l < this.getLayer() + 1; l++) {
-				for (int y = 0; y < this.getLevelHeight(); y++) {
-					for (int x = 0; x < this.getLevelWidth(); x++) {
-						c = this.getItemLayers().get(l).get(x, y).getId();
-						if (c != Items.noitem.getId()) {
-							c += 48;
-							writer.write("item=" + l + "," + x + "," + y + "=" + (char) c + ";\n");
-						}
-						if (this.getBlockLayers().get(l).getOption(x, y).getX() != -1 && this.getBlockLayers().get(l).getOption(x, y).getY() != -1) {
-							writer.write(l + "," + x + "," + y + "=" + this.getBlockLayers().get(l).getOption(x, y).getX() + "," + this.getBlockLayers().get(l).getOption(x, y).getY() + "\n");
-						}
-						this.getGui().getProgressbar().setValue(this.getGui().getProgressbar().getValue() + 1);
-
-						this.getGui().getProgressbar().repaint();
-						this.getGui().repaint();
-						try {
-							Thread.sleep(10);
-						} catch (Exception e) {
-						}
-					}
-				}
-			}
-			writer.close();
-			JOptionPane.showMessageDialog(this, "Level " + name + " V" + version + " was saved to Data/lvl/" + name + ".lvl / .cfg");
-			this.getGui().getGame().updateLevels();
-		} catch (Exception e) {
-		}
+		//this.getGui().getProgressbar().setIndeterminate(true);
+		Thread t = new Thread(new EditorSaveThread(this, name, version));
+		t.start();
 	}
 
+	public synchronized void incrementBar(){
+		this.getGui().getProgressbar().setValue(this.getGui().getProgressbar().getValue() + 1);
+	}
+		
 	public void loadLevel(String filename) {
 		File lvlFile = new File("Data/lvl/" + filename + ".lvl");
 		File cfgFile = new File("Data/lvl/" + filename + ".cfg");
