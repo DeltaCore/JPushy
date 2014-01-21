@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import JPushy.Core.Game;
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
 import JPushy.Types.Items.Item;
@@ -83,11 +84,14 @@ public class LevelEditorGui extends JFrame {
 	private JButton	          applyLayer	      = new JButton("Apply layer");
 	private JButton	          selectLayer	      = new JButton("Jump to");
 
+	private Game	            game;
+
 	/**
 	 * Create the frame.
 	 */
-	public LevelEditorGui() {
+	public LevelEditorGui(Game game) {
 		super("Level editor");
+		this.setGame(game);
 		this.setJMenuBar(this.getMainMenuBar());
 		this.getMainMenuBar().add(this.getMainMenu());
 
@@ -95,7 +99,7 @@ public class LevelEditorGui extends JFrame {
 		this.getLevelSave().addActionListener(this.getListener());
 
 		this.getMainMenu().add(this.getLevelSave());
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setBounds(100, 100, 1000, 753);
 		this.getMainSplitPane().setResizeWeight(0.225);
 
@@ -580,7 +584,7 @@ public class LevelEditorGui extends JFrame {
 		public void stateChanged(ChangeEvent e) {
 			String name = ((JSpinner) e.getSource()).getName();
 			if (name.equalsIgnoreCase("optionx") || name.equalsIgnoreCase("optiony")) {
-				this.getGui().getEditorPanel().updateCoords(((Integer) this.getGui().getOptionsLabelXVal().getValue()) - 1, ((Integer) this.getGui().getOptionsLabelYVal().getValue()) - 1);
+				this.getGui().getEditorPanel().updateCoords(((Integer) this.getGui().getOptionsLabelXVal().getValue()), ((Integer) this.getGui().getOptionsLabelYVal().getValue()));
 			}
 		}
 
@@ -645,5 +649,20 @@ public class LevelEditorGui extends JFrame {
 	 */
 	public void setBlockPanel(BlockPreviewPanel blockPanel) {
 		this.blockPanel = blockPanel;
+	}
+
+	/**
+	 * @return the game
+	 */
+	public Game getGame() {
+		return game;
+	}
+
+	/**
+	 * @param game
+	 *          the game to set
+	 */
+	public void setGame(Game game) {
+		this.game = game;
 	}
 }

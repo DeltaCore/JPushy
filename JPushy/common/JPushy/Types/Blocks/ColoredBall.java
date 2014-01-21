@@ -19,8 +19,21 @@ public class ColoredBall extends MoveableBlock {
 
 	private LVData	data;
 
-	private Block	 b;
 	private Color	 color	= Color.white;
+
+	public static ColoredBall getColoredBall(Color color) {
+		for (int i = 0; i < Blocks.blockRegistry.size(); i++) {
+			try {
+				ColoredBall b = (ColoredBall) Blocks.getBlockById(i);
+				if (b.getColor() == color) {
+					return b;
+				}
+			} catch (Exception e) {
+
+			}
+		}
+		return null;
+	}
 
 	public ColoredBall(String name, int id, Picture img, Color c) {
 		super(name, id, img);

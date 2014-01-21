@@ -22,7 +22,8 @@ public class Button extends Block {
 		super(string, id, loadImageFromFile, b);
 	}
 
-	private int	x	= 0, y = 0;
+	private int	exPos	= 0;
+	private int	eyPos	= 0;
 
 	@Override
 	public void init() {
@@ -32,31 +33,14 @@ public class Button extends Block {
 
 	@Override
 	public void onOccupied(boolean o, Level l) {
+		System.out.println("Ouch !");
+		Block b = l.getActiveStage().getBlock(this.getExPos(), this.getEyPos());
+		System.out.println(this.getExPos() + ":" + this.getEyPos() + " -> " + b.toString());
 		if (o) {
-			Block b = l.getActiveStage().getBlock(x, y);
 			b.set();
-			l.getActiveStage().setBlock(x, y, b);
 		} else {
-			Block b = l.getActiveStage().getBlock(x, y);
 			b.reset();
-			l.getActiveStage().setBlock(x, y, b);
 		}
-	}
-
-	public int getX() {
-		return y;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
 	}
 
 	@Override
@@ -64,10 +48,40 @@ public class Button extends Block {
 		int[] cfgCords = LevelLoader.checkCFGCords(cfgLines, stageId, x, y);
 		if (cfgCords[0] == 0 && cfgCords[1] == 0) {
 		} else {
-			this.setX(cfgCords[0]);
-			this.setY(cfgCords[1]);
+			this.setExPos(cfgCords[0]);
+			this.setEyPos(cfgCords[1]);
 		}
 		return this;
+	}
+
+	/**
+	 * @return the exPos
+	 */
+	public int getExPos() {
+		return exPos;
+	}
+
+	/**
+	 * @param exPos
+	 *          the exPos to set
+	 */
+	public void setExPos(int exPos) {
+		this.exPos = exPos;
+	}
+
+	/**
+	 * @return the eyPos
+	 */
+	public int getEyPos() {
+		return eyPos;
+	}
+
+	/**
+	 * @param eyPos
+	 *          the eyPos to set
+	 */
+	public void setEyPos(int eyPos) {
+		this.eyPos = eyPos;
 	}
 
 }

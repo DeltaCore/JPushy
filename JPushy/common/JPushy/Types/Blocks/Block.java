@@ -34,6 +34,8 @@ public class Block extends Object implements Cloneable {
 	private boolean	canGetocupied	 = false;
 	private boolean	movable	       = false;
 	private boolean	optionRequired	= false;
+	private int	    x	             = 0;
+	private int	    y	             = 0;
 
 	public Block(Block b) {
 		this.id = b.getId();
@@ -342,6 +344,36 @@ public class Block extends Object implements Cloneable {
 		return this;
 	}
 
+	/**
+	 * @return the x
+	 */
+	public int getX() {
+		return x;
+	}
+
+	/**
+	 * @param x
+	 *          the x to set
+	 */
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	/**
+	 * @return the y
+	 */
+	public int getY() {
+		return y;
+	}
+
+	/**
+	 * @param y
+	 *          the y to set
+	 */
+	public void setY(int y) {
+		this.y = y;
+	}
+
 	public void init() {
 		if (this.isRegister()) {
 			Blocks.registerBlock(this);
@@ -367,6 +399,8 @@ public class Block extends Object implements Cloneable {
 	}
 
 	public void onLoaded(int x, int y, int stageId, Stage stage) {
+		this.setX(x);
+		this.setY(y);
 	}
 
 	public void onPush(int oldX, int oldY, int newX, int newY, int side, Level l) {

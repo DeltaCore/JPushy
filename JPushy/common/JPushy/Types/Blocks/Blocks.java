@@ -49,8 +49,11 @@ public class Blocks {
 	public static final Block	     blueBall	      = new ColoredBall("Blue ball", 30, PictureLoader.loadImageFromFile("BlueBall.png"), Color.blue);
 	public static final Block	     greenBall	    = new ColoredBall("Green ball", 31, PictureLoader.loadImageFromFile("GreenBall.png"), Color.green);
 	public static final Block	     redBall	      = new ColoredBall("Red ball", 32, PictureLoader.loadImageFromFile("RedBall.png"), Color.red);
+	public static final Block	     blueBallPaint	= new ColoredBallPaint("Blue ball paint", 33, PictureLoader.loadImageFromFile("BlueBallPaint.png"), Color.blue);
+	public static final Block	     greenBallPaint	= new ColoredBallPaint("Green ball paint", 34, PictureLoader.loadImageFromFile("GreenBallPaint.png"), Color.green);
+	public static final Block	     redBallPaint	  = new ColoredBallPaint("Red ball paint", 35, PictureLoader.loadImageFromFile("RedBallPaint.png"), Color.red);
 
-	// continue with id 19
+	// continue with id 36
 
 	public static void registerBlock(Block b) {
 		if (!checkBlockId(b.getId())) {

@@ -1,14 +1,14 @@
 package JPushy.Types.Blocks;
 
 import JPushy.Types.gfx.Picture;
+
 /**
  * 
  * @author Marcel Benning
  * 
  */
 public class Gate extends Block {
-	
-		
+
 	public Gate(String name, int id, Picture img) {
 		super(name, id, img);
 	}
@@ -18,25 +18,25 @@ public class Gate extends Block {
 		super.init();
 		this.setSwitchable(true);
 	}
-	
+
 	@Override
 	public void toggle() {
-		if(this.isSwitchable()){
+		if (this.isSwitchable()) {
 			this.setVisible(!this.isVisible());
 			this.setPlayerAbleToWalkOn(!this.isPlayerAbleToWalkOn());
 		}
 	}
-	
+
 	@Override
-	public void set() {
+	public void reset() {
 		this.setVisible(true);
 		this.setPlayerAbleToWalkOn(false);
 	}
-	
+
 	@Override
-	public void reset() {
+	public void set() {
 		this.setVisible(false);
 		this.setPlayerAbleToWalkOn(true);
 	}
-	
+
 }

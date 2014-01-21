@@ -39,6 +39,8 @@ import JPushy.Types.Player.Player;
 
 public class Game extends JFrame {
 
+	private static final long	     serialVersionUID	        = 1L;
+
 	private JPanel	               contentPane;
 
 	/**
@@ -139,13 +141,14 @@ public class Game extends JFrame {
 		levelSplitPane.setLeftComponent(btnStart);
 
 		txtLevelInfo.setText("Select a level");
+		txtLevelInfo.setEditable(false);
 		levelSplitPane.setRightComponent(txtLevelInfo);
 
 		contentPane.add(stateLabel, BorderLayout.SOUTH);
 		updateLevels();
 	}
 
-	String	levelRegEx	      = "^<level name=\"([a-zA-Z\\s0-9[-]]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
+	String	levelRegEx	      = "^<level name=\"([a-zA-Z\\s0-9[-][_]]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
 	String	commentStartRegEx	= "^<comment>";
 	String	commentEndRegEx	  = "^</comment>";
 
@@ -379,7 +382,7 @@ public class Game extends JFrame {
 					}
 				});
 			} else if (arg0.getActionCommand().equals("createLevel")) {
-				new LevelEditorThread();
+				new LevelEditorThread(this.gui);
 			}
 		}
 

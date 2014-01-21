@@ -4,7 +4,6 @@ import javax.swing.SwingUtilities;
 
 import JPushy.Core.Natives.MacOSX;
 import JPushy.Core.Natives.NativeHandler;
-import JPushy.LevelEditor.LevelEditorThread;
 import JPushy.Settings.Settings;
 
 public class Launcher {
@@ -24,22 +23,16 @@ public class Launcher {
 		System.out.println("Loading Settings ...");
 		settings = new Settings();
 		System.out.println(Game.name + " V" + Game.version + " is starting ...");
-		if (args.length > 0) {
-			if (args[0].equalsIgnoreCase("-ledit")) {
-				new LevelEditorThread();
-			}
-		} else {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					try {
-						launcher = new Game();
-						launcher.setVisible(true);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					launcher = new Game();
+					launcher.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			});
-		}
+			}
+		});
 	}
 
 	public static void setWindowTitle(String name) {

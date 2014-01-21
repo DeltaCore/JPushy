@@ -1,6 +1,7 @@
 package JPushy.LevelEditor;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -63,6 +64,8 @@ public class EditorPanel extends JPanel {
 
 	private InputListener	        listener;
 
+	private final Font	          inPanelFont	      = new Font("Arial", Font.PLAIN, 18);
+
 	public EditorPanel() {
 		super();
 		this.listener = new InputListener(this);
@@ -113,6 +116,9 @@ public class EditorPanel extends JPanel {
 			} else {
 				Block b = Blocks.getBlockByName(sel);
 				this.getBlockLayers().get(this.getCurrentLayer()).setBlock(cx, cy, b);
+				if (b.getId() == Blocks.air.getId()) {
+					this.getItemLayers().get(this.getCurrentLayer()).set(cx, cy, Items.getItemById(Items.noitem.getId()));
+				}
 			}
 		}
 	}
@@ -124,6 +130,9 @@ public class EditorPanel extends JPanel {
 	}
 
 	public void render(Graphics2D g) {
+		g.setFont(this.getFont());
+		String s = "X : " + (int) ((this.listener.getxPos() - originX) / (40 * this.getScale())) + " Y : " + (int) ((this.listener.getyPos() - originY) / (40 * this.getScale()));
+		g.drawString(s, 0, (int) g.getFontMetrics().getStringBounds(s, g).getHeight());
 		g.translate(originX, originY);
 		g.scale(scale, scale);
 		if (this.getBlockLayers().size() != 0) {
@@ -193,6 +202,7 @@ public class EditorPanel extends JPanel {
 			}
 			writer.close();
 			JOptionPane.showMessageDialog(this, "Level " + name + " V" + version + " was saved to Data/lvl/" + name + ".lvl / .cfg");
+			this.getGui().getGame().updateLevels();
 		} catch (Exception e) {
 		}
 	}
@@ -209,7 +219,7 @@ public class EditorPanel extends JPanel {
 			ArrayList<String> lines = LevelLoader.loadLevelFile(lvlFile.getName());
 			String start_regex = "^<stage id=([0-9])>$";
 			String end_regex = "^</stage>";
-			String levelRegEx = "^<level name=\"([a-zA-Z\\s0-9[-]]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
+			String levelRegEx = "^<level name=\"([a-zA-Z\\s0-9[-][_]]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
 			String commentStart = "^<comment>";
 			String commentEnd = "^</comment>";
 
@@ -563,6 +573,13 @@ public class EditorPanel extends JPanel {
 		this.opY = opY;
 	}
 
+	/**
+	 * @return the inPanelFont
+	 */
+	public Font getInPanelFont() {
+		return inPanelFont;
+	}
+
 	private class InputListener implements MouseListener, MouseWheelListener, MouseMotionListener, KeyListener {
 
 		private EditorPanel	gui;
@@ -571,6 +588,8 @@ public class EditorPanel extends JPanel {
 		private int		      selTileY	= -1;
 
 		private boolean		  btns[]		= new boolean[] { false, false, false, false };
+
+		private int		      xPos		 = 0, yPos = 0;
 
 		public InputListener(EditorPanel gui) {
 			this.setGui(gui);
@@ -603,7 +622,10 @@ public class EditorPanel extends JPanel {
 		}
 
 		@Override
-		public void mouseMoved(MouseEvent arg0) {
+		public void mouseMoved(MouseEvent e) {
+			this.setxPos(e.getX());
+			this.setyPos(e.getY());
+			this.gui.repaint();
 		}
 
 		@Override
@@ -625,6 +647,9 @@ public class EditorPanel extends JPanel {
 			if (e.isShiftDown() && ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0))) {
 				this.selTileX = (e.getX() - gui.originX) / (int) (40 * this.gui.getScale());
 				this.selTileY = (e.getY() - gui.originY) / (int) (40 * this.gui.getScale());
+			} else if (e.isControlDown() && ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0))) {
+				this.gui.getGui().getOptionsLabelXVal().setValue((e.getX() - gui.originX) / (int) (40 * this.gui.getScale()));
+				this.gui.getGui().getOptionsLabelYVal().setValue((e.getY() - gui.originY) / (int) (40 * this.gui.getScale()));
 			} else {
 				this.selTileX = -1;
 				this.selTileY = -1;
@@ -743,6 +768,36 @@ public class EditorPanel extends JPanel {
 		 */
 		public int getSelTileY() {
 			return selTileY;
+		}
+
+		/**
+		 * @return the xPos
+		 */
+		public int getxPos() {
+			return xPos;
+		}
+
+		/**
+		 * @param xPos
+		 *          the xPos to set
+		 */
+		public void setxPos(int xPos) {
+			this.xPos = xPos;
+		}
+
+		/**
+		 * @return the yPos
+		 */
+		public int getyPos() {
+			return yPos;
+		}
+
+		/**
+		 * @param yPos
+		 *          the yPos to set
+		 */
+		public void setyPos(int yPos) {
+			this.yPos = yPos;
 		}
 
 	}

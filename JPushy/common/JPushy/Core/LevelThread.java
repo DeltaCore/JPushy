@@ -25,14 +25,15 @@ import JPushy.gfx.PictureLoader;
 
 public class LevelThread extends JFrame implements Runnable {
 
-	private GamePanel	gamePanel;
-	private MPClient	client;
-	private MPServer	server;
-	private boolean	  running	= true;
-	private Level	    level;
-	private Input	    input;
-	private Player	  player;
-	private Chat	    chat;
+	private static final long	serialVersionUID	= 1L;
+	private GamePanel	        gamePanel;
+	private MPClient	        client;
+	private MPServer	        server;
+	private boolean	          running	         = true;
+	private Level	            level;
+	private Input	            input;
+	private Player	          player;
+	private Chat	            chat;
 
 	public LevelThread(Game gui, LevelItem level) {
 		super(level.getName() + " | JPushy");
