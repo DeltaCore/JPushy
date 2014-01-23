@@ -8,21 +8,22 @@ import javax.swing.JOptionPane;
 
 import JPushy.Types.Items.Items;
 
-public class EditorSaveThread implements Runnable{
+public class EditorSaveThread implements Runnable {
 
-	private EditorPanel gui;
-	private String name;
-	private String version;
-	
-	public EditorSaveThread(EditorPanel panel, String name, String version){
+	private EditorPanel	gui;
+	private String	    name;
+	private String	    version;
+	public boolean	    isRunning	= false;
+
+	public EditorSaveThread(EditorPanel panel, String name, String version) {
 		this.setGui(panel);
 		this.name = name;
 		this.version = version;
 	}
-	
+
 	@Override
-  public void run() {
-		
+	public void run() {
+		isRunning = true;
 		System.out.println("Blueh !");
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File("Data/lvl/" + name + ".lvl")));
@@ -61,7 +62,8 @@ public class EditorSaveThread implements Runnable{
 			this.getGui().getGui().getGame().updateLevels();
 		} catch (Exception e) {
 		}
-  }
+		this.isRunning = false;
+	}
 
 	public EditorPanel getGui() {
 		return gui;

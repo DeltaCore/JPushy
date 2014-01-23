@@ -26,7 +26,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -113,7 +112,7 @@ public class Game extends JFrame {
 		// Setting content pane
 
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(null);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
@@ -129,8 +128,10 @@ public class Game extends JFrame {
 		levelList.setBackground(UIManager.getColor("CheckBox.background"));
 		levelList.addListSelectionListener(listener);
 		mainSplitPane.setRightComponent(levelList);
+		mainSplitPane.setBorder(null);
 
 		JSplitPane levelSplitPane = new JSplitPane();
+		levelSplitPane.setBorder(null);
 		levelSplitPane.setEnabled(false);
 		levelSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		mainSplitPane.setLeftComponent(levelSplitPane);

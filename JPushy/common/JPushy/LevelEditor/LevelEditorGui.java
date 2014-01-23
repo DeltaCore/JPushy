@@ -91,6 +91,11 @@ public class LevelEditorGui extends JFrame {
 	 */
 	public LevelEditorGui(Game game) {
 		super("Level editor");
+		this.getSettingsPanel().setBorder(null);
+		// JPanel cFrame = new JPanel();
+		// cFrame.setBorder(null);
+		// this.add(cFrame, BorderLayout.CENTER);
+		// this.setContentPane(cFrame);
 		this.setGame(game);
 		this.setJMenuBar(this.getMainMenuBar());
 		this.getMainMenuBar().add(this.getMainMenu());
@@ -101,9 +106,11 @@ public class LevelEditorGui extends JFrame {
 		this.getMainMenu().add(this.getLevelSave());
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setBounds(100, 100, 1000, 753);
+		this.getMainSplitPane().setBorder(null);
 		this.getMainSplitPane().setResizeWeight(0.225);
 
 		this.getContentPane().add(this.getMainSplitPane(), BorderLayout.CENTER);
+		// cFrame.add(this.getMainSplitPane(), BorderLayout.CENTER);
 		this.getSettingsPanel().setLayout(null);
 
 		this.getEditorPanel().setGui(this);

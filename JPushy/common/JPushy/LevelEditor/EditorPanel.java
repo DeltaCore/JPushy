@@ -11,14 +11,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import JPushy.Types.Coord2D;
@@ -65,7 +62,9 @@ public class EditorPanel extends JPanel {
 	private InputListener	        listener;
 
 	private final Font	          inPanelFont	      = new Font("Arial", Font.PLAIN, 18);
-	
+
+	private int	                  incrementBy	      = 0;
+
 	public EditorPanel() {
 		super();
 		this.listener = new InputListener(this);
@@ -157,15 +156,16 @@ public class EditorPanel extends JPanel {
 	public void saveLevel(String name, String version) {
 		this.getGui().getProgressbar().setMaximum((this.getLayer() * this.getLevelHeight() * this.getLevelWidth()));
 		this.getGui().getProgressbar().setEnabled(true);
-		//this.getGui().getProgressbar().setIndeterminate(true);
-		Thread t = new Thread(new EditorSaveThread(this, name, version));
+		// this.getGui().getProgressbar().setIndeterminate(true);
+		EditorSaveThread saveThread = new EditorSaveThread(this, name, version);
+		Thread t = new Thread(saveThread);
 		t.start();
 	}
 
-	public synchronized void incrementBar(){
-		this.getGui().getProgressbar().setValue(this.getGui().getProgressbar().getValue() + 1);
+	public synchronized void incrementBar() {
+		// this.incrementBy++;
 	}
-		
+
 	public void loadLevel(String filename) {
 		File lvlFile = new File("Data/lvl/" + filename + ".lvl");
 		File cfgFile = new File("Data/lvl/" + filename + ".cfg");
