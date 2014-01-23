@@ -24,6 +24,7 @@ public class Gate extends Block {
 		if (this.isSwitchable()) {
 			this.setVisible(!this.isVisible());
 			this.setPlayerAbleToWalkOn(!this.isPlayerAbleToWalkOn());
+			this.setCanGetocupied(!this.isCanGetocupied());
 		}
 	}
 
@@ -31,12 +32,14 @@ public class Gate extends Block {
 	public void reset() {
 		this.setVisible(true);
 		this.setPlayerAbleToWalkOn(false);
+		this.setCanGetocupied(false);
 	}
 
 	@Override
 	public void set() {
 		this.setVisible(false);
 		this.setPlayerAbleToWalkOn(true);
+		this.setCanGetocupied(true);
 	}
 
 }
