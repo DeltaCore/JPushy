@@ -130,7 +130,7 @@ public class EditorPanel extends JPanel {
 
 	public void render(Graphics2D g) {
 		g.setColor(Color.black);
-		g.drawLine(this.listener.getxPos(), 0, this.listener.getxPos(), (int)this.getBounds().getHeight());
+		g.drawLine(this.listener.getxPos(), 0, this.listener.getxPos(), (int) this.getBounds().getHeight());
 		g.drawLine(0, this.listener.getyPos(), (int) this.getBounds().getWidth(), this.listener.getyPos());
 		g.setFont(this.getFont());
 		String s = "X : " + (int) ((this.listener.getxPos() - originX) / (40 * this.getScale())) + " Y : " + (int) ((this.listener.getyPos() - originY) / (40 * this.getScale()));
@@ -566,6 +566,9 @@ public class EditorPanel extends JPanel {
 		@Override
 		// -> on windows the drag event won't work with e.getButton()
 		public void mouseDragged(MouseEvent e) {
+			this.setxPos(e.getX());
+			this.setyPos(e.getY());
+			this.gui.repaint();
 			if (btns[3]) {
 				gui.originX += e.getX() - lastX;
 				gui.originY += e.getY() - lastY;
