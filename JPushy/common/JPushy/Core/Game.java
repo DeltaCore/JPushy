@@ -47,7 +47,7 @@ public class Game extends JFrame {
 	 */
 
 	public static final String	   name	                    = "JPushy";
-	public static final String	   version	                = "0.1";
+	public static final String	   version	                = "0.2.1";
 
 	LevelThread	                   thread;
 
