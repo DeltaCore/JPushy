@@ -159,11 +159,11 @@ public class BlockArray {
 		for (int x = 0; x < this.getWidth(); x++) {
 			for (int y = 0; y < this.getHeight(); y++) {
 				if (this.getBlock(x, y) != null) {
-					g.drawImage(this.getBlock(x, y).getTexture().getImg(), x * 40, y * 40, 40, 40, null);
+					if (this.getBlock(x, y).getId() != Blocks.air.getId())
+						g.drawImage(this.getBlock(x, y).getTexture().getImg(), x * 40, y * 40, 40, 40, null);
 					g.drawRect(x * 40, y * 40, 40, 40);
 				}
 			}
 		}
 	}
-
 }

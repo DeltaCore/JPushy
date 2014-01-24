@@ -83,6 +83,11 @@ public class Stage {
 	public void init(Player p) {
 		p.setX(homeX);
 		p.setY(homeY);
+		for (int y = 0; y < this.getBlocks().length; y++) {
+			for (int x = 0; x < this.getBlocks()[0].length; x++) {
+				this.getBlock(x, y).afterInit(this);
+			}
+		}
 	}
 
 	public void destroyBlock(int x, int y) {

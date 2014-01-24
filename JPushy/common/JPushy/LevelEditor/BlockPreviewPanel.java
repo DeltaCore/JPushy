@@ -44,6 +44,7 @@ public class BlockPreviewPanel extends JPanel {
 	 */
 	public void setSelectedIndex(int selectedIndex) {
 		this.selectedIndex = selectedIndex;
+		this.repaint();
 	}
 
 	/**

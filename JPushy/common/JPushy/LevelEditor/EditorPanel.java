@@ -53,17 +53,17 @@ public class EditorPanel extends JPanel {
 	private int	                  lastX	            = 0;
 	private int	                  lastY	            = 0;
 
-	private int	                  originX	          = 0;
-	private int	                  originY	          = 0;
+	private int	                  originX	          = 100;
+	private int	                  originY	          = 100;
 	private float	                scale	            = 1.0f;
 	private int	                  opX	              = 0;
 	private int	                  opY	              = 0;
 
+	private static int	          margin	          = 10;
+
 	private InputListener	        listener;
 
 	private final Font	          inPanelFont	      = new Font("Arial", Font.PLAIN, 18);
-
-	private int	                  incrementBy	      = 0;
 
 	public EditorPanel() {
 		super();
@@ -76,6 +76,7 @@ public class EditorPanel extends JPanel {
 	public void updateLayer(int layers, int width, int height) {
 		this.setLevelHeight(height);
 		this.setLevelWidth(width);
+		this.setLayer(layers);
 		while (this.getBlockLayers().size() < layers) {
 			this.getBlockLayers().add(new BlockArray(width, height));
 		}
@@ -134,7 +135,13 @@ public class EditorPanel extends JPanel {
 		g.drawLine(0, this.listener.getyPos(), (int) this.getBounds().getWidth(), this.listener.getyPos());
 		g.setFont(this.getFont());
 		String s = "X : " + (int) ((this.listener.getxPos() - originX) / (40 * this.getScale())) + " Y : " + (int) ((this.listener.getyPos() - originY) / (40 * this.getScale()));
-		g.drawString(s, 0, (int) g.getFontMetrics().getStringBounds(s, g).getHeight());
+		g.drawString(s, 0, (int) (g.getFontMetrics().getStringBounds(s, g).getHeight() * 2) + margin);
+		s = "Mouse - left : " + this.listener.btns[1];
+		g.drawString(s, 0, (int) (g.getFontMetrics().getStringBounds(s, g).getHeight() * 3) + margin);
+		s = "Mouse - wheel : " + this.listener.btns[2];
+		g.drawString(s, 0, (int) (g.getFontMetrics().getStringBounds(s, g).getHeight() * 4) + margin);
+		s = "Mouse - right : " + this.listener.btns[3];
+		g.drawString(s, 0, (int) (g.getFontMetrics().getStringBounds(s, g).getHeight() * 5) + margin);
 		g.translate(originX, originY);
 		g.scale(scale, scale);
 		if (this.getBlockLayers().size() != 0) {
@@ -258,7 +265,6 @@ public class EditorPanel extends JPanel {
 			}
 		}
 		ArrayList<String> lines = LevelLoader.loadLevelConfig(cfgFile.getName());
-		ArrayList<String> levelLines = LevelLoader.loadLevelFile(lvlFile.getName());
 		for (String line : lines) {
 			String regex = "^([0-9]{1,}),([0-9]{1,}),([0-9]{1,})=([0-9]{1,}),([0-9]{1,})$";
 			if (line.matches(regex)) {
@@ -654,6 +660,7 @@ public class EditorPanel extends JPanel {
 									}
 								}
 							}
+							this.gui.getGui().getBlockPanel().setSelectedIndex(this.gui.getGui().getCurrentBlock().getSelectedIndex());
 						}
 					}
 				} else if (btns[1]) {

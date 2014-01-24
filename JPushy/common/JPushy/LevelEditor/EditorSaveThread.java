@@ -23,13 +23,12 @@ public class EditorSaveThread implements Runnable {
 
 	@Override
 	public void run() {
-		isRunning = true;
 		System.out.println("Blueh !");
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File("Data/lvl/" + name + ".lvl")));
 			writer.write("<level name=\"" + name + "\" version='" + this.version + "'>\n");
 			int c = 0;
-			for (int l = 0; l < this.getGui().getLayer() + 1; l++) {
+			for (int l = 0; l < this.getGui().getLayer(); l++) {
 				writer.write("<stage id=" + l + ">\n");
 				for (int y = 0; y < this.getGui().getLevelHeight(); y++) {
 					for (int x = 0; x < this.getGui().getLevelWidth(); x++) {
@@ -42,7 +41,7 @@ public class EditorSaveThread implements Runnable {
 			}
 			writer.close();
 			writer = new BufferedWriter(new FileWriter(new File("Data/lvl/" + name + ".cfg")));
-			for (int l = 0; l < this.getGui().getLayer() + 1; l++) {
+			for (int l = 0; l < this.getGui().getLayer(); l++) {
 				for (int y = 0; y < this.getGui().getLevelHeight(); y++) {
 					for (int x = 0; x < this.getGui().getLevelWidth(); x++) {
 						c = this.getGui().getItemLayers().get(l).get(x, y).getId();
@@ -62,7 +61,6 @@ public class EditorSaveThread implements Runnable {
 			this.getGui().getGui().getGame().updateLevels();
 		} catch (Exception e) {
 		}
-		this.isRunning = false;
 	}
 
 	public EditorPanel getGui() {

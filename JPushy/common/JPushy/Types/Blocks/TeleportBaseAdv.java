@@ -9,26 +9,18 @@ import JPushy.Types.Level.LevelLoader;
 import JPushy.Types.Level.Stage;
 import JPushy.Types.gfx.Picture;
 
-/**
- * 
- * @author Marcel Benning
- * 
- */
-public class TeleportBase extends Block {
+public class TeleportBaseAdv extends TeleportBase {
 
 	private int	endX	       = 0;
 	private int	endY	       = 0;
+	private int	thisX	       = 0;
+	private int	thisY	       = 0;
 	boolean	    teleport	   = false;
 	private int	teleportTime	= 125;	// time to teleport after player walk on the
 	                                  // teleporter (in ms)
 
-	public TeleportBase(String name, int id, Picture img) {
+	public TeleportBaseAdv(String name, int id, Picture img) {
 		super(name, id, img);
-		this.setCanGetocupied(false);
-		this.setDestroyable(false);
-		this.setPlayerAbleToWalkOn(true);
-		this.setSolid(true);
-		this.setVisible(true);
 	}
 
 	@Override
@@ -38,7 +30,7 @@ public class TeleportBase extends Block {
 		System.out.println("Ouch ! Get away from me ! My cords : " + endX + "," + endY);
 		Block b = l.getActiveStage().getBlock(endX, endY);
 		System.out.println(b.toString());
-		if (l.getActiveStage().getBlock(endX, endY).getId() == Blocks.teleportExit.getId()) {
+		if (l.getActiveStage().getBlock(endX, endY).getId() == Blocks.teleportAdv.getId()) {
 			Game.sendMessage("Ouch ! Get away ! From me in about NOW !");
 			Game.getPlayer().setFreezed(true);
 			teleport = true;
@@ -59,8 +51,19 @@ public class TeleportBase extends Block {
 	}
 
 	@Override
+	public void afterInit(Stage s) {
+		super.afterInit(s);
+		if (s.getBlock(endX, endY) instanceof TeleportBaseAdv) {
+			((TeleportBaseAdv) s.getBlock(endX, endY)).setEndX(this.getThisX());
+			((TeleportBaseAdv) s.getBlock(endX, endY)).setEndY(this.getThisY());
+		}
+	}
+
+	@Override
 	public Block onConfigLoaded(int x, int y, int stageId, ArrayList<String> cfgLines, Stage stage) {
 		System.out.println("X: " + x + " Y:" + y + " STAGE: " + stageId);
+		this.setThisX(x);
+		this.setThisY(y);
 		int[] cfgCords = LevelLoader.checkCFGCords(cfgLines, stageId, x, y);
 		if (cfgCords[0] == 0 && cfgCords[1] == 0) {
 			System.out.println("No coords for me :(");
@@ -85,6 +88,36 @@ public class TeleportBase extends Block {
 
 	public void setEndY(int endY) {
 		this.endY = endY;
+	}
+
+	/**
+	 * @return the thisX
+	 */
+	public int getThisX() {
+		return thisX;
+	}
+
+	/**
+	 * @param thisX
+	 *          the thisX to set
+	 */
+	public void setThisX(int thisX) {
+		this.thisX = thisX;
+	}
+
+	/**
+	 * @return the thisY
+	 */
+	public int getThisY() {
+		return thisY;
+	}
+
+	/**
+	 * @param thisY
+	 *          the thisY to set
+	 */
+	public void setThisY(int thisY) {
+		this.thisY = thisY;
 	}
 
 }

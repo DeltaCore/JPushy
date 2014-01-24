@@ -380,6 +380,9 @@ public class Block extends Object implements Cloneable {
 		}
 	}
 
+	public void afterInit(Stage s) {
+	}
+
 	public void toggle() {
 	}
 
