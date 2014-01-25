@@ -25,6 +25,14 @@ public class LVDataList {
 		return false;
 	}
 
+	public boolean dataExists(String name) {
+		for (int i = 0; i < dataField.size(); i++) {
+			if (dataField.get(i).getDataName().equals(name))
+				return true;
+		}
+		return false;
+	}
+
 	public LVData getDataByDataName(String dataName) {
 		for (int i = 0; i < dataField.size(); i++) {
 			if (dataField.get(i).getDataName().equalsIgnoreCase(dataName))
