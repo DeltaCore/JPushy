@@ -52,6 +52,7 @@ public class ColoredBallPaint extends Block {
 						l.getActiveStage().getDataList().getDataByDataName(dataNameNew).setInt(l.getActiveStage().getDataList().getDataByDataName(dataNameNew).getInt() + 1);
 					}
 					this.setVisible(false);
+					l.getActiveStage().setBlock(this.getX(), this.getY(), Blocks.getBlockById(Blocks.air.getId()));
 				} else {
 					Game.sendMessage("MEEEP ! Wrong ball ...");
 				}

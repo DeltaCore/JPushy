@@ -36,53 +36,56 @@ public class LevelEditorGui extends JFrame {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long	serialVersionUID	 = 1L;
 
 	/**
 	 * Launch the application.
 	 */
 
-	private boolean	          running	          = true;
+	private boolean	          running	           = true;
 	private GuiListener	      listener;
 
 	// JMenu
 
-	private JMenuBar	        mainMenuBar	      = new JMenuBar();
-	private JMenu	            mainMenu	        = new JMenu("Level");
-	private JMenuItem	        levelLoad	        = new JMenuItem("Load");
-	private JMenuItem	        levelSave	        = new JMenuItem("Save");
+	private JMenuBar	        mainMenuBar	       = new JMenuBar();
+	private JMenu	            mainMenu	         = new JMenu("Level");
+	private JMenuItem	        levelLoad	         = new JMenuItem("Load");
+	private JMenuItem	        levelSave	         = new JMenuItem("Save");
 
-	private EditorPanel	      editorPanel	      = new EditorPanel();
-	private JSplitPane	      mainSplitPane	    = new JSplitPane();
-	private JPanel	          settingsPanel	    = new JPanel();
-	private JLabel	          settingsLabel	    = new JLabel("LevelSettings");
-	private JLabel	          xSizeLabel	      = new JLabel("X Size :");
-	private JSpinner	        xSizeVal	        = new JSpinner();
-	private JLabel	          ySizeLabel	      = new JLabel("Y Size :");
-	private JSpinner	        ySizeVal	        = new JSpinner();
-	private JLabel	          layerLabel	      = new JLabel("Layers :");
-	private JSpinner	        layerVal	        = new JSpinner();
-	private JLabel	          labelCurrentBlock	= new JLabel("Current block :");
-	private JComboBox	        currentBlock	    = new JComboBox();
-	private BlockPreviewPanel	blockPanel	      = new BlockPreviewPanel();
-	private JProgressBar	    progressbar	      = new JProgressBar();
-	private JLabel	          optionsLabelX	    = new JLabel("X :");
-	private JSpinner	        optionsLabelXVal	= new JSpinner();
-	private JLabel	          optionsLabelY	    = new JLabel("Y :");
-	private JSpinner	        optionsLabelYVal	= new JSpinner();
-	private JButton	          optionsApply	    = new JButton("Apply");
-	private JLabel	          labelInfo1	      = new JLabel("Coordinates are shown in");
-	private JLabel	          labelInfo2	      = new JLabel(" form of a blue box");
-	private JTextField	      levelNameText	    = new JTextField("Name");
-	private JTextField	      levelVersionText	= new JTextField("1.0");
-	private JButton	          levelSaveBtn	    = new JButton("Save");
-	private JSpinner	        currentLayerBox	  = new JSpinner();
-	private JLabel	          labelCurrentLayer	= new JLabel("Current layer :");
+	private EditorPanel	      editorPanel	       = new EditorPanel();
+	private JSplitPane	      mainSplitPane	     = new JSplitPane();
+	private JPanel	          settingsPanel	     = new JPanel();
+	private JLabel	          settingsLabel	     = new JLabel("LevelSettings");
+	private JLabel	          xSizeLabel	       = new JLabel("X Size :");
+	private JSpinner	        xSizeVal	         = new JSpinner();
+	private JLabel	          ySizeLabel	       = new JLabel("Y Size :");
+	private JSpinner	        ySizeVal	         = new JSpinner();
+	private JLabel	          layerLabel	       = new JLabel("Layers :");
+	private JSpinner	        layerVal	         = new JSpinner();
+	private JLabel	          labelCurrentBlock	 = new JLabel("Current block :");
+	private JComboBox	        currentBlock	     = new JComboBox();
+	private BlockPreviewPanel	blockPanel	       = new BlockPreviewPanel();
 
-	private JButton	          applyXSize	      = new JButton("Apply X Size");
-	private JButton	          applyYSize	      = new JButton("Apply Y Size");
-	private JButton	          applyLayer	      = new JButton("Apply layer");
-	private JButton	          selectLayer	      = new JButton("Jump to");
+	private JButton	          btnWallConnections	= new JButton("Make wall connections");
+
+	private JProgressBar	    progressbar	       = new JProgressBar();
+	private JLabel	          optionsLabelX	     = new JLabel("X :");
+	private JSpinner	        optionsLabelXVal	 = new JSpinner();
+	private JLabel	          optionsLabelY	     = new JLabel("Y :");
+	private JSpinner	        optionsLabelYVal	 = new JSpinner();
+	private JButton	          optionsApply	     = new JButton("Apply");
+	private JLabel	          labelInfo1	       = new JLabel("Coordinates are shown in");
+	private JLabel	          labelInfo2	       = new JLabel(" form of a blue box");
+	private JTextField	      levelNameText	     = new JTextField("Name");
+	private JTextField	      levelVersionText	 = new JTextField("1.0");
+	private JButton	          levelSaveBtn	     = new JButton("Save");
+	private JSpinner	        currentLayerBox	   = new JSpinner();
+	private JLabel	          labelCurrentLayer	 = new JLabel("Current layer :");
+
+	private JButton	          applyXSize	       = new JButton("Apply X Size");
+	private JButton	          applyYSize	       = new JButton("Apply Y Size");
+	private JButton	          applyLayer	       = new JButton("Apply layer");
+	private JButton	          selectLayer	       = new JButton("Jump to");
 
 	private Game	            game;
 
@@ -249,6 +252,11 @@ public class LevelEditorGui extends JFrame {
 		this.getLevelLoad().setActionCommand("load");
 
 		this.getSettingsPanel().add(this.getCurrentBlock());
+
+		this.getBtnWallConnections().setBounds(6, 413, 209, 29);
+		this.getBtnWallConnections().setActionCommand("makeWallsFancy");
+		this.getBtnWallConnections().addActionListener(this.getListener());
+		this.getSettingsPanel().add(this.getBtnWallConnections());
 
 		this.getSettingsPanel().add(this.getBlockPanel());
 		this.addKeyListener(this.getEditorPanel().getListener());
@@ -569,6 +577,8 @@ public class LevelEditorGui extends JFrame {
 					}
 				}
 				this.getGui().getEditorPanel().loadLevel(filename);
+			} else if (cmd.equalsIgnoreCase("makeWallsFancy")) {
+				this.getGui().getEditorPanel().makeWallsFancy();
 			}
 		}
 
@@ -671,5 +681,20 @@ public class LevelEditorGui extends JFrame {
 	 */
 	public void setGame(Game game) {
 		this.game = game;
+	}
+
+	/**
+	 * @return the btnWallConnections
+	 */
+	public JButton getBtnWallConnections() {
+		return btnWallConnections;
+	}
+
+	/**
+	 * @param btnWallConnections
+	 *          the btnWallConnections to set
+	 */
+	public void setBtnWallConnections(JButton btnWallConnections) {
+		this.btnWallConnections = btnWallConnections;
 	}
 }

@@ -21,11 +21,13 @@ import javax.swing.JPanel;
 import JPushy.Types.Coord2D;
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
+import JPushy.Types.Blocks.WallBlock;
 import JPushy.Types.Items.Item;
 import JPushy.Types.Items.Items;
 import JPushy.Types.Level.LevelLoader;
 import JPushy.Types.ProgammingRelated.BlockArray;
 import JPushy.Types.ProgammingRelated.ItemArray;
+import JPushy.Types.ProgammingRelated.WallState;
 
 public class EditorPanel extends JPanel {
 
@@ -65,12 +67,19 @@ public class EditorPanel extends JPanel {
 
 	private final Font	          inPanelFont	      = new Font("Arial", Font.PLAIN, 18);
 
+	private ArrayList<String>	    controls	        = new ArrayList<String>();
+
 	public EditorPanel() {
 		super();
 		this.listener = new InputListener(this);
 		this.addMouseListener(this.listener);
 		this.addMouseMotionListener(this.listener);
 		this.addMouseWheelListener(this.listener);
+		controls.add("Right mouse button -> Drag the level");
+		controls.add("Left mouse button -> Place the selected block");
+		controls.add("Middle mouse button -> select the currently hovered block");
+		controls.add("Shift-click -> selects a block");
+		controls.add("Ctrl-Click -> set's the optional coordinate for the currently selected block");
 	}
 
 	public void updateLayer(int layers, int width, int height) {
@@ -129,6 +138,12 @@ public class EditorPanel extends JPanel {
 		render((Graphics2D) g);
 	}
 
+	private void renderControls(Graphics2D g) {
+		for (int i = 0; i < this.controls.size(); i++) {
+			g.drawString(this.controls.get(i), 0, (int) (g.getFontMetrics().getStringBounds(this.controls.get(i), g).getHeight() * (i + 3)) + margin);
+		}
+	}
+
 	public void render(Graphics2D g) {
 		g.setColor(Color.black);
 		g.drawLine(this.listener.getxPos(), 0, this.listener.getxPos(), (int) this.getBounds().getHeight());
@@ -136,12 +151,7 @@ public class EditorPanel extends JPanel {
 		g.setFont(this.getFont());
 		String s = "X : " + (int) ((this.listener.getxPos() - originX) / (40 * this.getScale())) + " Y : " + (int) ((this.listener.getyPos() - originY) / (40 * this.getScale()));
 		g.drawString(s, 0, (int) (g.getFontMetrics().getStringBounds(s, g).getHeight() * 2) + margin);
-		s = "Mouse - left : " + this.listener.btns[1];
-		g.drawString(s, 0, (int) (g.getFontMetrics().getStringBounds(s, g).getHeight() * 3) + margin);
-		s = "Mouse - wheel : " + this.listener.btns[2];
-		g.drawString(s, 0, (int) (g.getFontMetrics().getStringBounds(s, g).getHeight() * 4) + margin);
-		s = "Mouse - right : " + this.listener.btns[3];
-		g.drawString(s, 0, (int) (g.getFontMetrics().getStringBounds(s, g).getHeight() * 5) + margin);
+		renderControls(g);
 		g.translate(originX, originY);
 		g.scale(scale, scale);
 		if (this.getBlockLayers().size() != 0) {
@@ -218,7 +228,14 @@ public class EditorPanel extends JPanel {
 			this.gui.getxSizeVal().setValue(width);
 			this.gui.getySizeVal().setValue(height);
 			this.gui.getLayerVal().setValue(layers);
-
+			this.setLevelHeight(height);
+			this.setLevelWidth(width);
+			this.setLayer(layers);
+			for (int i = 0; i < this.getLayer(); i++) {
+				this.getBlockLayers().get(i).setHeight(height);
+				this.getBlockLayers().get(i).setWidth(width);
+				this.getBlockLayers().get(i).initArray();
+			}
 			for (int linesY = 0; linesY < lines.size(); linesY++) {
 				line = lines.get(linesY);
 				if (line.matches(levelRegEx)) {
@@ -280,6 +297,60 @@ public class EditorPanel extends JPanel {
 				}
 			}
 		}
+	}
+
+	public void makeWallsFancy() {
+		Block n = null;
+		Block e = null;
+		Block s = null;
+		Block w = null;
+		WallState state = new WallState();
+		for (int y = 0; y < this.getLevelHeight(); y++) {
+			for (int x = 0; x < this.getLevelWidth(); x++) {
+				if (this.getBlockLayers().get(this.getCurrentLayer()).getBlock(x, y) instanceof WallBlock) {
+					state = new WallState();
+					if (x == 0) {
+						state.setWest(false);
+					} else {
+						w = this.getBlockLayers().get(this.getCurrentLayer()).getBlock(x - 1, y);
+						if (w instanceof WallBlock) {
+							state.setWest(true);
+						}
+					}
+					if (y == 0) {
+						state.setNorth(false);
+					} else {
+						n = this.getBlockLayers().get(this.getCurrentLayer()).getBlock(x, y - 1);
+						if (n instanceof WallBlock) {
+							state.setNorth(true);
+						}
+					}
+					if (x == this.getLevelWidth() - 1) {
+						state.setEast(false);
+					} else {
+						e = this.getBlockLayers().get(this.getCurrentLayer()).getBlock(x + 1, y);
+						if (e instanceof WallBlock) {
+							state.setEast(true);
+						}
+					}
+					if (y == this.getLevelWidth() - 1) {
+						state.setSouth(false);
+					} else {
+						s = this.getBlockLayers().get(this.getCurrentLayer()).getBlock(x, y + 1);
+						if (s instanceof WallBlock) {
+							state.setSouth(true);
+						}
+					}
+					for (WallState st : WallState.wallStates) {
+						if (st.equals(state)) {
+							this.getBlockLayers().get(this.getCurrentLayer()).setBlock(x, y, Blocks.getBlockById(st.getId()));
+							this.repaint();
+						}
+					}
+				}
+			}
+		}
+		this.repaint();
 	}
 
 	/**
