@@ -1,3 +1,4 @@
+
 package JPushy.Gui;
 
 import java.awt.Color;
@@ -7,9 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-
 import javax.swing.JPanel;
-
 import JPushy.Core.Game;
 import JPushy.Core.LevelThread;
 import JPushy.Types.Blocks.Block;
@@ -29,7 +28,6 @@ import JPushy.gfx.GraphicUtils;
 public class GamePanel extends JPanel {
 
 	private static final long	serialVersionUID	= 1L;
-
 	private LevelThread	      thread;
 	private int	              margin	         = 10;
 	private Font	            font	           = new Font("Arial", Font.PLAIN, 18);
@@ -95,10 +93,12 @@ public class GamePanel extends JPanel {
 					}
 					if (this.tempBlock.getKeptItem() != null) {
 						if (!(this.tempBlock.getKeptItem() == Items.noitem))
-							g.drawImage(GraphicUtils.getImageFromPicture(this.tempBlock.getKeptItem().getTexture()), ((x * 40)), ((y * 40)), null);
+							g.drawImage(GraphicUtils.getImageFromPicture(this.tempBlock.getKeptItem().getTexture()), ((x * 40)),
+							    ((y * 40)), 40, 40, null);
 					}
 					if (this.level.getActiveStage().getMoveableBlock(x, y) != null) {
-						this.tempTexture = GraphicUtils.getImageFromPicture(this.level.getActiveStage().getMoveableBlock(x, y).getTexture());
+						this.tempTexture = GraphicUtils.getImageFromPicture(this.level.getActiveStage().getMoveableBlock(x, y)
+						    .getTexture());
 						g.drawImage(this.tempTexture, ((x * 40)), ((y * 40)), 40, 40, null);
 					}
 				} catch (Exception e) {
@@ -130,18 +130,30 @@ public class GamePanel extends JPanel {
 			int xoffset = windowWidth - (i * 68) - 88;
 			g.setColor(Color.BLACK);
 			g.fillRect(xoffset, yOffset, 68, 68);
-			g.setColor(Color.DARK_GRAY);
+			g.setColor(Color.LIGHT_GRAY);
 			g.fillRect(xoffset + 4, yOffset + 4, 60, 60);
 			if (!this.getInventory().getSlots()[i].getItem().getName().equalsIgnoreCase("noitem")) {
-				g.drawImage(GraphicUtils.getImageFromPicture(this.getInventory().getSlots()[i].getItem().getTexture()), xoffset + 4, yOffset + 4, 60, 60, null);
+				g.drawImage(GraphicUtils.getImageFromPicture(this.getInventory().getSlots()[i].getItem().getTexture()),
+				    xoffset + 4, yOffset + 4, 60, 60, null);
 				g.setFont(font);
 				g.setColor(Color.WHITE);
-				g.drawString(this.getInventory().getSlots()[i].getAmount() + "", xoffset + 2 + (int) g.getFontMetrics(font).getStringBounds(this.getInventory().getSlots()[i].getAmount() + "", g).getWidth(), yOffset + 2 + (int) g.getFontMetrics(font).getStringBounds(this.getInventory().getSlots()[i].getAmount() + "", g).getHeight());
+				g.drawString(
+				    this.getInventory().getSlots()[i].getAmount() + "",
+				    xoffset
+				        + 2
+				        + (int) g.getFontMetrics(font).getStringBounds(this.getInventory().getSlots()[i].getAmount() + "", g)
+				            .getWidth(),
+				    yOffset
+				        + 2
+				        + (int) g.getFontMetrics(font).getStringBounds(this.getInventory().getSlots()[i].getAmount() + "", g)
+				            .getHeight());
 				if (this.getInventory().getSlots()[i].getItem().isDamageBar()) {
 					g.setColor(Color.BLACK);
 					g.drawRect(xoffset + 9, yOffset + 49, 41, 4);
 					g.setColor(Color.BLUE);
-					g.fillRect(xoffset + 10, yOffset + 50, 40 - (40 / this.getInventory().getSlots()[i].getItem().getMaxDMG() * this.getInventory().getSlots()[i].getItem().getDmg()), 3);
+					g.fillRect(xoffset + 10, yOffset + 50,
+					    40 - (40 / this.getInventory().getSlots()[i].getItem().getMaxDMG() * this.getInventory().getSlots()[i]
+					        .getItem().getDmg()), 3);
 				}
 			}
 			if (this.getInventory().getSelectedSlot() == i) {

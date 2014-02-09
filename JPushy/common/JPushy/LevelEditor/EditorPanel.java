@@ -125,6 +125,7 @@ public class EditorPanel extends JPanel {
 			} else {
 				Block b = Blocks.getBlockByName(sel);
 				this.getBlockLayers().get(this.getCurrentLayer()).setBlock(cx, cy, b);
+				makeWallsFancy();
 				if (b.getId() == Blocks.air.getId()) {
 					this.getItemLayers().get(this.getCurrentLayer()).set(cx, cy, Items.getItemById(Items.noitem.getId()));
 				}

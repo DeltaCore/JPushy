@@ -3,6 +3,7 @@ package JPushy.Types.Level;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
+import JPushy.Core.Game;
 import JPushy.Types.Coord2D;
 import JPushy.Types.Blocks.Block;
 import JPushy.Types.Blocks.Blocks;
@@ -232,7 +233,7 @@ public class Level {
 
 	public void init(Player p) {
 		for (String s : comment) {
-			// Game.sendMessage(s);
+			Game.sendMessage(s);
 		}
 		getActiveStage().init(p);
 	}

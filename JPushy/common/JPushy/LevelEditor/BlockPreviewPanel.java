@@ -25,7 +25,8 @@ public class BlockPreviewPanel extends JPanel {
 		Graphics2D g = (Graphics2D) g_;
 		g.clearRect(0, 0, 80, 80);
 		if (selectedIndex > Blocks.blockRegistry.size()) {
-			g.drawImage(GraphicUtils.getImageFromPicture(Items.getItemById(Items.getIdByName(this.getGui().getCurrentBlock().getItemAt(selectedIndex - Blocks.blockRegistry.size()).toString())).getTexture()), 0, 0, 80, 80, null);
+			int itemIndex = selectedIndex - Blocks.blockRegistry.size(); System.out.println("Item index : " + itemIndex);
+			g.drawImage(GraphicUtils.getImageFromPicture(Items.getItemById(Items.getIdByName(this.getGui().getCurrentBlock().getItemAt(itemIndex).toString())).getTexture()), 0, 0, 80, 80, null);
 		} else {
 			g.drawImage(GraphicUtils.getImageFromPicture(Blocks.getBlockByName(this.getGui().getCurrentBlock().getItemAt(selectedIndex).toString()).getTexture()), 0, 0, 80, 80, null);
 		}

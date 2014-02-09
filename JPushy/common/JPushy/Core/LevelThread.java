@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +38,9 @@ public class LevelThread extends JFrame implements Runnable {
 
 	public LevelThread(Game gui, LevelItem level) {
 		super(level.getName() + " | JPushy");
+		Launcher.getInstance().thread = this;
+		this.setGamePanel(new GamePanel(this, 25));
+		this.setChat(new Chat(this.getGamePanel()));
 		this.setPlayer(new Player(this, PictureLoader.loadImageFromFile("char.png"), "Player"));
 		this.setServer(new MPServer(this));
 		this.setClient(new MPClient(this.getServer()));
@@ -47,13 +51,27 @@ public class LevelThread extends JFrame implements Runnable {
 		this.setPreferredSize(new Dimension(1000, 700));
 		this.setSize(new Dimension(1000, 700));
 		this.setLayout(new BorderLayout());
-		this.setGamePanel(new GamePanel(this, 25));
 		this.add(this.getGamePanel());
 		this.setInput(new Input(this, this.getGamePanel(), this.getClient()));
 		this.addKeyListener(input);
-		this.setChat(new Chat(this.getGamePanel()));
+		showControls();
 	}
 
+	private void showControls(){
+		ArrayList<String> controls = new ArrayList<String>();
+		controls.add("The controls : ");
+		controls.add("W - Up");
+		controls.add("S - Down");
+		controls.add("A - Left");
+		controls.add("D - Right");
+		controls.add("Enter - Use an item");
+		controls.add("	-> After you pressed enter , use W/A/S/D to determine ");
+		controls.add("     a direction you wanna active the item");
+		for(int i = 0;i<controls.size();i++){
+			Game.sendMessage(controls.get(i));
+		}
+	}
+	
 	public LevelThread(String ip) {
 		super("JPushy");
 		this.setPlayer(new Player(this, PictureLoader.loadImageFromFile("char.png"), "Player"));
