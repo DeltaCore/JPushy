@@ -35,10 +35,12 @@ import JPushy.Listener.LevelServerListener;
 
 public class LevelServerConnector extends JFrame {
 
+  private static final long serialVersionUID = -8701921507349591140L;
+  
 	private JPanel	            contentPane;
 	JLabel	                    lblStatus;
 	private LevelServerListener	actionListener;
-	public DefaultListModel	    listModel	= new DefaultListModel();
+	public DefaultListModel<CheckBoxListEntry>	    listModel	= new DefaultListModel<CheckBoxListEntry>();
 	public CheckBoxList	        checkBoxList;
 	private JLabel	            lblStatusText;
 	public Game	                mainGui;
@@ -75,7 +77,7 @@ public class LevelServerConnector extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 
-		listModel = new DefaultListModel();
+		listModel = new DefaultListModel<CheckBoxListEntry>();
 		listModel.add(0, new CheckBoxListEntry("Klick 'Server -> Reload List' to list available files on the Server", false));
 
 		checkBoxList = new CheckBoxList(listModel);
@@ -113,7 +115,7 @@ public class LevelServerConnector extends JFrame {
 		btnDownload.addActionListener(actionListener);
 	}
 
-	public void newCheckList(DefaultListModel model) {
+	public void newCheckList(DefaultListModel<CheckBoxListEntry> model) {
 		contentPane.remove(checkBoxList);
 		checkBoxList = new CheckBoxList(model);
 		checkBoxList.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -202,10 +204,11 @@ public class LevelServerConnector extends JFrame {
 		public void setRunning(boolean running) {
 			this.running = running;
 		}
-
+		
+		/*
 		private boolean checkServer() {
 			return sendCommand(ping);
-		}
+		}*/
 
 	}
 

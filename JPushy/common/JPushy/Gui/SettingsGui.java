@@ -15,6 +15,7 @@ import JPushy.Listener.SettingsListener;
  */
 public class SettingsGui extends JFrame {
 
+  private static final long serialVersionUID = -8320007872922793400L;
 	private JPanel	         contentPane;
 	public JTextField	       updateServer;
 	public JTextField	       lvlServer;

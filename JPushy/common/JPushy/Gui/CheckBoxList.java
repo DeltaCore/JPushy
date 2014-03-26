@@ -51,8 +51,15 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
+@SuppressWarnings("rawtypes")
 public class CheckBoxList extends JList {
 
+  /**
+	 * 
+	 */
+  private static final long serialVersionUID = 2992056756340352259L;
+
+	@SuppressWarnings({ "unchecked" })
   public CheckBoxList() {
     super();
 
@@ -81,6 +88,7 @@ public class CheckBoxList extends JList {
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
   }
 
+  @SuppressWarnings({ "unchecked" })
   public CheckBoxList(DefaultListModel model){
 	    setModel(model);
 	    setCellRenderer(new CheckboxCellRenderer());
@@ -107,9 +115,8 @@ public class CheckBoxList extends JList {
 	    setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
   }
   
-  @SuppressWarnings("unchecked")
   public int[] getCheckedIdexes() {
-    java.util.List list = new java.util.ArrayList();
+    java.util.List<Integer> list = new java.util.ArrayList<Integer>();
     DefaultListModel dlm = (DefaultListModel) getModel();
     for (int i = 0; i < dlm.size(); ++i) {
       Object obj = getModel().getElementAt(i);
@@ -124,13 +131,12 @@ public class CheckBoxList extends JList {
     int[] indexes = new int[list.size()];
 
     for (int i = 0; i < list.size(); ++i) {
-      indexes[i] = ((Integer) list.get(i)).intValue();
+      indexes[i] = list.get(i).intValue();
     }
 
     return indexes;
   }
 
-  @SuppressWarnings("unchecked")
   public ArrayList<CheckBoxListEntry> getCheckedItems() {
     ArrayList<CheckBoxListEntry> list = new ArrayList<CheckBoxListEntry>();
     DefaultListModel dlm = (DefaultListModel) getModel();
@@ -182,8 +188,13 @@ public class CheckBoxList extends JList {
  * @author gtoffoli
  */
 class CheckboxCellRenderer extends DefaultListCellRenderer {
-  protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
+  /**
+	 * 
+	 */
+  private static final long serialVersionUID = -1299924334338466062L;
+	protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 
+  @SuppressWarnings("rawtypes")
   public Component getListCellRendererComponent(JList list, Object value, int index,
       boolean isSelected, boolean cellHasFocus) {
     if (value instanceof CheckBoxListEntry) {

@@ -17,7 +17,6 @@ import JPushy.gfx.PictureLoader;
  */
 public class Level {
 
-	private int	              homeX	      = 1, homeY = 1;
 	private int	              activeStage	= 0;
 	private ArrayList<Stage>	stages	    = new ArrayList<Stage>();
 	private String	          name	      = "", version = "";

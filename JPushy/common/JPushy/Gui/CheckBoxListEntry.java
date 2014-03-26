@@ -39,7 +39,9 @@ import javax.swing.JCheckBox;
  */
 public class CheckBoxListEntry extends JCheckBox {
 
-  private Object value = null;
+  private static final long serialVersionUID = 8295652000973877132L;
+
+	private Object value = null;
 
   private boolean red = false;
 

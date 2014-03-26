@@ -19,8 +19,6 @@ public class Player {
 	private String	    name	         = "Player";
 	private Inventory	  inventory;
 	private boolean	    cancelnextmove	= false;
-	private int	        currentStage	 = 0;
-
 	public Player(LevelThread levelThread, Picture img, String name) {
 		this.thread = levelThread;
 		this.img = img;

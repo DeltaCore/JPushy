@@ -98,6 +98,7 @@ public class MPServer extends Thread {
 			while ((line = reader.readLine()) != null) {
 				returnString += line + String.format("%n");
 			}
+			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -186,7 +187,7 @@ public class MPServer extends Thread {
 	}
 
 	// IO Stuff
-
+	/*
 	private static ArrayList<String> loadLevelFile(String filename) {
 		ArrayList<String> returnString = new ArrayList<String>();
 		File f = new File("Data/lvl/" + filename);
@@ -196,6 +197,7 @@ public class MPServer extends Thread {
 			while ((line = reader.readLine()) != null) {
 				returnString.add(line);
 			}
+			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -212,12 +214,13 @@ public class MPServer extends Thread {
 			while ((line = reader.readLine()) != null) {
 				returnString.add(line);
 			}
+			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return returnString;
 	}
-
+*/
 	public static String getRandomKey() {
 		char[] aChars = { 'A', 'B', 'C', 'D', 'E', 'F', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
 		String key = "";

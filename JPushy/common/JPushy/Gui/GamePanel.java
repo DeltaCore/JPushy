@@ -6,9 +6,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+
 import javax.swing.JPanel;
+
 import JPushy.Core.Game;
 import JPushy.Core.LevelThread;
 import JPushy.Types.Blocks.Block;
@@ -51,18 +54,24 @@ public class GamePanel extends JPanel {
 
 	public void render(Graphics2D g) {
 
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		
 		// Chat
 
 		int x = margin, y = 0;
-		int startAt = this.getConsoleLines().size() - this.getThread().getChat().MAX_LINES;
+		this.getThread().getChat();
+		int startAt = this.getConsoleLines().size() - Chat.MAX_LINES;
 		String tmp;
 		Rectangle2D rect;
 		g.setColor(Color.black);
 		g.setFont(font);
 		int lastText = (int) this.getBounds().getHeight() - margin;
 		int max = this.getConsoleLines().size();
-		if (this.getConsoleLines().size() < this.getThread().getChat().MAX_LINES) {
-			max = this.getThread().getChat().MAX_LINES;
+		this.getThread().getChat();
+		if (this.getConsoleLines().size() < Chat.MAX_LINES) {
+			this.getThread().getChat();
+			max = Chat.MAX_LINES;
 		}
 		for (int i = max; i >= 0; i--) {
 			if (i > startAt) {

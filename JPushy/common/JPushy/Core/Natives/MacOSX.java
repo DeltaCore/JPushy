@@ -7,8 +7,6 @@ import JPushy.Core.JPushy;
 
 public class MacOSX extends NativeHandler {
 
-	private JPushy	game	= null;
-
 	public MacOSX(String osName) {
 		super(osName);
 	}

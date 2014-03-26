@@ -63,7 +63,7 @@ public class LevelEditorGui extends JFrame {
 	private JLabel	          layerLabel	       = new JLabel("Layers :");
 	private JSpinner	        layerVal	         = new JSpinner();
 	private JLabel	          labelCurrentBlock	 = new JLabel("Current block :");
-	private JComboBox	        currentBlock	     = new JComboBox();
+	private JComboBox<String>	        currentBlock	     = new JComboBox<String>();
 	private BlockPreviewPanel	blockPanel	       = new BlockPreviewPanel();
 
 	private JButton	          btnWallConnections	= new JButton("Make wall connections");
@@ -183,7 +183,7 @@ public class LevelEditorGui extends JFrame {
 
 		this.getEditorPanel().updateLayer((Integer) this.getLayerVal().getValue(), (Integer) this.getxSizeVal().getValue(), (Integer) this.getySizeVal().getValue());
 
-		DefaultComboBoxModel blockModel = new DefaultComboBoxModel();
+		DefaultComboBoxModel<String> blockModel = new DefaultComboBoxModel<String>();
 		Blocks.wakeUpDummy();
 		for (Block b : Blocks.blockRegistry) {
 			blockModel.addElement(b.getName());
@@ -383,11 +383,11 @@ public class LevelEditorGui extends JFrame {
 		this.labelCurrentBlock = labelCurrentBlock;
 	}
 
-	public JComboBox getCurrentBlock() {
+	public JComboBox<String> getCurrentBlock() {
 		return currentBlock;
 	}
 
-	public void setCurrentBlock(JComboBox currentBlock) {
+	public void setCurrentBlock(JComboBox<String> currentBlock) {
 		this.currentBlock = currentBlock;
 	}
 
@@ -605,7 +605,8 @@ public class LevelEditorGui extends JFrame {
 			}
 		}
 
-		@Override
+		@SuppressWarnings("rawtypes")
+    @Override
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 			if (isSelected) {
 				this.getGui().getBlockPanel().setSelectedIndex(index);

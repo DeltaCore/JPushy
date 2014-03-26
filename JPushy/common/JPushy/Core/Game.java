@@ -1,3 +1,4 @@
+
 package JPushy.Core;
 
 import java.awt.BorderLayout;
@@ -38,43 +39,43 @@ import JPushy.Types.Player.Player;
 
 public class Game extends JFrame {
 
-	private static final long	     serialVersionUID	        = 1L;
+	private static final long	       serialVersionUID	        = 1L;
 
-	private JPanel	               contentPane;
+	private JPanel	                 contentPane;
 
 	/**
 	 * Launch the application.
 	 */
 
-	public static final String	   name	                    = "JPushy";
-	public static final String	   version	                = "0.2.3";
+	public static final String	     name	                    = "JPushy";
+	public static final String	     version	                = "0.2.3";
 
-	LevelThread	                   thread;
+	LevelThread	                     thread;
 
-	private DefaultListModel	     levelModel	              = new DefaultListModel();
+	private DefaultListModel<String>	levelModel	            = new DefaultListModel<String>();
 
-	private JMenuBar	             mainBar	                = new JMenuBar();
+	private JMenuBar	               mainBar	                = new JMenuBar();
 
-	private JMenu	                 levelMenu	              = new JMenu("Level");
-	private JMenuItem	             startLevel	              = new JMenuItem("Start");
-	private JMenuItem	             createLevel	            = new JMenuItem("Open Leveleditor");
+	private JMenu	                   levelMenu	              = new JMenu("Level");
+	private JMenuItem	               startLevel	              = new JMenuItem("Start");
+	private JMenuItem	               createLevel	            = new JMenuItem("Open Leveleditor");
 
-	private JMenu	                 serverMenu	              = new JMenu("Server");
-	private JMenuItem	             connectToServer	        = new JMenuItem("Connect to server");
-	private JMenuItem	             connectToLevelServer	    = new JMenuItem("Connect to level server");
+	private JMenu	                   serverMenu	              = new JMenu("Server");
+	private JMenuItem	               connectToServer	        = new JMenuItem("Connect to server");
+	private JMenuItem	               connectToLevelServer	    = new JMenuItem("Connect to level server");
 
-	private JMenu	                 generalMenu	            = new JMenu("General");	                  // General
-	private JMenu	                 generalSettingsMenu	    = new JMenu("Settings");	                  // General->Settings
-	private JMenuItem	             generalSettingsControls	= new JMenuItem("Controls");	              // General->Settings->Controls
-	private JMenuItem	             generalSettingsInterface	= new JMenuItem("Interface");	            // General->Settings->Interface
-	private JMenuItem	             generalUpdates	          = new JMenuItem("Updates");	              // General->Updates
-	private final JLabel	         stateLabel	              = new JLabel("JPushy");
+	private JMenu	                   generalMenu	            = new JMenu("General");	                  // General
+	private JMenu	                   generalSettingsMenu	    = new JMenu("Settings");	                  // General->Settings
+	private JMenuItem	               generalSettingsControls	= new JMenuItem("Controls");	              // General->Settings->Controls
+	private JMenuItem	               generalSettingsInterface	= new JMenuItem("Interface");	            // General->Settings->Interface
+	private JMenuItem	               generalUpdates	          = new JMenuItem("Updates");	              // General->Updates
+	private final JLabel	           stateLabel	              = new JLabel("JPushy");
 
-	private JList	                 levelList	              = new JList();
-	private JTextArea	             txtLevelInfo	            = new JTextArea();
-	private LevelSelectionListener	listener;
+	private JList<String>	                   levelList	              = new JList<String>();
+	private JTextArea	               txtLevelInfo	            = new JTextArea();
+	private LevelSelectionListener	 listener;
 
-	ArrayList<LevelItem>	         levels	                  = new ArrayList<LevelItem>();
+	ArrayList<LevelItem>	           levels	                  = new ArrayList<LevelItem>();
 
 	/**
 	 * Create the frame.
@@ -168,7 +169,7 @@ public class Game extends JFrame {
 			}
 		}
 		System.out.println("Levels total : " + levels.size());
-		this.setLevelModel(new DefaultListModel());
+		this.setLevelModel(new DefaultListModel<String>());
 		for (int i = 0; i < levels.size(); i++) {
 			this.getLevelModel().addElement(levels.get(i).toString());
 		}
@@ -322,11 +323,11 @@ public class Game extends JFrame {
 		this.generalUpdates = generalUpdates;
 	}
 
-	public DefaultListModel getLevelModel() {
+	public DefaultListModel<String> getLevelModel() {
 		return levelModel;
 	}
 
-	public void setLevelModel(DefaultListModel levelModel) {
+	public void setLevelModel(DefaultListModel<String> levelModel) {
 		this.levelModel = levelModel;
 	}
 
@@ -346,11 +347,11 @@ public class Game extends JFrame {
 		return Launcher.getInstance().thread.getLevel();
 	}
 
-	public JList getLevelList() {
+	public JList<String> getLevelList() {
 		return levelList;
 	}
 
-	public void setLevelList(JList levelList) {
+	public void setLevelList(JList<String> levelList) {
 		this.levelList = levelList;
 	}
 

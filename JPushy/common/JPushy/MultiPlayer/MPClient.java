@@ -30,7 +30,7 @@ public class MPClient {
 		String lvl;
 		String hostname = "";
 		int port = 11941;
-		String key = server.getRandomKey();
+		String key = MPServer.getRandomKey();
 		try {
 			String regex_ip_port = "^([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}):([0-9]{1,})";
 			String regex_host_port = "^([a-zA-Z]{1,}.[a-zA-Z]{1,}):([0-9]{1,})";
@@ -110,7 +110,7 @@ public class MPClient {
 	public void set(int x, int y) {
 		if (connected) {
 			String cmd = "-setPlayer/" + server.getLauncher().getPlayer().getName() + "/" + x + "/" + y;
-			DatagramPacket packet = new DatagramPacket(cmd.getBytes(), cmd.getBytes().length);
+			//DatagramPacket packet = new DatagramPacket(cmd.getBytes(), cmd.getBytes().length);
 			sendToServer(cmd);
 		}
 	}
@@ -118,7 +118,7 @@ public class MPClient {
 	public void move(int dir) {
 		if (connected) {
 			String cmd = "-movePlayer/" + server.getLauncher().getPlayer().getName() + "/" + dir;
-			DatagramPacket packet = new DatagramPacket(cmd.getBytes(), cmd.getBytes().length);
+			//DatagramPacket packet = new DatagramPacket(cmd.getBytes(), cmd.getBytes().length);
 			sendToServer(cmd);
 		}
 	}

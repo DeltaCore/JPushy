@@ -43,7 +43,7 @@ public class LevelServerListener implements ActionListener {
 			Pattern pattern = Pattern.compile(regex);
 			Matcher matcher = pattern.matcher(ret);
 			gui.setStaus("Updating Level list ...", dark_green);
-			gui.listModel = new DefaultListModel();
+			gui.listModel = new DefaultListModel<CheckBoxListEntry>();
 			int index = 0;
 			for (int i = 0; i < levels.length; i++) {
 				matcher = pattern.matcher(levels[i]);
@@ -54,7 +54,7 @@ public class LevelServerListener implements ActionListener {
 					gui.listModel.add(index, new CheckBoxListEntry(name + " - " + version, false));
 					index++;
 				} //
-				gui.listModel.add(i, levels[i]);
+				gui.listModel.add(i, new CheckBoxListEntry(levels[i], false));
 			}
 			gui.newCheckList(gui.listModel);
 			gui.setStaus("Idle", Color.blue);
