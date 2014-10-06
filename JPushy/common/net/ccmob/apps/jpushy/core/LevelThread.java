@@ -38,7 +38,7 @@ public class LevelThread extends JFrame implements Runnable {
 
 	public LevelThread(Game gui, LevelItem level) {
 		super(level.getName() + " | JPushy");
-		Launcher.getInstance().thread = this;
+		JPushy.getInstance().thread = this;
 		this.setGamePanel(new GamePanel(this, 25));
 		this.setChat(new Chat(this.getGamePanel()));
 		this.setPlayer(new Player(this, PictureLoader.loadImageFromFile("char.png"), "Player"));
@@ -174,7 +174,7 @@ public class LevelThread extends JFrame implements Runnable {
 	}
 
 	public void loadLevel(String file) {
-		this.setLevel(LevelLoader.loadLevelFromFile(file));
+		this.setLevel(LevelLoader.load(file));
 	}
 
 	public Input getInput() {

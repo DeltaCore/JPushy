@@ -1,3 +1,4 @@
+
 package net.ccmob.xml;
 
 import java.io.BufferedReader;
@@ -9,9 +10,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class XMLConfig {
-	
+
 	/**
-	 * This File is licensed under the MIT License (http://opensource.org/licenses/MIT)
+	 * This File is licensed under the MIT License
+	 * (http://opensource.org/licenses/MIT)
 	 * 
 	 * @author Marcel Benning
 	 * @email marcel@ccmob.net
@@ -23,16 +25,16 @@ public class XMLConfig {
 	 * Here is the config saved to and can be modified at runtime. After
 	 * modification, call the save method.
 	 */
-	private XMLNode rootNode = new XMLNode("XMLConfig");
+	private XMLNode	rootNode	= new XMLNode("XMLConfig");
 
 	/**
 	 * Stores the fileName if given;
 	 */
-	private String fileName = null;
+	private String	fileName	= null;
 
 	/**
 	 * @param filename
-	 *            the file to parse from
+	 *          the file to parse from
 	 */
 	public XMLConfig(String filename) {
 		File f = new File(filename);
@@ -43,14 +45,14 @@ public class XMLConfig {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}else{
+		} else {
 			parse();
 		}
 	}
 
 	/**
 	 * @param f
-	 *            the file to parse from
+	 *          the file to parse from
 	 */
 	public XMLConfig(File f) {
 		this.setFileName(f.getAbsolutePath());
@@ -59,7 +61,7 @@ public class XMLConfig {
 
 	/**
 	 * @param lines
-	 *            - the file content to parse from
+	 *          - the file content to parse from
 	 */
 	public XMLConfig(ArrayList<String> lines) {
 		parseLines(lines);
@@ -67,7 +69,7 @@ public class XMLConfig {
 
 	/**
 	 * @param lines
-	 *            the file content to parse from
+	 *          the file content to parse from
 	 */
 	public XMLConfig(String[] lines) {
 		ArrayList<String> arr = new ArrayList<String>();
@@ -91,9 +93,9 @@ public class XMLConfig {
 	}
 
 	/**
-	 * This function converts the content of the ArrayList (the content of a
-	 * file or a string in the first object) to a XMLNode tree, saved in the
-	 * rootNode varibale.
+	 * This function converts the content of the ArrayList (the content of a file
+	 * or a string in the first object) to a XMLNode tree, saved in the rootNode
+	 * varibale.
 	 */
 	public void parseLines(ArrayList<String> lines) {
 		try {
@@ -130,8 +132,7 @@ public class XMLConfig {
 	 * @return formated attribute string
 	 */
 	private String formAttribute(XMLAttribute attr) {
-		return attr.getAttributeName() + "=\"" + attr.getAttributeValue()
-				+ "\"";
+		return attr.getAttributeName() + "=\"" + attr.getAttributeValue() + "\"";
 	}
 
 	/**
@@ -150,16 +151,15 @@ public class XMLConfig {
 
 	/**
 	 * This function writes an XMLNode ( @param node ) to a FileWriter ( @param
-	 * writer ) with the proper format. The @param tabIndex specifies the shift
-	 * to the right in the file for proper reading.
+	 * writer ) with the proper format. The @param tabIndex specifies the shift to
+	 * the right in the file for proper reading.
 	 * 
 	 * @param node
 	 * @param tabIndex
 	 * @param writer
 	 * @throws IOException
 	 */
-	private void writeNode(XMLNode node, int tabIndex, FileWriter writer)
-			throws IOException {
+	private void writeNode(XMLNode node, int tabIndex, FileWriter writer) throws IOException {
 		String line = formTabs(tabIndex) + "<" + node.getName();
 		if (node.getAttributes().size() > 0) {
 			for (int i = 0; i < node.getAttributes().size(); i++) {
@@ -188,7 +188,7 @@ public class XMLConfig {
 
 	/**
 	 * @param rootNode
-	 *            the rootNode to set
+	 *          the rootNode to set
 	 */
 	public void setRootNode(XMLNode rootNode) {
 		this.rootNode = rootNode;
@@ -203,7 +203,7 @@ public class XMLConfig {
 
 	/**
 	 * @param fileName
-	 *            the fileName to set
+	 *          the fileName to set
 	 */
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
@@ -213,18 +213,18 @@ public class XMLConfig {
 		/**
 		 * Stores the name of the Attribute
 		 */
-		private String attributeName = "";
+		private String	attributeName		= "";
 
 		/**
 		 * Sores the value of the Attribute
 		 */
-		private Object attributeValue = "";
+		private Object	attributeValue	= "";
 
 		/**
 		 * @param name
-		 *            Attribute name
+		 *          Attribute name
 		 * @param value
-		 *            Attribute value
+		 *          Attribute value
 		 */
 		public XMLAttribute(String name, Object value) {
 			this.setAttributeName(name);
@@ -235,7 +235,7 @@ public class XMLConfig {
 		 * Just without the value
 		 * 
 		 * @param name
-		 *            Attribute name
+		 *          Attribute name
 		 */
 		public XMLAttribute(String name) {
 			this(name, null);
@@ -250,7 +250,7 @@ public class XMLConfig {
 
 		/**
 		 * @param attributeName
-		 *            the attributeName to set
+		 *          the attributeName to set
 		 */
 		public void setAttributeName(String attributeName) {
 			this.attributeName = attributeName;
@@ -265,7 +265,7 @@ public class XMLConfig {
 
 		/**
 		 * @param attributeValue
-		 *            the attributeValue to set
+		 *          the attributeValue to set
 		 */
 		public void setAttributeValue(Object attributeValue) {
 			this.attributeValue = attributeValue;
@@ -278,22 +278,22 @@ public class XMLConfig {
 		/**
 		 * Node name
 		 */
-		private String name;
+		private String		              name;
 
 		/**
 		 * Node childs
 		 */
-		private ArrayList<XMLNode> childs;
+		private ArrayList<XMLNode>		  childs;
 
 		/**
 		 * Node attributes
 		 */
-		private ArrayList<XMLAttribute> attributes;
+		private ArrayList<XMLAttribute>	attributes;
 
 		/**
 		 * The parent of this node
 		 */
-		private XMLNode parent;
+		private XMLNode		              parent;
 
 		public XMLNode() {
 			this.childs = new ArrayList<XMLNode>();
@@ -324,6 +324,30 @@ public class XMLConfig {
 		}
 
 		/**
+		 * Checks if an attribute exists in this node
+		 * 
+		 * @param attributeName
+		 * @return
+		 */
+		public boolean attributeExists(String attributeName) {
+			for (XMLAttribute attr : this.getAttributes()) {
+				if (attr.getAttributeName().equals(attributeName)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public XMLAttribute getAttribute(String attributeName) {
+			for (XMLAttribute attr : this.getAttributes()) {
+				if (attr.getAttributeName().equals(attributeName)) {
+					return attr;
+				}
+			}
+			return null;
+		}
+
+		/**
 		 * Adds a attribute to the node
 		 * 
 		 * @param key
@@ -349,8 +373,10 @@ public class XMLConfig {
 		 * @param child
 		 */
 		public void addChild(XMLNode child) {
-			this.childs.add(child);
-			child.setParent(this);
+			if(child != this){
+				this.childs.add(child);
+				child.setParent(this);
+			}
 		}
 
 		/**
@@ -448,13 +474,10 @@ public class XMLConfig {
 			String s = "";
 			for (int j = 0; j < height; j++)
 				s = s + "\t";
-			s = s + "<" + this.name + getAttributeString()
-					+ (getNumChilds() == 0 ? " /" : "") + ">\n";
+			s = s + "<" + this.name + getAttributeString() + (getNumChilds() == 0 ? " /" : "") + ">\n";
 			if (this.childs.size() != 0) {
 				for (int i = 0; i < this.childs.size(); i++) {
-					s = s
-							+ ((XMLNode) this.childs.get(i))
-									.getXMLString(height + 1);
+					s = s + ((XMLNode) this.childs.get(i)).getXMLString(height + 1);
 				}
 				for (int j = 0; j < height; j++)
 					s = s + "\t";
@@ -471,8 +494,7 @@ public class XMLConfig {
 		private String getAttributeString() {
 			String s = "";
 			for (int i = 0; i < this.attributes.size(); i++) {
-				s = s + this.attributes.get(i).getAttributeName() + "=\""
-						+ this.attributes.get(i).getAttributeValue() + "\" ";
+				s = s + this.attributes.get(i).getAttributeName() + "=\"" + this.attributes.get(i).getAttributeValue() + "\" ";
 			}
 			s = s.trim();
 			if (this.attributes.size() > 0)
@@ -489,7 +511,7 @@ public class XMLConfig {
 
 		/**
 		 * @param childs
-		 *            the childs to set
+		 *          the childs to set
 		 */
 		public void setChilds(ArrayList<XMLNode> childs) {
 			this.childs = childs;
@@ -504,7 +526,7 @@ public class XMLConfig {
 
 		/**
 		 * @param attributes
-		 *            the attributes to set
+		 *          the attributes to set
 		 */
 		public void setAttributes(ArrayList<XMLAttribute> attributes) {
 			this.attributes = attributes;
@@ -533,8 +555,7 @@ public class XMLConfig {
 			String tabs2 = tabs + "  ";
 			System.out.println(tabs + "[" + node.getName() + "] {");
 			for (XMLAttribute attr : node.getAttributes()) {
-				System.out.println(tabs2 + attr.getAttributeName() + " - "
-						+ attr.getAttributeValue());
+				System.out.println(tabs2 + attr.getAttributeName() + " - " + attr.getAttributeValue());
 			}
 			for (int i = 0; i < node.getChilds().size(); i++) {
 				pNode(node.childs.get(i), tabIndex + 1);
@@ -571,17 +592,13 @@ public class XMLConfig {
 					XMLNode newNode = new XMLNode();
 					currentNode.addChild(newNode);
 					currentNode = newNode;
-					currentNode.setName(tagText.substring(0,
-							tagText.indexOf(">")).split(" ")[0]);
+					currentNode.setName(tagText.substring(0, tagText.indexOf(">")).split(" ")[0]);
 					int tagEnd = min(tagText.indexOf(">"), tagText.indexOf("/"));
 
 					String attribText = tagText.substring(0, tagEnd);
 					for (String currentAttribute : attribText.split(" ")) {
 						if (currentAttribute.split("=").length >= 2)
-							currentNode.addAttribute(currentAttribute
-									.split("=")[0],
-									currentAttribute.split("=")[1].replace(
-											"\"", ""));
+							currentNode.addAttribute(currentAttribute.split("=")[0], currentAttribute.split("=")[1].replace("\"", ""));
 					}
 					i = i + tagEnd - 1;
 				}
@@ -601,8 +618,7 @@ public class XMLConfig {
 			StringBuilder text = new StringBuilder();
 			String line = "";
 			try {
-				BufferedReader reader = new BufferedReader(new FileReader(
-						new File(filePath)));
+				BufferedReader reader = new BufferedReader(new FileReader(new File(filePath)));
 
 				while ((line = reader.readLine()) != null)
 					text.append(line);
@@ -620,8 +636,7 @@ public class XMLConfig {
 		 * @return
 		 * @throws EOFException
 		 */
-		public static XMLNode parseFileLines(ArrayList<String> lines)
-				throws EOFException {
+		public static XMLNode parseFileLines(ArrayList<String> lines) throws EOFException {
 			StringBuilder text = new StringBuilder();
 			for (int i = 0; i < lines.size(); i++) {
 				text.append(lines.get(i));

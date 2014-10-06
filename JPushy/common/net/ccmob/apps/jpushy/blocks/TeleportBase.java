@@ -8,6 +8,7 @@ import net.ccmob.apps.jpushy.graphics.Picture;
 import net.ccmob.apps.jpushy.sp.level.Level;
 import net.ccmob.apps.jpushy.sp.level.LevelLoader;
 import net.ccmob.apps.jpushy.sp.level.Stage;
+import net.ccmob.apps.jpushy.sp.level.editor.EditorSaveThread.BlockAction;
 
 /**
  * 
@@ -69,6 +70,13 @@ public class TeleportBase extends Block {
 			this.setEndY(cfgCords[1]);
 		}
 		return this;
+	}
+	
+	@Override
+	public void onLevelLoad(int x, int y, int stageId, BlockAction action) {
+	  super.onLevelLoad(x, y, stageId, action);
+	  this.setEndX(action.blockDestX);
+		this.setEndY(action.blockDestY);
 	}
 
 	public int getEndX() {

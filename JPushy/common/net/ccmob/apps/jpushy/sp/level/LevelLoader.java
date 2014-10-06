@@ -2,6 +2,7 @@
 package net.ccmob.apps.jpushy.sp.level;
 
 import java.io.BufferedReader;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,7 +13,12 @@ import java.util.regex.Pattern;
 import net.ccmob.apps.jpushy.blocks.Block;
 import net.ccmob.apps.jpushy.blocks.Blocks;
 import net.ccmob.apps.jpushy.blocks.MoveableBlock;
+import net.ccmob.apps.jpushy.items.Item;
 import net.ccmob.apps.jpushy.items.Items;
+import net.ccmob.apps.jpushy.utils.Coord2D;
+import net.ccmob.apps.jpushy.sp.level.editor.EditorSaveThread.BlockAction;
+import net.ccmob.xml.XMLConfig;
+import net.ccmob.xml.XMLConfig.XMLNode;
 
 /**
  * 
@@ -22,6 +28,125 @@ import net.ccmob.apps.jpushy.items.Items;
 
 public class LevelLoader {
 
+	public static Level load(String fileName) {
+		Level level = new Level(fileName);
+		XMLConfig levelFile = new XMLConfig("Data/lvl/" + fileName);
+		XMLNode rootNode = levelFile.getRootNode();
+		if (rootNode.getName().equals("level")) {
+			XMLNode levelNode = rootNode;
+			if (levelNode.attributeExists("name")) {
+				level.setName((String) levelNode.getAttribute("name").getAttributeValue());
+			} else {
+				level.setName("Unnamed level");
+			}
+			if (levelNode.attributeExists("comment")) {
+				if (levelNode.getChild("comment").nodeExists("line")) {
+					ArrayList<String> lines = new ArrayList<String>();
+					for (XMLNode commentLine : levelNode.getChild("comment").getChilds()) {
+						if (commentLine.attributeExists("value"))
+							lines.add((String) commentLine.getAttribute("value").getAttributeValue());
+					}
+				}
+			}
+			for (XMLNode child : levelNode.getChilds()) {
+				if (child.getName().equalsIgnoreCase("stage") && child.attributeExists("id")) {
+					try {
+						Stage stage = new Stage(Integer.valueOf((String) child.getAttribute("id").getAttributeValue()));
+						XMLNode stageNode = child;
+						if (stageNode.nodeExists("blocks")) {
+							BlockList normalBlocks = new BlockList();
+							BlockList moveableBlocks = new BlockList();
+							Coord2D bounds = getStageBounds(child);
+							normalBlocks.init(bounds.getX(), bounds.getY());
+							moveableBlocks.init(bounds.getX(), bounds.getY());
+							for (int y = 0; y < bounds.getY(); y++) {
+								for (int x = 0; x < bounds.getX(); x++) {
+									normalBlocks.setBlock(x, y, Blocks.getBlockById(Blocks.air.getId()));
+								}
+							}
+							XMLNode blocksNode = stageNode.getChild("blocks");
+							for (XMLNode block : blocksNode.getChilds()) {
+								if (block.getName().equals("block") && block.attributeExists("id") && block.attributeExists("x") && block.attributeExists("y") && block.attributeExists("uid")) {
+									Block b = Blocks.getBlockById(Integer.valueOf((String) block.getAttribute("id").getAttributeValue()));
+									b.onLoaded(Integer.valueOf((String) block.getAttribute("x").getAttributeValue()),
+									    Integer.valueOf((String) block.getAttribute("y").getAttributeValue()), Integer.valueOf((String) child.getAttribute("id").getAttributeValue()), stage);
+									if (!(b instanceof MoveableBlock)) {
+										normalBlocks.setBlock(Integer.valueOf((String) block.getAttribute("x").getAttributeValue()),
+										    Integer.valueOf((String) block.getAttribute("y").getAttributeValue()), b);
+									} else {
+										moveableBlocks.setBlock(Integer.valueOf((String) block.getAttribute("x").getAttributeValue()),
+										    Integer.valueOf((String) block.getAttribute("y").getAttributeValue()), b);
+									}
+								}
+							}
+							stage.setBlocks(normalBlocks.getBlocks());
+							stage.setMoveableBlocks(moveableBlocks.getBlocks());
+							if (stageNode.nodeExists("items")) {
+								XMLNode itemssNode = stageNode.getChild("items");
+								for (XMLNode item : itemssNode.getChilds()) {
+									if (item.getName().equals("item") && item.attributeExists("id") && item.attributeExists("x") && item.attributeExists("y") && item.attributeExists("uid")) {
+										Item i = Items.getItemById(Integer.valueOf((String) item.getAttribute("id").getAttributeValue()));
+										if (normalBlocks.getBlocks()[Integer.valueOf((String) item.getAttribute("x").getAttributeValue())][Integer.valueOf((String) item.getAttribute("y")
+										    .getAttributeValue())] != null) {
+											normalBlocks.getBlocks()[Integer.valueOf((String) item.getAttribute("x").getAttributeValue())][Integer.valueOf((String) item.getAttribute("y")
+											    .getAttributeValue())].setKeptItem(i);
+										}
+									}
+								}
+							}
+						}
+						level.getStages().add(stage);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			if(levelNode.nodeExists("actions")){
+				for(XMLNode actions : levelNode.getChild("actions").getChilds()){
+					if(actions.attributeExists("uid") && actions.attributeExists("bSourceX") && actions.attributeExists("bSourceY") && actions.attributeExists("bDestX") && actions.attributeExists("bDestY") && actions.attributeExists("bSourceL") && actions.attributeExists("bDestL")){
+						BlockAction action = new BlockAction();
+						action.id = Integer.valueOf((String) actions.getAttribute("uid").getAttributeValue());
+						action.blockSourceX = Integer.valueOf((String) actions.getAttribute("bSourceX").getAttributeValue());
+						action.blockSourceY = Integer.valueOf((String) actions.getAttribute("bSourceY").getAttributeValue());
+						action.blockDestX = Integer.valueOf((String) actions.getAttribute("bDestX").getAttributeValue());
+						action.blockDestY = Integer.valueOf((String) actions.getAttribute("bDestY").getAttributeValue());
+						action.blockLayerSource = Integer.valueOf((String) actions.getAttribute("bSourceL").getAttributeValue());
+						action.blockLayerDest = Integer.valueOf((String) actions.getAttribute("bDestL").getAttributeValue());
+						if(level.getStages().size() >= action.blockLayerSource){
+							level.getStages().get(action.blockLayerSource).getBlock(action.blockSourceX, action.blockSourceY).onLevelLoad(action.blockSourceX, action.blockSourceY, action.blockLayerSource, action);
+						}
+					}
+				}
+			}
+		} else {
+			System.out.println("Found corrupt level file. Is it maybe an old one ? Trying to parse it with the old level parser ...");
+			return loadLevelFromFile(fileName);
+		}
+		return level;
+	}
+
+	private static Coord2D getStageBounds(XMLNode stageNode) {
+		int maxX = 0, maxY = 0;
+		int cX = 0, cY = 0;
+		if (stageNode.nodeExists("blocks")) {
+			for (XMLNode block : stageNode.getChild("blocks").getChilds()) {
+				if (block.getName().equals("block") && block.attributeExists("id") && block.attributeExists("x") && block.attributeExists("y") && block.attributeExists("uid")) {
+					cX = Integer.valueOf((String) block.getAttribute("x").getAttributeValue());
+					cY = Integer.valueOf((String) block.getAttribute("y").getAttributeValue());
+					if (cX > maxX) {
+						maxX = cX;
+					}
+					if (cY > maxY) {
+						maxY = cY;
+					}
+				}
+			}
+			return new Coord2D(maxX + 1, maxY + 1);
+		}
+		return null;
+	}
+
+	@Deprecated
 	public static Level loadLevelFromFile(String filename) {
 		boolean debug = true; // Core.getSettings().getSettings(Core.getSettings().debug);
 		System.out.println("Loading level : " + filename);
@@ -104,7 +229,6 @@ public class LevelLoader {
 						b.setKeptItem(Items.getItemById(itemForBlock));
 					}
 					if (b instanceof MoveableBlock) {
-						System.out.println("MOVEABLE BLOCK ! : " + b.toString());
 						blocks.setBlock(xCounter, yCounter, Blocks.getBlockById(0));
 						secondLayer.setBlock(xCounter, yCounter, b);
 					} else {

@@ -9,6 +9,7 @@ import net.ccmob.apps.jpushy.items.Item;
 import net.ccmob.apps.jpushy.items.Items;
 import net.ccmob.apps.jpushy.sp.level.Level;
 import net.ccmob.apps.jpushy.sp.level.Stage;
+import net.ccmob.apps.jpushy.sp.level.editor.EditorSaveThread.BlockAction;
 import net.ccmob.apps.jpushy.sp.player.Inventory;
 import net.ccmob.apps.jpushy.sp.player.Player;
 
@@ -407,6 +408,10 @@ public class Block extends Object implements Cloneable {
 		return this;
 	}
 
+	public void onLevelLoad(int x, int y, int stageId, BlockAction action){
+		
+	}
+	
 	public void onWalk(int x, int y, Level l) {
 		Item item = this.getKeptItem();
 		if (item != null) {

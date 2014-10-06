@@ -13,6 +13,7 @@ public class BlockList {
 
 	public BlockList(int x, int y) {
 		blocks = new Block[y][x];
+		set = true;
 	}
 
 	public void init(int x, int y) {

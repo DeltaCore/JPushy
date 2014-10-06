@@ -37,6 +37,8 @@ import net.ccmob.apps.jpushy.sp.level.LevelItem;
 import net.ccmob.apps.jpushy.sp.level.editor.LevelEditorThread;
 import net.ccmob.apps.jpushy.sp.player.Player;
 import net.ccmob.apps.jpushy.ui.LevelServerConnector;
+import net.ccmob.xml.XMLConfig;
+import net.ccmob.xml.XMLConfig.XMLNode;
 
 public class Game extends JFrame {
 
@@ -170,15 +172,44 @@ public class Game extends JFrame {
 			if (f.isFile()) {
 				if (f.getName().endsWith(".lvl")) {
 					levels.add(readLevel(f.getName()));
+				}else if(f.getName().endsWith(".xml")){
+					levels.add(readXMLLevel(f.getName()));
 				}
 			}
 		}
-		//System.out.println("Levels total : " + levels.size());
 		this.setLevelModel(new DefaultListModel<String>());
 		for (int i = 0; i < levels.size(); i++) {
 			this.getLevelModel().addElement(levels.get(i).toString());
 		}
 		this.levelList.setModel(this.getLevelModel());
+	}
+	
+	public LevelItem readXMLLevel(String fileName){
+		LevelItem level = new LevelItem();
+		level.setFile(fileName);
+		XMLConfig levelFile = new XMLConfig("Data/lvl/" + fileName);
+		XMLNode rootNode = levelFile.getRootNode();
+		if (rootNode.getName().equals("level")) {
+			XMLNode levelNode = rootNode;
+			if (levelNode.attributeExists("name")) {
+				level.setName((String) levelNode.getAttribute("name").getAttributeValue());
+			} else {
+				level.setName("Unnamed level");
+			}
+			if(levelNode.attributeExists("version")){
+				level.setVersion((String) levelNode.getAttribute("version").getAttributeValue());
+			}
+			if (levelNode.attributeExists("comment")) {
+				if (levelNode.getChild("comment").nodeExists("line")) {
+					ArrayList<String> lines = new ArrayList<String>();
+					for (XMLNode commentLine : levelNode.getChild("comment").getChilds()) {
+						if (commentLine.attributeExists("value"))
+							lines.add((String) commentLine.getAttribute("value").getAttributeValue());
+					}
+				}
+			}
+		}
+		return level;
 	}
 
 	public LevelItem readLevel(String filename) {
@@ -337,19 +368,19 @@ public class Game extends JFrame {
 	}
 
 	public static Player getPlayer() {
-		return Launcher.getInstance().thread.getPlayer();
+		return JPushy.getInstance().thread.getPlayer();
 	}
 
 	public static void pushUpdate() {
-		Launcher.getInstance().thread.update();
+		JPushy.getInstance().thread.update();
 	}
 
 	public static void sendMessage(String msg) {
-		Launcher.getInstance().thread.sendMessage(msg);
+		JPushy.getInstance().thread.sendMessage(msg);
 	}
 
 	public static Level getLevel() {
-		return Launcher.getInstance().thread.getLevel();
+		return JPushy.getInstance().thread.getLevel();
 	}
 
 	public JList<String> getLevelList() {
@@ -401,7 +432,7 @@ public class Game extends JFrame {
 	}
 
 	public static Level getActiveLevel() {
-		return Launcher.getInstance().thread.getLevel();
+		return JPushy.getInstance().thread.getLevel();
 	}
 
 	public void connect(String ip) {
@@ -409,21 +440,21 @@ public class Game extends JFrame {
 	}
 
 	public static void selectLevel(int id) {
-		Launcher.getInstance().thread.getLevel().setActiveStage(id);
+		JPushy.getInstance().thread.getLevel().setActiveStage(id);
 	}
 
 	public static MPClient getClient() {
-		return Launcher.getInstance().thread.getClient();
+		return JPushy.getInstance().thread.getClient();
 	}
 
 	public static void stopGame() {
-		Launcher.getInstance().thread.getServer().setRunning(false);
+		JPushy.getInstance().thread.getServer().setRunning(false);
 		try {
 			Thread.sleep(1000);
 		} catch (Exception e) {
 
 		}
-		Launcher.getInstance().thread.dispose();
+		JPushy.getInstance().thread.dispose();
 	}
 
 	/**
