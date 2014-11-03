@@ -23,6 +23,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
@@ -131,7 +132,9 @@ public class Game extends JFrame {
 		stateLabel.setLabelFor(levelList);
 		levelList.setBackground(UIManager.getColor("CheckBox.background"));
 		levelList.addListSelectionListener(listener);
-		mainSplitPane.setRightComponent(levelList);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportView(levelList);
+		mainSplitPane.setRightComponent(scrollPane);
 		mainSplitPane.setBorder(null);
 
 		JSplitPane levelSplitPane = new JSplitPane();

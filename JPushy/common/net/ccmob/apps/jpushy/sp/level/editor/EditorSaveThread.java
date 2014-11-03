@@ -83,6 +83,7 @@ public class EditorSaveThread implements Runnable {
 						item.addAttribute("x", x + "");
 						item.addAttribute("y", y + "");
 						item.addAttribute("uid", itemUID + "");
+						item.addAttribute("id", "" + c);
 						items.addChild(item);
 						itemUID++;
 						addItems = true;
