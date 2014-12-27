@@ -3,11 +3,12 @@ package net.ccmob.apps.jpushy.mp.remote;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.net.DatagramPacket;
+import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.ccmob.apps.jpushy.mp.local.ICommandHandler;
+import net.ccmob.apps.jpushy.mp.local.MPListenerThread;
 
 /**
  * 
@@ -28,7 +29,7 @@ public class LevelServerCmdHandler implements ICommandHandler {
 
 	String	errorLevel			= "<level name=\"error\" version='0.1'>\n" + "<stage id=0>\n" + "11111111111111111111111\n" + "10000000000000000000001\n" + "10111011001100111011001\n" + "10100010101010101010101\n" + "10111010101010101010101\n" + "10100011001100101011001\n" + "10111010101010111010101\n" + "10000000000000000000001\n" + "11111111111111111111111\n" + "</stage>\n";
 
-	private void handleCommand(String msg, DatagramPacket packet) {
+	private void handleCommand(String msg, Socket packet, MPListenerThread t) {
 		if (msg.matches(rgetLevels)) {
 			getLevels(msg, packet);
 		} else if (msg.matches(rloadLevel)) {
@@ -38,11 +39,11 @@ public class LevelServerCmdHandler implements ICommandHandler {
 		}
 	}
 
-	private void getLevels(String msg, DatagramPacket packet) {
+	private void getLevels(String msg, Socket packet) {
 		levelServer.getLevelConnectionHandler().sendPacket(packet, levelServer.getLevelHandler().buildLevelDataString());
 	}
 
-	private void loadLevel(String msg, DatagramPacket packet) {
+	private void loadLevel(String msg, Socket packet) {
 		Pattern p = Pattern.compile(rloadLevel);
 		Matcher m = p.matcher(msg);
 		if (m.matches()) {
@@ -51,7 +52,7 @@ public class LevelServerCmdHandler implements ICommandHandler {
 		}
 	}
 
-	private void loadLevelConfig(String msg, DatagramPacket packet) {
+	private void loadLevelConfig(String msg, Socket packet) {
 		Pattern p = Pattern.compile(rloadLevelConfig);
 		Matcher m = p.matcher(msg);
 		if (m.matches()) {
@@ -123,11 +124,11 @@ public class LevelServerCmdHandler implements ICommandHandler {
 	}
 
 	@Override
-	public void onCommand(String msg, DatagramPacket packet) {
-		handleCommand(msg, packet);
+	public void onCommand(String msg, Socket packet, MPListenerThread t) {
+		handleCommand(msg, packet, t);
 	}
 
 	@Override
-	public void onCommand(String[] args, DatagramPacket packet) {
+	public void onCommand(String[] args, Socket packet, MPListenerThread t) {
 	}
 }

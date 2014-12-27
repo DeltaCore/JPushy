@@ -68,8 +68,8 @@ public class LevelLoader {
 							for (XMLNode block : blocksNode.getChilds()) {
 								if (block.getName().equals("block") && block.attributeExists("id") && block.attributeExists("x") && block.attributeExists("y") && block.attributeExists("uid")) {
 									Block b = Blocks.getBlockById(Integer.valueOf((String) block.getAttribute("id").getAttributeValue()));
-									b.onLoaded(Integer.valueOf((String) block.getAttribute("x").getAttributeValue()),
-									    Integer.valueOf((String) block.getAttribute("y").getAttributeValue()), Integer.valueOf((String) child.getAttribute("id").getAttributeValue()), stage);
+									b.onLoaded(Integer.valueOf((String) block.getAttribute("x").getAttributeValue()), Integer.valueOf((String) block.getAttribute("y").getAttributeValue()),
+									    Integer.valueOf((String) child.getAttribute("id").getAttributeValue()), stage);
 									if (!(b instanceof MoveableBlock)) {
 										normalBlocks.setBlock(Integer.valueOf((String) block.getAttribute("x").getAttributeValue()),
 										    Integer.valueOf((String) block.getAttribute("y").getAttributeValue()), b);
@@ -101,9 +101,10 @@ public class LevelLoader {
 					}
 				}
 			}
-			if(levelNode.nodeExists("actions")){
-				for(XMLNode actions : levelNode.getChild("actions").getChilds()){
-					if(actions.attributeExists("uid") && actions.attributeExists("bSourceX") && actions.attributeExists("bSourceY") && actions.attributeExists("bDestX") && actions.attributeExists("bDestY") && actions.attributeExists("bSourceL") && actions.attributeExists("bDestL")){
+			if (levelNode.nodeExists("actions")) {
+				for (XMLNode actions : levelNode.getChild("actions").getChilds()) {
+					if (actions.attributeExists("uid") && actions.attributeExists("bSourceX") && actions.attributeExists("bSourceY") && actions.attributeExists("bDestX")
+					    && actions.attributeExists("bDestY") && actions.attributeExists("bSourceL") && actions.attributeExists("bDestL")) {
 						BlockAction action = new BlockAction();
 						action.id = Integer.valueOf((String) actions.getAttribute("uid").getAttributeValue());
 						action.blockSourceX = Integer.valueOf((String) actions.getAttribute("bSourceX").getAttributeValue());
@@ -112,8 +113,9 @@ public class LevelLoader {
 						action.blockDestY = Integer.valueOf((String) actions.getAttribute("bDestY").getAttributeValue());
 						action.blockLayerSource = Integer.valueOf((String) actions.getAttribute("bSourceL").getAttributeValue());
 						action.blockLayerDest = Integer.valueOf((String) actions.getAttribute("bDestL").getAttributeValue());
-						if(level.getStages().size() >= action.blockLayerSource){
-							level.getStages().get(action.blockLayerSource).getBlock(action.blockSourceX, action.blockSourceY).onLevelLoad(action.blockSourceX, action.blockSourceY, action.blockLayerSource, action);
+						if (level.getStages().size() >= action.blockLayerSource) {
+							level.getStages().get(action.blockLayerSource).getBlock(action.blockSourceX, action.blockSourceY)
+							    .onLevelLoad(action.blockSourceX, action.blockSourceY, action.blockLayerSource, action);
 						}
 					}
 				}
@@ -125,7 +127,7 @@ public class LevelLoader {
 		return level;
 	}
 
-	private static Coord2D getStageBounds(XMLNode stageNode) {
+	public static Coord2D getStageBounds(XMLNode stageNode) {
 		int maxX = 0, maxY = 0;
 		int cX = 0, cY = 0;
 		if (stageNode.nodeExists("blocks")) {
@@ -364,6 +366,9 @@ public class LevelLoader {
 	public static ArrayList<String> loadLevelConfig(String filename) {
 		ArrayList<String> returnString = new ArrayList<String>();
 		String modPath = filename.replace(".lvl", ".cfg");
+		if(modPath.endsWith(".cfg.cfg")){
+			modPath = modPath.substring(0,modPath.indexOf(".cfg") + 4);
+		}
 		if (!modPath.startsWith("Data/lvl/")) {
 			modPath = "Data/lvl/" + modPath;
 		}

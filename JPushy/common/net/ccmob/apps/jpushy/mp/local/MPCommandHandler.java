@@ -1,6 +1,6 @@
 package net.ccmob.apps.jpushy.mp.local;
 
-import java.net.DatagramPacket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 import net.ccmob.apps.jpushy.core.LevelThread;
@@ -24,7 +24,7 @@ public class MPCommandHandler implements ICommandHandler {
 	}
 
 	@Override
-	public void onCommand(String[] args, DatagramPacket packet) {
+	public void onCommand(String[] args, Socket packet, MPListenerThread t) {
 		if (args.length == 2) {
 			if (args[0].equals("-addPlayer")) {
 				String playername = args[1];
@@ -51,6 +51,10 @@ public class MPCommandHandler implements ICommandHandler {
 					target.movePlayer(dir);
 					thread.pushUpdate();
 				}
+			}
+		} else if(args.length == 1){
+			if(args[0].equalsIgnoreCase("--endconnection")){
+				t.setRunning(false);
 			}
 		}
 	}
@@ -90,14 +94,14 @@ public class MPCommandHandler implements ICommandHandler {
 		Player p = new Player(thread, PictureLoader.loadImageFromFile("char.png"), playername);
 		addPlayer(p);
 	}
-
+  
 	public void addPlayer(Player player) {
 		System.out.println("Adding Player : " + player.getName());
 		players.add(player);
 	}
-
+  
 	@Override
-	public void onCommand(String msg, DatagramPacket packet) {
+	public void onCommand(String msg, Socket packet, MPListenerThread t) {
 	}
 
 }

@@ -5,8 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -21,26 +22,26 @@ import net.ccmob.apps.jpushy.core.LevelThread;
  */
 public class MPServer extends Thread {
 
-	private LevelThread	    launcher;
-
 	private int	            port	      = 11941;
 	private boolean	        running	    = true;
 	public MPCommandHandler	cmdHandler;
 	int	                    mode	      = 0;
-	private DatagramSocket	socket;
+	private ServerSocket	socket;
 
 	ArrayList<Connection>	  connections	= new ArrayList<Connection>();
 
+	private LevelThread	    launcher;
+	
 	public MPServer(LevelThread gui) {
-		cmdHandler = new MPCommandHandler(launcher, this);
 		this.launcher = gui;
+		cmdHandler = new MPCommandHandler(launcher, this);
 	}
 
-	private void newConnection(DatagramPacket packet) {
-		InetAddress ip = packet.getAddress();
+	private void newConnection(Socket packet) {
+		InetAddress ip = packet.getInetAddress();
 		int port = packet.getPort();
 		if (!checkInetAddress(ip) && !checkPort(port)) {
-			connections.add(new Connection(ip, port));
+			connections.add(new Connection(packet));
 		}
 	}
 
@@ -62,8 +63,8 @@ public class MPServer extends Thread {
 		return false;
 	}
 
-	public Connection getConnection(DatagramPacket packet) {
-		InetAddress ip = packet.getAddress();
+	public Connection getConnection(Socket packet) {
+		InetAddress ip = packet.getInetAddress();
 		int port = packet.getPort();
 		for (int i = 0; i < connections.size(); i++) {
 			if (ip.equals(connections.get(i).getIp())) {
@@ -113,64 +114,61 @@ public class MPServer extends Thread {
 	}
 
 	private void startServer() {
-		try {
-			socket = new DatagramSocket(port); // open port
-			byte[] data = new byte[1024];
-			// cmdHandler = new MPCommandHandler(levelHandler, this);
-			DatagramPacket packet;
-			String msg;
-			socket.setSoTimeout(1000);
-			while (isRunning()) {
-				packet = new DatagramPacket(data, data.length);
-				try {
-					socket.receive(packet);
-				} catch (IOException e) {
-				}
-				newConnection(packet);
-				msg = new String(packet.getData()).trim();
-				if (msg.length() > 0) {
-					if (!connectionMsg(msg, packet)) {
-						String[] cmds = msg.split("/");
-						for (String s : cmds)
-							System.out.println(s);
-						cmdHandler.onCommand(cmds, packet);
+			try {
+	      socket = new ServerSocket(port);
+				socket.setSoTimeout(1000);
+				while (isRunning()) {
+					try{
+						Socket client = socket.accept();
+						newConnection(client);
+						new MPListenerThread(client, this);
+					}catch(Exception e){
+						
 					}
 				}
-			}
-			socket.close();
-			System.out.println("MpServer terminated.");
-		} catch (SocketException e) {
-			e.printStackTrace();
-		}
+				socket.close();
+				System.out.println("MpServer terminated.");
+      } catch (IOException e) {
+	      e.printStackTrace();
+      } // open port
 	}
 
 	public ArrayList<Connection> getConnections() {
 		return connections;
 	}
 
-	private boolean connectionMsg(String msg, DatagramPacket packet) {
+	boolean connectionMsg(String msg, Socket packet) {
 		if (msg.equalsIgnoreCase("--getLevel")) {
 			String fileContent = packFile(Game.getLevel().getFileName());
-			Connection c = getConnection(packet);
-			sendTo(fileContent, c);
+			sendTo(fileContent, packet);
 			return true;
 		} else if (msg.equalsIgnoreCase("--getLevelCFG")) {
 			String fileContent = packFile(Game.getLevel().getFileName().replace(".lvl", ".cfg"));
-			Connection c = getConnection(packet);
-			sendTo(fileContent, c);
+			sendTo(fileContent, packet);
+			return true;
+		} else if (msg.equalsIgnoreCase("--getLevelType")) {
+			if(Game.getLevel().getFileName().endsWith(".xml")){
+				sendTo("xml", packet);
+			}else if(Game.getLevel().getFileName().endsWith(".lvl")){
+				sendTo("lvl", packet);
+			}else{
+				sendTo("undef-" + Game.getLevel().getFileName().substring(Game.getLevel().getFileName().lastIndexOf('.'), Game.getLevel().getFileName().length()), packet);
+			}
 			return true;
 		}
 		return false;
 	}
 
-	private boolean sendTo(String cmd, Connection c) {
+	private boolean sendTo(String cmd, Socket c) {
 		return sendTo(cmd.getBytes(), c);
 	}
 
-	private boolean sendTo(byte[] data, Connection c) {
-		DatagramPacket packet = new DatagramPacket(data, data.length, c.getIp(), c.getPort());
+	private boolean sendTo(byte[] data, Socket c) {
 		try {
-			socket.send(packet);
+			//this.socket.
+			System.out.println("Sending to [" + c.getInetAddress().toString() + "] => " + new String(data).toString());
+			c.getOutputStream().write(data);
+			c.getOutputStream().flush();
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
