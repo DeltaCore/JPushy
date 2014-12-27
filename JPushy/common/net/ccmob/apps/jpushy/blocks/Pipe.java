@@ -264,6 +264,13 @@ public class Pipe extends InventoryBlock {
 				g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.I_B_Bottom), x, y, width, height, null);
 				g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_Left), x, y, width, height, null);
 				g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_Right), x, y, width, height, null);
+				if(p.getRotation() == Direction.EAST){
+					g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_A_LEFT_L), x, y, width, height, null);
+					g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_A_RIGHT_L), x, y, width, height, null);
+				}else{
+					g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_A_LEFT_R), x, y, width, height, null);
+					g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_A_RIGHT_R), x, y, width, height, null);
+				}
 			} else {
 				g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_Middle), x, y, width, height, null);
 				g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.O_B_Top), x, y, width, height, null);
@@ -289,6 +296,29 @@ public class Pipe extends InventoryBlock {
 			g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_Top), x, y, width, height, null);
 			g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.I_B_Left), x, y, width, height, null);
 			g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.I_B_Right), x, y, width, height, null);
+			
+			switch(p.getRotation()){
+				case EAST: {
+					g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_A_LEFT_L), x, y, width, height, null);
+					g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_A_RIGHT_L), x, y, width, height, null);
+					break;
+				}
+				case WEST: {
+					g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_A_LEFT_R), x, y, width, height, null);
+					g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_A_RIGHT_R), x, y, width, height, null);
+					break;
+				}
+				case NORTH: {
+					g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_A_TOP_T), x, y, width, height, null);
+					g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_A_BOTTOM_T), x, y, width, height, null);
+					break;
+				}
+				case SOUTH: {
+					g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_A_TOP_B), x, y, width, height, null);
+					g.drawImage(PipeTextureHandler.getTextureById(PipeTextureHandler.TextureIds.T_A_BOTTOM_B), x, y, width, height, null);
+					break;
+				}
+			}
 		}
 
 		private void renderEdge(Pipe p, Graphics2D g, int xp, int yp, int width, int height) {
@@ -365,18 +395,24 @@ public class Pipe extends InventoryBlock {
 	public static class PipeTextureHandler {
 
 		private enum TextureIds {
-			I_B_Right, I_B_Left, I_B_Top, I_B_Bottom, O_B_Right, O_B_Left, O_B_Top, O_B_Bottom, T_Right, T_Left, T_Top, T_Bottom, T_Middle
+			I_B_Right, I_B_Left, I_B_Top, I_B_Bottom, O_B_Right, O_B_Left, O_B_Top, O_B_Bottom, T_Right, T_Left, T_Top, T_Bottom, T_Middle,
+			T_A_LEFT_L, T_A_LEFT_R, T_A_RIGHT_R, T_A_RIGHT_L, T_A_TOP_T, T_A_TOP_B, T_A_BOTTOM_B, T_A_BOTTOM_T
 		}
 
 		private static String[]	TexturePaths	= { "inner_barrier_right.png", "inner_barrier_left.png", "inner_barrier_top.png", "inner_barrier_bottom.png", "outer_barrier_right.png",
 		                                         "outer_barrier_left.png", "outer_barrier_top.png", "outer_barrier_bottom.png", "tube_right.png", "tube_left.png", "tube_top.png",
-		                                         "tube_bottom.png", "tube_middle.png" };
+		                                         "tube_bottom.png", "tube_middle.png", "tube_arrow_left_left.png", "tube_arrow_left_right.png", "tube_arrow_right_right.png",
+		                                         "tube_arrow_right_left.png", "tube_arrow_top_top.png", "tube_arrow_top_bottom.png", "tube_arrow_bottom_bottom.png", "tube_arrow_bottom_top.png" };
 
 		public static Picture[]	PipeTextures	= { loadSaveTexture(TextureIds.I_B_Right), loadSaveTexture(TextureIds.I_B_Left), loadSaveTexture(TextureIds.I_B_Top),
 		                                         loadSaveTexture(TextureIds.I_B_Bottom), loadSaveTexture(TextureIds.O_B_Right), loadSaveTexture(TextureIds.O_B_Left),
 		                                         loadSaveTexture(TextureIds.O_B_Top), loadSaveTexture(TextureIds.O_B_Bottom), loadSaveTexture(TextureIds.T_Right),
 		                                         loadSaveTexture(TextureIds.T_Left), loadSaveTexture(TextureIds.T_Top), loadSaveTexture(TextureIds.T_Bottom),
-		                                         loadSaveTexture(TextureIds.T_Middle) };
+		                                         loadSaveTexture(TextureIds.T_Middle),
+		                                         loadSaveTexture(TextureIds.T_A_LEFT_L),loadSaveTexture(TextureIds.T_A_LEFT_R),
+		                                         loadSaveTexture(TextureIds.T_A_RIGHT_R),loadSaveTexture(TextureIds.T_A_RIGHT_L),
+		                                         loadSaveTexture(TextureIds.T_A_TOP_T),loadSaveTexture(TextureIds.T_A_TOP_B),
+		                                         loadSaveTexture(TextureIds.T_A_BOTTOM_B),loadSaveTexture(TextureIds.T_A_BOTTOM_T)};
 
 		public static BufferedImage getTextureById(TextureIds id) {
 			return PipeTextures[id.ordinal()].getImg();

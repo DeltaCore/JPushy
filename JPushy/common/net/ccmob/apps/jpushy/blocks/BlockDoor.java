@@ -13,7 +13,6 @@ public class BlockDoor extends Block {
 
 	public BlockDoor(String name, int id, Picture img) {
 		super(name, id, img);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

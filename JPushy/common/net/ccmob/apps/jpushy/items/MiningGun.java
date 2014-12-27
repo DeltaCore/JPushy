@@ -15,12 +15,10 @@ public class MiningGun extends Item {
 
 	public MiningGun(String name, int id, Picture texture) {
 		super(name, id, texture);
-		// TODO Auto-generated constructor stub
 	}
 
 	public MiningGun(String name, int id, Picture texture, boolean register) {
 		super(name, id, texture, register);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
