@@ -1,3 +1,4 @@
+
 package net.ccmob.apps.jpushy.sp.level.editor;
 
 import java.awt.Color;
@@ -20,14 +21,20 @@ import javax.swing.JPanel;
 
 import net.ccmob.apps.jpushy.blocks.Block;
 import net.ccmob.apps.jpushy.blocks.Blocks;
+import net.ccmob.apps.jpushy.blocks.MoveableBlock;
 import net.ccmob.apps.jpushy.blocks.WallBlock;
 import net.ccmob.apps.jpushy.blocks.WallState;
 import net.ccmob.apps.jpushy.items.Item;
 import net.ccmob.apps.jpushy.items.Items;
 import net.ccmob.apps.jpushy.sp.level.BlockArray;
+import net.ccmob.apps.jpushy.sp.level.BlockList;
 import net.ccmob.apps.jpushy.sp.level.ItemArray;
 import net.ccmob.apps.jpushy.sp.level.LevelLoader;
+import net.ccmob.apps.jpushy.sp.level.Stage;
+import net.ccmob.apps.jpushy.sp.level.editor.EditorSaveThread.BlockAction;
 import net.ccmob.apps.jpushy.utils.Coord2D;
+import net.ccmob.xml.XMLConfig;
+import net.ccmob.xml.XMLConfig.XMLNode;
 
 public class EditorPanel extends JPanel {
 
@@ -88,7 +95,7 @@ public class EditorPanel extends JPanel {
 		this.setLayer(layers);
 		this.setBlockLayers(new ArrayList<BlockArray>());
 		this.setItemLayers(new ArrayList<ItemArray>());
-		for(int i = 0;i<layers;i++){
+		for (int i = 0; i < layers; i++) {
 			this.getItemLayers().add(new ItemArray(width, height));
 			this.getBlockLayers().add(new BlockArray(width, height));
 		}
@@ -102,13 +109,17 @@ public class EditorPanel extends JPanel {
 	}
 
 	public void updateCoords(int x, int y) {
-		//System.out.println("update !");
+		// System.out.println("update !");
 		if (listener.getSelTileX() != -1 && listener.getSelTileY() != -1) {
 			this.setOpX(x);
 			this.setOpY(y);
 			this.getBlockLayers().get(currentLayer).setOption(this.listener.selTileX, this.listener.selTileY, new Coord2D(x, y));
 			this.repaint();
-			//System.out.println("Option X : " + this.getBlockLayers().get(currentLayer).getOption(this.listener.selTileX, this.listener.selTileX).getX() + " ; Option Y : " + this.getBlockLayers().get(currentLayer).getOption(this.listener.selTileX, this.listener.selTileX).getY());
+			// System.out.println("Option X : " +
+			// this.getBlockLayers().get(currentLayer).getOption(this.listener.selTileX,
+			// this.listener.selTileX).getX() + " ; Option Y : " +
+			// this.getBlockLayers().get(currentLayer).getOption(this.listener.selTileX,
+			// this.listener.selTileX).getY());
 		}
 	}
 
@@ -165,8 +176,10 @@ public class EditorPanel extends JPanel {
 			g.setColor(Color.red);
 			g.drawRect(this.listener.getSelTileX() * 40, this.listener.getSelTileY() * 40, 40, 40);
 			g.setColor(Color.blue);
-			if (this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() != -1 && this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() != -1) {
-				g.drawRect(this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() * 40, this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getY() * 40, 40, 40);
+			if (this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() != -1
+			    && this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() != -1) {
+				g.drawRect(this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() * 40, this.getBlockLayers().get(currentLayer)
+				    .getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getY() * 40, 40, 40);
 			}
 		}
 	}
@@ -185,119 +198,234 @@ public class EditorPanel extends JPanel {
 	}
 
 	public void loadLevel(String filename) {
-		File lvlFile = new File("Data/lvl/" + filename + ".lvl");
-		File cfgFile = new File("Data/lvl/" + filename + ".cfg");
-		if (!lvlFile.exists() || !cfgFile.exists()) {
-			System.out.println("File not found :/");
-		} else {
-			System.out.println("Loading level : " + filename);
-			Blocks.wakeUpDummy();
-			String line;
-			ArrayList<String> lines = LevelLoader.loadLevelFile(lvlFile.getName());
-			String start_regex = "^<stage id=([0-9])>$";
-			String end_regex = "^</stage>";
-			String levelRegEx = "^<level name=\"([a-zA-Z\\s0-9[-][_]]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
-			String commentStart = "^<comment>";
-			String commentEnd = "^</comment>";
-
-			int currentStageId = 0;
-			boolean flag = false;
-			int xCounter = 0;
-			int yCounter = 0;
-			char charValue = '0';
-			int blockId = 0;
-			int itemForBlock = -1;
-
-			boolean commentFlag = false;
-
-			int layers = LevelLoader.getLevelStages(lines);
-			int width = LevelLoader.getStageWidth(lines, currentStageId);
-			int height = LevelLoader.getStageLength(lines, currentStageId);
-			for (int i = 0; i < layers; i++) {
-				int x = LevelLoader.getStageWidth(lines, i);
-				if (x > width) {
-					width = x;
+		if (filename.endsWith(".xml")) {
+			System.out.println("Filename: " + filename);
+			XMLConfig levelFile = new XMLConfig("Data/lvl/" + filename);
+			XMLNode rootNode = levelFile.getRootNode();
+			if (rootNode.getName().equals("level")) {
+				XMLNode levelNode = rootNode;
+				if (levelNode.attributeExists("name")) {
+					this.gui.getLevelNameText().setText((String) levelNode.getAttribute("name").getAttributeValue());
+				} else {
+					this.gui.getLevelNameText().setText("Unnamed level");
 				}
-				int y = LevelLoader.getStageLength(lines, i);
-				if (y > height) {
-					height = y;
-				}
-			}
-			this.setBlockLayers(new ArrayList<BlockArray>());
-			this.updateLayer(layers, width, height);
-			System.out.println("Levelsize : x: " + width + " y:" + height);
-			this.gui.getxSizeVal().setValue(width);
-			this.gui.getySizeVal().setValue(height);
-			this.gui.getLayerVal().setValue(layers);
-			this.setLevelHeight(height);
-			this.setLevelWidth(width);
-			this.setLayer(layers);
-			for (int i = 0; i < this.getLayer(); i++) {
-				this.getBlockLayers().get(i).setHeight(height);
-				this.getBlockLayers().get(i).setWidth(width);
-				this.getBlockLayers().get(i).initArray();
-			}
-			for (int linesY = 0; linesY < lines.size(); linesY++) {
-				line = lines.get(linesY);
-				if (line.matches(levelRegEx)) {
-					Pattern pattern = Pattern.compile(levelRegEx);
-					Matcher matcher = pattern.matcher(line);
-					if (matcher.matches()) {
-						String name = matcher.group(1);
-						String version = matcher.group(2);
-						this.gui.getLevelNameText().setText(name);
-						this.gui.getLevelVersionText().setText(version);
-						this.gui.repaint();
+				if (levelNode.attributeExists("comment")) {
+					if (levelNode.getChild("comment").nodeExists("line")) {
+						ArrayList<String> lines = new ArrayList<String>();
+						for (XMLNode commentLine : levelNode.getChild("comment").getChilds()) {
+							if (commentLine.attributeExists("value"))
+								lines.add((String) commentLine.getAttribute("value").getAttributeValue());
+						}
 					}
-				} else if (line.matches(start_regex)) {
-					flag = true;
-					Pattern pattern = Pattern.compile(start_regex);
+				}
+				
+				int layerSize = 0;
+				Coord2D size = new Coord2D(0, 0);
+				for (XMLNode child : levelNode.getChilds()) {
+					if (child.getName().equalsIgnoreCase("stage") && child.attributeExists("id")) {
+						layerSize++;
+						size.setX(LevelLoader.getStageBounds(child).getX());
+						size.setY(LevelLoader.getStageBounds(child).getY());
+					}
+				}
+				
+				this.gui.getxSizeVal().setValue(size.getX());
+				this.gui.getySizeVal().setValue(size.getY());
+				this.gui.getLayerVal().setValue(layerSize);
+				this.setLevelHeight(size.getY());
+				this.setLevelWidth(size.getX());
+				this.setLayer(layerSize);
+				System.out.println("Layersize: " + layerSize);
+				for (int i = 0; i < this.getLayer(); i++) {
+					this.getBlockLayers().get(i).setHeight(size.getY());
+					this.getBlockLayers().get(i).setWidth(size.getX());
+					this.getBlockLayers().get(i).initArray();
+					this.getItemLayers().get(i).setHeight(size.getY());
+					this.getItemLayers().get(i).setWidth(size.getX());
+					this.getItemLayers().get(i).initArray();
+				}
+				
+				for (XMLNode child : levelNode.getChilds()) {
+					if (child.getName().equalsIgnoreCase("stage") && child.attributeExists("id")) {
+						try {
+							Stage stage = new Stage(Integer.valueOf(child.getAttribute("id").getAttributeValue()));
+							XMLNode stageNode = child;
+							if (stageNode.nodeExists("blocks")) {
+								Coord2D bounds = LevelLoader.getStageBounds(child);
+								this.getBlockLayers().get(Integer.valueOf(child.getAttribute("id").getAttributeValue())).setHeight(bounds.getY());
+								this.getBlockLayers().get(Integer.valueOf(child.getAttribute("id").getAttributeValue())).setWidth(bounds.getX());
+								this.getBlockLayers().get(Integer.valueOf(child.getAttribute("id").getAttributeValue())).initArray();
+								XMLNode blocksNode = stageNode.getChild("blocks");
+								for (XMLNode block : blocksNode.getChilds()) {
+									if (block.getName().equals("block") && block.attributeExists("id") && block.attributeExists("x") && block.attributeExists("y") && block.attributeExists("uid")) {
+										Block b = Blocks.getBlockById(Integer.valueOf((String) block.getAttribute("id").getAttributeValue()));
+										b.onLoaded(Integer.valueOf((String) block.getAttribute("x").getAttributeValue()), Integer.valueOf((String) block.getAttribute("y").getAttributeValue()),
+										    Integer.valueOf((String) child.getAttribute("id").getAttributeValue()), stage);
+										{
+											this.getBlockLayers()
+											    .get(Integer.valueOf((String) child.getAttribute("id").getAttributeValue()))
+											    .setBlock(Integer.valueOf((String) block.getAttribute("x").getAttributeValue()), Integer.valueOf((String) block.getAttribute("y").getAttributeValue()), b);
+										}
+									}
+									if (stageNode.nodeExists("items")) {
+										XMLNode itemssNode = stageNode.getChild("items");
+										for (XMLNode item : itemssNode.getChilds()) {
+											if (item.getName().equals("item") && item.attributeExists("id") && item.attributeExists("x") && item.attributeExists("y") && item.attributeExists("uid")) {
+												Item i = Items.getItemById(Integer.valueOf((String) item.getAttribute("id").getAttributeValue()));
+												if (this.getBlockLayers().get(Integer.valueOf((String) child.getAttribute("id").getAttributeValue()))
+												    .getBlock(Integer.valueOf((String) item.getAttribute("x").getAttributeValue()), Integer.valueOf((String) item.getAttribute("y").getAttributeValue())) != null) {
+													this.getBlockLayers().get(Integer.valueOf((String) child.getAttribute("id").getAttributeValue()))
+													    .getBlock(Integer.valueOf((String) item.getAttribute("x").getAttributeValue()), Integer.valueOf((String) item.getAttribute("y").getAttributeValue()))
+													    .setKeptItem(i);
+												}
+											}
+										}
+									}
+								}
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				if (levelNode.nodeExists("actions")) {
+					for (XMLNode actions : levelNode.getChild("actions").getChilds()) {
+						if (actions.attributeExists("uid") && actions.attributeExists("bSourceX") && actions.attributeExists("bSourceY") && actions.attributeExists("bDestX")
+						    && actions.attributeExists("bDestY") && actions.attributeExists("bSourceL") && actions.attributeExists("bDestL")) {
+							BlockAction action = new BlockAction();
+							action.id = Integer.valueOf((String) actions.getAttribute("uid").getAttributeValue());
+							action.blockSourceX = Integer.valueOf((String) actions.getAttribute("bSourceX").getAttributeValue());
+							action.blockSourceY = Integer.valueOf((String) actions.getAttribute("bSourceY").getAttributeValue());
+							action.blockDestX = Integer.valueOf((String) actions.getAttribute("bDestX").getAttributeValue());
+							action.blockDestY = Integer.valueOf((String) actions.getAttribute("bDestY").getAttributeValue());
+							action.blockLayerSource = Integer.valueOf((String) actions.getAttribute("bSourceL").getAttributeValue());
+							action.blockLayerDest = Integer.valueOf((String) actions.getAttribute("bDestL").getAttributeValue());
+							if(this.getBlockLayers().size() >= action.blockLayerSource){
+								this.getBlockLayers().get(action.blockLayerSource).getOption(action.blockSourceX, action.blockSourceY).setX(action.blockDestX);
+								this.getBlockLayers().get(action.blockLayerSource).getOption(action.blockSourceX, action.blockSourceY).setY(action.blockDestY);
+							}
+						}
+					}
+				}
+			} else {
+				System.out.println("Found corrupt level file. Is it maybe an old one ?");
+			}
+		} else {
+			File lvlFile = new File("Data/lvl/" + filename + ".lvl");
+			File cfgFile = new File("Data/lvl/" + filename + ".cfg");
+			if (!lvlFile.exists() || !cfgFile.exists()) {
+				System.out.println("File not found :/");
+			} else {
+				System.out.println("Loading level : " + filename);
+				Blocks.wakeUpDummy();
+				String line;
+				ArrayList<String> lines = LevelLoader.loadLevelFile(lvlFile.getName());
+				String start_regex = "^<stage id=([0-9])>$";
+				String end_regex = "^</stage>";
+				String levelRegEx = "^<level name=\"([a-zA-Z\\s0-9[-][_]]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
+				String commentStart = "^<comment>";
+				String commentEnd = "^</comment>";
+
+				int currentStageId = 0;
+				boolean flag = false;
+				int xCounter = 0;
+				int yCounter = 0;
+				char charValue = '0';
+				int blockId = 0;
+				int itemForBlock = -1;
+
+				boolean commentFlag = false;
+
+				int layers = LevelLoader.getLevelStages(lines);
+				int width = LevelLoader.getStageWidth(lines, currentStageId);
+				int height = LevelLoader.getStageLength(lines, currentStageId);
+				for (int i = 0; i < layers; i++) {
+					int x = LevelLoader.getStageWidth(lines, i);
+					if (x > width) {
+						width = x;
+					}
+					int y = LevelLoader.getStageLength(lines, i);
+					if (y > height) {
+						height = y;
+					}
+				}
+				this.setBlockLayers(new ArrayList<BlockArray>());
+				this.updateLayer(layers, width, height);
+				System.out.println("Levelsize : x: " + width + " y:" + height);
+				this.gui.getxSizeVal().setValue(width);
+				this.gui.getySizeVal().setValue(height);
+				this.gui.getLayerVal().setValue(layers);
+				this.setLevelHeight(height);
+				this.setLevelWidth(width);
+				this.setLayer(layers);
+				for (int i = 0; i < this.getLayer(); i++) {
+					this.getBlockLayers().get(i).setHeight(height);
+					this.getBlockLayers().get(i).setWidth(width);
+					this.getBlockLayers().get(i).initArray();
+				}
+				for (int linesY = 0; linesY < lines.size(); linesY++) {
+					line = lines.get(linesY);
+					if (line.matches(levelRegEx)) {
+						Pattern pattern = Pattern.compile(levelRegEx);
+						Matcher matcher = pattern.matcher(line);
+						if (matcher.matches()) {
+							String name = matcher.group(1);
+							String version = matcher.group(2);
+							this.gui.getLevelNameText().setText(name);
+							this.gui.getLevelVersionText().setText(version);
+							this.gui.repaint();
+						}
+					} else if (line.matches(start_regex)) {
+						flag = true;
+						Pattern pattern = Pattern.compile(start_regex);
+						Matcher matcher = pattern.matcher(line);
+						if (matcher.matches()) {
+							int id = Integer.parseInt(matcher.group(1));
+							currentStageId = id;
+						}
+						yCounter = 0;
+					} else if (line.matches(end_regex)) {
+						flag = false;
+						yCounter = 0;
+					} else if (line.matches(commentStart)) {
+						commentFlag = true;
+					} else if (line.matches(commentEnd)) {
+						commentFlag = false;
+					} else if (commentFlag) {
+					} else if (flag) {
+						for (xCounter = 0; xCounter < line.length(); xCounter++) {
+							charValue = line.charAt(xCounter);
+							blockId = charValue - 48;
+							Block b = Blocks.getBlockById(blockId);
+							this.getBlockLayers().get(currentStageId).setBlock(xCounter, yCounter, b);
+
+							itemForBlock = LevelLoader.getItemForBlock(currentStageId, xCounter, yCounter, cfgFile.getName());
+							if (itemForBlock != -1) {
+								this.getItemLayers().get(currentStageId).set(xCounter, yCounter, Items.getItemById(itemForBlock));
+							}
+						}
+						yCounter++;
+					}
+				}
+			}
+			ArrayList<String> lines = LevelLoader.loadLevelConfig(cfgFile.getName());
+			for (String line : lines) {
+				String regex = "^([0-9]{1,}),([0-9]{1,}),([0-9]{1,})=([0-9]{1,}),([0-9]{1,})$";
+				if (line.matches(regex)) {
+					Pattern pattern = Pattern.compile(regex);
 					Matcher matcher = pattern.matcher(line);
 					if (matcher.matches()) {
 						int id = Integer.parseInt(matcher.group(1));
-						currentStageId = id;
+						int x1 = Integer.parseInt(matcher.group(2));
+						int y1 = Integer.parseInt(matcher.group(3));
+						int x2 = Integer.parseInt(matcher.group(4));
+						int y2 = Integer.parseInt(matcher.group(5));
+						this.getBlockLayers().get(id).setOption(x1, y1, new Coord2D(x2, y2));
 					}
-					yCounter = 0;
-				} else if (line.matches(end_regex)) {
-					flag = false;
-					yCounter = 0;
-				} else if (line.matches(commentStart)) {
-					commentFlag = true;
-				} else if (line.matches(commentEnd)) {
-					commentFlag = false;
-				} else if (commentFlag) {
-				} else if (flag) {
-					for (xCounter = 0; xCounter < line.length(); xCounter++) {
-						charValue = line.charAt(xCounter);
-						blockId = charValue - 48;
-						Block b = Blocks.getBlockById(blockId);
-						this.getBlockLayers().get(currentStageId).setBlock(xCounter, yCounter, b);
-
-						itemForBlock = LevelLoader.getItemForBlock(currentStageId, xCounter, yCounter, cfgFile.getName());
-						if (itemForBlock != -1) {
-							this.getItemLayers().get(currentStageId).set(xCounter, yCounter, Items.getItemById(itemForBlock));
-						}
-					}
-					yCounter++;
 				}
 			}
 		}
-		ArrayList<String> lines = LevelLoader.loadLevelConfig(cfgFile.getName());
-		for (String line : lines) {
-			String regex = "^([0-9]{1,}),([0-9]{1,}),([0-9]{1,})=([0-9]{1,}),([0-9]{1,})$";
-			if (line.matches(regex)) {
-				Pattern pattern = Pattern.compile(regex);
-				Matcher matcher = pattern.matcher(line);
-				if (matcher.matches()) {
-					int id = Integer.parseInt(matcher.group(1));
-					int x1 = Integer.parseInt(matcher.group(2));
-					int y1 = Integer.parseInt(matcher.group(3));
-					int x2 = Integer.parseInt(matcher.group(4));
-					int y2 = Integer.parseInt(matcher.group(5));
-					this.getBlockLayers().get(id).setOption(x1, y1, new Coord2D(x2, y2));
-				}
-			}
-		}
+		this.gui.repaint();
 	}
 
 	public void makeWallsFancy() {

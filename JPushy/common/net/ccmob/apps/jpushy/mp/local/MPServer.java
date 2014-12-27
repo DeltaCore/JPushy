@@ -22,8 +22,6 @@ import net.ccmob.apps.jpushy.core.LevelThread;
  */
 public class MPServer extends Thread {
 
-	private LevelThread	    launcher;
-
 	private int	            port	      = 11941;
 	private boolean	        running	    = true;
 	public MPCommandHandler	cmdHandler;
@@ -32,9 +30,11 @@ public class MPServer extends Thread {
 
 	ArrayList<Connection>	  connections	= new ArrayList<Connection>();
 
+	private LevelThread	    launcher;
+	
 	public MPServer(LevelThread gui) {
-		cmdHandler = new MPCommandHandler(launcher, this);
 		this.launcher = gui;
+		cmdHandler = new MPCommandHandler(launcher, this);
 	}
 
 	private void newConnection(Socket packet) {
@@ -116,35 +116,15 @@ public class MPServer extends Thread {
 	private void startServer() {
 			try {
 	      socket = new ServerSocket(port);
-	   // cmdHandler = new MPCommandHandler(levelHandler, this);
-				String msg;
 				socket.setSoTimeout(1000);
-				Socket client = null;
 				while (isRunning()) {
 					try{
-						client = socket.accept();
+						Socket client = socket.accept();
+						newConnection(client);
+						new MPListenerThread(client, this);
 					}catch(Exception e){
 						
 					}
-					if(client == null){
-						
-					}else{
-						newConnection(client);
-						StringBuilder b = new StringBuilder();
-						while(client.getInputStream().available() > 0){
-							b.append(client.getInputStream().read());
-						}
-						msg = b.toString().trim();
-						if (msg.length() > 0) {
-							if (!connectionMsg(msg, client)) {
-								String[] cmds = msg.split("/");
-								for (String s : cmds)
-									System.out.println(s);
-								cmdHandler.onCommand(cmds, client);
-							}
-						}
-					}
-					client = null;
 				}
 				socket.close();
 				System.out.println("MpServer terminated.");
@@ -157,30 +137,38 @@ public class MPServer extends Thread {
 		return connections;
 	}
 
-	private boolean connectionMsg(String msg, Socket packet) {
+	boolean connectionMsg(String msg, Socket packet) {
 		if (msg.equalsIgnoreCase("--getLevel")) {
 			String fileContent = packFile(Game.getLevel().getFileName());
-			Connection c = getConnection(packet);
-			sendTo(fileContent, c);
+			sendTo(fileContent, packet);
 			return true;
 		} else if (msg.equalsIgnoreCase("--getLevelCFG")) {
 			String fileContent = packFile(Game.getLevel().getFileName().replace(".lvl", ".cfg"));
-			Connection c = getConnection(packet);
-			sendTo(fileContent, c);
+			sendTo(fileContent, packet);
+			return true;
+		} else if (msg.equalsIgnoreCase("--getLevelType")) {
+			if(Game.getLevel().getFileName().endsWith(".xml")){
+				sendTo("xml", packet);
+			}else if(Game.getLevel().getFileName().endsWith(".lvl")){
+				sendTo("lvl", packet);
+			}else{
+				sendTo("undef-" + Game.getLevel().getFileName().substring(Game.getLevel().getFileName().lastIndexOf('.'), Game.getLevel().getFileName().length()), packet);
+			}
 			return true;
 		}
 		return false;
 	}
 
-	private boolean sendTo(String cmd, Connection c) {
+	private boolean sendTo(String cmd, Socket c) {
 		return sendTo(cmd.getBytes(), c);
 	}
 
-	private boolean sendTo(byte[] data, Connection c) {
+	private boolean sendTo(byte[] data, Socket c) {
 		try {
 			//this.socket.
-			c.s.getOutputStream().write(data);
-			c.s.getOutputStream().flush();
+			System.out.println("Sending to [" + c.getInetAddress().toString() + "] => " + new String(data).toString());
+			c.getOutputStream().write(data);
+			c.getOutputStream().flush();
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();

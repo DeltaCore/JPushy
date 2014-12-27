@@ -18,7 +18,7 @@ public class Finish extends Block {
 
 	@Override
 	public void onWalk(int x, int y, Level l) {
-		// super.onWalk(x,y,l);
+		super.onWalk(x,y,l);
 		System.out.println("Ouch !");
 		Game.pushUpdate();
 		if (l.getActiveStage().getWinConditions().allCompleted()) {

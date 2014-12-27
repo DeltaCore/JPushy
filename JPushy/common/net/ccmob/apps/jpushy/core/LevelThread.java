@@ -85,7 +85,7 @@ public class LevelThread extends JFrame implements Runnable {
 		LevelItem levelItem = new LevelItem();
 		try {
 			String comment = "";
-			BufferedReader reader = new BufferedReader(new FileReader(new File("Data/lvl/" + filename)));
+			BufferedReader reader = new BufferedReader(new FileReader(new File(filename)));
 			String line = "";
 			Pattern level = Pattern.compile(levelRegEx);
 			Matcher levelMatcher = level.matcher("");

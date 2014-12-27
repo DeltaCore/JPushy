@@ -8,8 +8,8 @@ import java.net.Socket;
  */
 public interface ICommandHandler {
 	
-	public void onCommand(String[] args, Socket packet);
+	public void onCommand(String[] args, Socket packet, MPListenerThread thread);
 	
-	public void onCommand(String msg, Socket packet);
+	public void onCommand(String msg, Socket packet, MPListenerThread thread);
 	
 }

@@ -67,7 +67,7 @@ public class LevelConnectionHandler implements Runnable {
 					msg = new String(packet.getData()).trim();
 					System.out.println("Connection from : " + packet.getAddress().toString() + ":" + packet.getPort() + " - " + packet.getAddress().getHostName().toString() + "\nMSG : " + msg);
 					newLine();
-					levelServer.getCMDHandler().onCommand(msg, client);
+					levelServer.getCMDHandler().onCommand(msg, client, null);
 					newLine();
 					newLine();
 					printHashLine();
