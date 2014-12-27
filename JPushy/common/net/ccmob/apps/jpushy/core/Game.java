@@ -258,9 +258,11 @@ public class Game extends JFrame {
 	}
 
 	public void startGame() {
-		this.thread = new LevelThread(this, levels.get(levelList.getSelectedIndex()));
-		Thread t = new Thread(thread);
-		t.start();
+		if(levelList.getSelectedIndex() != -1){
+			this.thread = new LevelThread(this, levels.get(levelList.getSelectedIndex()));
+			Thread t = new Thread(thread);
+			t.start();
+		}
 	}
 
 	public void openConnection() {

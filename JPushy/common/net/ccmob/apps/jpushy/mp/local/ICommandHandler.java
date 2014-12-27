@@ -1,6 +1,6 @@
 package net.ccmob.apps.jpushy.mp.local;
 
-import java.net.DatagramPacket;
+import java.net.Socket;
 /**
  * 
  * @author Marcel Benning
@@ -8,8 +8,8 @@ import java.net.DatagramPacket;
  */
 public interface ICommandHandler {
 	
-	public void onCommand(String[] args, DatagramPacket packet);
+	public void onCommand(String[] args, Socket packet);
 	
-	public void onCommand(String msg, DatagramPacket packet);
+	public void onCommand(String msg, Socket packet);
 	
 }

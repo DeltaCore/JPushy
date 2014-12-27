@@ -56,7 +56,7 @@ public class LevelThread extends JFrame implements Runnable {
 		this.addKeyListener(input);
 		showControls();
 	}
-
+	
 	private void showControls(){
 		ArrayList<String> controls = new ArrayList<String>();
 		controls.add("The controls : ");

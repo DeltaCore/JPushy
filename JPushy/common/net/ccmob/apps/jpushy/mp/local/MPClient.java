@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,9 +20,9 @@ public class MPClient {
 	MPServer	             server;
 	private InetAddress	   serverIp;
 	private int	           port;
-	private DatagramSocket	socket;
 	private boolean	       connected	= false;
-
+	private Socket serverConnection = null;
+	
 	public MPClient(MPServer server) {
 		this.server = server;
 	}
@@ -54,6 +55,8 @@ public class MPClient {
 				hostname = ip;
 			} else if (ip.matches(regex_host_noport)) {
 				hostname = ip;
+			}else{
+				return null;
 			}
 
 			if (ip == "localhost") {
@@ -62,10 +65,10 @@ public class MPClient {
 
 			this.serverIp = InetAddress.getByName(hostname);
 			this.port = port;
-			socket = new DatagramSocket();
-
+			serverConnection = new Socket(InetAddress.getByName(hostname), port);
+			
 			System.out.println("[MP-Server] Connection to " + hostname + ":" + port);
-
+			
 			File mpFolder = new File("Data/lvl/mpcache/" + hostname + "/" + key);
 			if (!mpFolder.exists())
 				mpFolder.mkdirs();
@@ -77,7 +80,7 @@ public class MPClient {
 			File levelFile = new File(lvl);
 
 			String cmd = "--getLevel";
-			sendToServer(cmd);
+			sendToServer(cmd, serverConnection);
 			String c = getFromServer();
 			FileWriter w = new FileWriter(levelFile);
 			w.write(c);
@@ -87,14 +90,14 @@ public class MPClient {
 			File cfgFile = new File(cfg);
 
 			cmd = "--getLevelCFG";
-			sendToServer(cmd);
+			sendToServer(cmd, serverConnection);
 			c = "";
 			c = getFromServer();
 			w = new FileWriter(cfgFile);
 			w.write(c);
 			w.flush();
 			w.close();
-
+			
 			System.out.println("Setting levelfile");
 			connected = true;
 			System.out.println("Setting levelfile done.");
@@ -111,7 +114,7 @@ public class MPClient {
 		if (connected) {
 			String cmd = "-setPlayer/" + server.getLauncher().getPlayer().getName() + "/" + x + "/" + y;
 			//DatagramPacket packet = new DatagramPacket(cmd.getBytes(), cmd.getBytes().length);
-			sendToServer(cmd);
+			sendToServer(cmd, serverConnection);
 		}
 	}
 
@@ -119,18 +122,18 @@ public class MPClient {
 		if (connected) {
 			String cmd = "-movePlayer/" + server.getLauncher().getPlayer().getName() + "/" + dir;
 			//DatagramPacket packet = new DatagramPacket(cmd.getBytes(), cmd.getBytes().length);
-			sendToServer(cmd);
+			sendToServer(cmd, serverConnection);
 		}
 	}
 
-	private boolean sendToServer(String cmd) {
-		return sendToServer(cmd.getBytes());
+	private boolean sendToServer(String cmd, Socket socket) {
+		return sendToServer(cmd.getBytes(), socket);
 	}
 
-	private boolean sendToServer(byte[] data) {
-		DatagramPacket packet = new DatagramPacket(data, data.length, this.serverIp, this.port);
+	private boolean sendToServer(byte[] data, Socket socket) {
 		try {
-			socket.send(packet);
+			socket.getOutputStream().write(data);
+			socket.getOutputStream().flush();
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -139,22 +142,20 @@ public class MPClient {
 	}
 
 	private String getFromServer() {
-		byte[] data = new byte[1024];
-		DatagramPacket packet = new DatagramPacket(data, data.length);
-		String msg = "";
+		StringBuilder b = new StringBuilder();
 		try {
-			socket.receive(packet);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		msg = new String(packet.getData()).trim();
-		return msg;
+	    while(serverConnection.getInputStream().available() > 0){
+	    	b.append(serverConnection.getInputStream().read());
+	    }
+    } catch (IOException e) {
+	    e.printStackTrace();
+    }
+		return b.toString();
 	}
 
 	public void loadPlayer() {
 		System.out.println("Loading Player : " + server.getLauncher().getPlayer().getName());
-		sendToServer("-addPlayer/" + server.getLauncher().getPlayer().getName());
+		sendToServer("-addPlayer/" + server.getLauncher().getPlayer().getName(), serverConnection);
 	}
 
 }

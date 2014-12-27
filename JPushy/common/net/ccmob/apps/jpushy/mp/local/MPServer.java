@@ -5,8 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -27,7 +28,7 @@ public class MPServer extends Thread {
 	private boolean	        running	    = true;
 	public MPCommandHandler	cmdHandler;
 	int	                    mode	      = 0;
-	private DatagramSocket	socket;
+	private ServerSocket	socket;
 
 	ArrayList<Connection>	  connections	= new ArrayList<Connection>();
 
@@ -36,11 +37,11 @@ public class MPServer extends Thread {
 		this.launcher = gui;
 	}
 
-	private void newConnection(DatagramPacket packet) {
-		InetAddress ip = packet.getAddress();
+	private void newConnection(Socket packet) {
+		InetAddress ip = packet.getInetAddress();
 		int port = packet.getPort();
 		if (!checkInetAddress(ip) && !checkPort(port)) {
-			connections.add(new Connection(ip, port));
+			connections.add(new Connection(packet));
 		}
 	}
 
@@ -62,8 +63,8 @@ public class MPServer extends Thread {
 		return false;
 	}
 
-	public Connection getConnection(DatagramPacket packet) {
-		InetAddress ip = packet.getAddress();
+	public Connection getConnection(Socket packet) {
+		InetAddress ip = packet.getInetAddress();
 		int port = packet.getPort();
 		for (int i = 0; i < connections.size(); i++) {
 			if (ip.equals(connections.get(i).getIp())) {
@@ -113,42 +114,50 @@ public class MPServer extends Thread {
 	}
 
 	private void startServer() {
-		try {
-			socket = new DatagramSocket(port); // open port
-			byte[] data = new byte[1024];
-			// cmdHandler = new MPCommandHandler(levelHandler, this);
-			DatagramPacket packet;
-			String msg;
-			socket.setSoTimeout(1000);
-			while (isRunning()) {
-				packet = new DatagramPacket(data, data.length);
-				try {
-					socket.receive(packet);
-				} catch (IOException e) {
-				}
-				newConnection(packet);
-				msg = new String(packet.getData()).trim();
-				if (msg.length() > 0) {
-					if (!connectionMsg(msg, packet)) {
-						String[] cmds = msg.split("/");
-						for (String s : cmds)
-							System.out.println(s);
-						cmdHandler.onCommand(cmds, packet);
+			try {
+	      socket = new ServerSocket(port);
+	   // cmdHandler = new MPCommandHandler(levelHandler, this);
+				String msg;
+				socket.setSoTimeout(1000);
+				Socket client = null;
+				while (isRunning()) {
+					try{
+						client = socket.accept();
+					}catch(Exception e){
+						
 					}
+					if(client == null){
+						
+					}else{
+						newConnection(client);
+						StringBuilder b = new StringBuilder();
+						while(client.getInputStream().available() > 0){
+							b.append(client.getInputStream().read());
+						}
+						msg = b.toString().trim();
+						if (msg.length() > 0) {
+							if (!connectionMsg(msg, client)) {
+								String[] cmds = msg.split("/");
+								for (String s : cmds)
+									System.out.println(s);
+								cmdHandler.onCommand(cmds, client);
+							}
+						}
+					}
+					client = null;
 				}
-			}
-			socket.close();
-			System.out.println("MpServer terminated.");
-		} catch (SocketException e) {
-			e.printStackTrace();
-		}
+				socket.close();
+				System.out.println("MpServer terminated.");
+      } catch (IOException e) {
+	      e.printStackTrace();
+      } // open port
 	}
 
 	public ArrayList<Connection> getConnections() {
 		return connections;
 	}
 
-	private boolean connectionMsg(String msg, DatagramPacket packet) {
+	private boolean connectionMsg(String msg, Socket packet) {
 		if (msg.equalsIgnoreCase("--getLevel")) {
 			String fileContent = packFile(Game.getLevel().getFileName());
 			Connection c = getConnection(packet);
@@ -168,9 +177,10 @@ public class MPServer extends Thread {
 	}
 
 	private boolean sendTo(byte[] data, Connection c) {
-		DatagramPacket packet = new DatagramPacket(data, data.length, c.getIp(), c.getPort());
 		try {
-			socket.send(packet);
+			//this.socket.
+			c.s.getOutputStream().write(data);
+			c.s.getOutputStream().flush();
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
