@@ -102,13 +102,13 @@ public class EditorPanel extends JPanel {
 	}
 
 	public void updateCoords(int x, int y) {
-		System.out.println("update !");
+		//System.out.println("update !");
 		if (listener.getSelTileX() != -1 && listener.getSelTileY() != -1) {
 			this.setOpX(x);
 			this.setOpY(y);
 			this.getBlockLayers().get(currentLayer).setOption(this.listener.selTileX, this.listener.selTileY, new Coord2D(x, y));
 			this.repaint();
-			System.out.println("Option X : " + this.getBlockLayers().get(currentLayer).getOption(this.listener.selTileX, this.listener.selTileX).getX() + " ; Option Y : " + this.getBlockLayers().get(currentLayer).getOption(this.listener.selTileX, this.listener.selTileX).getY());
+			//System.out.println("Option X : " + this.getBlockLayers().get(currentLayer).getOption(this.listener.selTileX, this.listener.selTileX).getX() + " ; Option Y : " + this.getBlockLayers().get(currentLayer).getOption(this.listener.selTileX, this.listener.selTileX).getY());
 		}
 	}
 

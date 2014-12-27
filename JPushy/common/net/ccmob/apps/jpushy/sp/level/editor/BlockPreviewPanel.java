@@ -24,12 +24,12 @@ public class BlockPreviewPanel extends JPanel {
 		super.paintComponent(g_);
 		Graphics2D g = (Graphics2D) g_;
 		g.clearRect(0, 0, 80, 80);
-		if (selectedIndex > Blocks.blockRegistry.size()) {
-			int itemIndex = selectedIndex - Blocks.blockRegistry.size(); System.out.println("Item index : " + itemIndex);
-			g.drawImage(GraphicUtils.getImageFromPicture(Items.getItemById(Items.getIdByName(this.getGui().getCurrentBlock().getItemAt(itemIndex).toString())).getTexture()), 0, 0, 80, 80, null);
-		} else {
-			Blocks.getBlockByName(this.getGui().getCurrentBlock().getItemAt(selectedIndex).toString()).getRenderHandler().renderBlock(Blocks.getBlockByName(this.getGui().getCurrentBlock().getItemAt(selectedIndex).toString()), g, 0, 0, 80, 80);
-			//g.drawImage(GraphicUtils.getImageFromPicture(Blocks.getBlockByName(this.getGui().getCurrentBlock().getItemAt(selectedIndex).toString()).getTexture()), 0, 0, 80, 80, null);
+		if(selectedIndex != -1){
+			if (selectedIndex > Blocks.blockRegistry.size()) {
+				g.drawImage(GraphicUtils.getImageFromPicture(Items.getItemById(Items.getIdByName(this.getGui().getCurrentBlock().getItemAt(selectedIndex).toString())).getTexture()), 0, 0, 80, 80, null);
+			} else {
+				Blocks.getBlockByName(this.getGui().getCurrentBlock().getItemAt(selectedIndex).toString()).getRenderHandler().renderBlock(Blocks.getBlockByName(this.getGui().getCurrentBlock().getItemAt(selectedIndex).toString()), g, 0, 0, 80, 80);
+			}
 		}
 	}
 
@@ -45,8 +45,10 @@ public class BlockPreviewPanel extends JPanel {
 	 *          the selectedIndex to set
 	 */
 	public void setSelectedIndex(int selectedIndex) {
-		this.selectedIndex = selectedIndex;
-		this.repaint();
+		if(selectedIndex != -1){
+			this.selectedIndex = selectedIndex;
+			this.repaint();
+		}
 	}
 
 	/**
