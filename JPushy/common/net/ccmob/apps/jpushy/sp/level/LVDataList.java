@@ -47,7 +47,6 @@ public class LVDataList {
 				if (dataField.get(i).getDataName().equals(data.getDataName())) {
 					dataField.get(i).setObject(data.getObject());
 				}
-
 			}
 		}
 	}

@@ -23,14 +23,13 @@ public class Finish extends Block {
 		Game.pushUpdate();
 		if (l.getActiveStage().getWinConditions().allCompleted()) {
 			if (!l.isLastStage()) {
-				Game.sendMessage("You won this stage ! Get ready for another one ...");
+				Game.sendMessage("You won this stage ! Get ready for another one.");
 				l.setActiveStage(l.getActiveStageI() + 1);
 				Game.getPlayer().setFreezed(true);
 				l.getActiveStage().init(Game.getPlayer());
 				Game.getPlayer().setFreezed(false);
 				Game.getPlayer().cancelNextMove();
 			} else {
-				Game.sendMessage("Yay ! You won this easy game for Elementary kids :DD");
 				Game.stopGame();
 			}
 		} else {
@@ -40,23 +39,19 @@ public class Finish extends Block {
 				String s = l.getActiveStage().getDataList().getList().get(i).getDataName() + "[";
 				if (l.getActiveStage().getDataList().getList().get(i).isiSet()) {
 					s += l.getActiveStage().getDataList().getList().get(i).getInt() + "|";
-				} else {
-					s += "NoInt|";
 				}
 				if (l.getActiveStage().getDataList().getList().get(i).issSet()) {
 					s += l.getActiveStage().getDataList().getList().get(i).getString() + "|";
-				} else {
-					s += "NoString|";
 				}
-				if (l.getActiveStage().getDataList().getList().get(i).isoSet()) {
-					s += l.getActiveStage().getDataList().getList().get(i).getObject() + "]";
-				} else {
-					s += "NoObj]";
+				if (l.getActiveStage().getDataList().getList().get(i).isoSet() && l.getActiveStage().getDataList().getList().get(i).getObject() != null) {
+					s += l.getActiveStage().getDataList().getList().get(i).getObject();
 				}
-				Game.sendMessage(s);
+				s += "]";
+				System.out.println("[LV-Data]" + s);
 			}
 			for (Wincondition w : l.getActiveStage().getWinConditions().getList()) {
 				Game.sendMessage("->" + w.getName() + " : " + w.isComplete());
+				System.out.println("[Chat]" + "->" + w.getName() + " : " + w.isComplete());
 			}
 		}
 		Game.pushUpdate();

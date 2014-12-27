@@ -10,7 +10,6 @@ import net.ccmob.apps.jpushy.items.Items;
 import net.ccmob.apps.jpushy.sp.level.Level;
 import net.ccmob.apps.jpushy.sp.level.Stage;
 import net.ccmob.apps.jpushy.sp.level.editor.EditorSaveThread.BlockAction;
-import net.ccmob.apps.jpushy.sp.player.Inventory;
 import net.ccmob.apps.jpushy.sp.player.Player;
 
 /**

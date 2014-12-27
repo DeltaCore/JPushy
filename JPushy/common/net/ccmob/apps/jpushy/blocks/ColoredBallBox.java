@@ -1,7 +1,6 @@
 package net.ccmob.apps.jpushy.blocks;
 
-import java.awt.Color;
-
+import net.ccmob.apps.jpushy.blocks.ColoredBall.NamedColor;
 import net.ccmob.apps.jpushy.core.Game;
 import net.ccmob.apps.jpushy.graphics.Picture;
 import net.ccmob.apps.jpushy.sp.level.Level;
@@ -10,11 +9,11 @@ import net.ccmob.apps.jpushy.sp.level.Stage;
 public class ColoredBallBox extends Block {
 
 	private int	  ballsLeft	= 0;
-	private Color	color	    = Color.white;
+	private NamedColor	color	    = NamedColor.WHITE;
 	private int	  x	        = 0;
 	private int	  y	        = 0;
 
-	public ColoredBallBox(String name, int id, Picture img, Color c) {
+	public ColoredBallBox(String name, int id, Picture img, NamedColor c) {
 		super(name, id, img);
 		this.setPlayerAbleToWalkOn(true);
 		this.setSolid(true);
@@ -47,7 +46,7 @@ public class ColoredBallBox extends Block {
 	/**
 	 * @return the color
 	 */
-	public Color getColor() {
+	public NamedColor getColor() {
 		return color;
 	}
 
@@ -55,7 +54,7 @@ public class ColoredBallBox extends Block {
 	 * @param color
 	 *          the color to set
 	 */
-	public Block setColor(Color color) {
+	public Block setColor(NamedColor color) {
 		this.color = color;
 		return this;
 	}
@@ -64,7 +63,7 @@ public class ColoredBallBox extends Block {
 	public void onLoaded(int x, int y, int stageId, Stage stage) {
 		this.x = x;
 		this.y = y;
-		stage.getWinConditions().newWinConWincondition("Ball" + this.getColor().toString() + "Finished");
+		stage.getWinConditions().newWinConWincondition("Ball " + this.getColor().getColorName().toLowerCase() + " Finished");
 	}
 
 	@Override
@@ -84,7 +83,7 @@ public class ColoredBallBox extends Block {
 				this.setOcupied(false);
 				int left = s.getDataList().getDataByDataName(dataName).getInt();
 				if (left == 0) {
-					s.getWinConditions().completeCondition("Ball" + this.getColor().toString() + "Finished");
+					s.getWinConditions().completeCondition("Ball " + this.getColor().toString() + " Finished");
 				}
 			} else {
 				Game.sendMessage("MEEEP ! Wrong ball ...");

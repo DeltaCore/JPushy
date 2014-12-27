@@ -4,11 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -27,7 +25,7 @@ public class MPServer extends Thread {
 	public MPCommandHandler	cmdHandler;
 	int	                    mode	      = 0;
 	private ServerSocket	socket;
-
+	
 	ArrayList<Connection>	  connections	= new ArrayList<Connection>();
 
 	private LevelThread	    launcher;
@@ -90,7 +88,7 @@ public class MPServer extends Thread {
 		return false;
 	}
 
-	private String packFile(String filename) {
+	private static String packFile(String filename) {
 		String returnString = "";
 		File f = new File("Data/lvl/" + filename);
 		try {
@@ -121,7 +119,7 @@ public class MPServer extends Thread {
 					try{
 						Socket client = socket.accept();
 						newConnection(client);
-						new MPListenerThread(client, this);
+						new MPListenerThread(client, this.cmdHandler);
 					}catch(Exception e){
 						
 					}
@@ -130,14 +128,14 @@ public class MPServer extends Thread {
 				System.out.println("MpServer terminated.");
       } catch (IOException e) {
 	      e.printStackTrace();
-      } // open port
+      }
 	}
 
 	public ArrayList<Connection> getConnections() {
 		return connections;
 	}
 
-	boolean connectionMsg(String msg, Socket packet) {
+	static boolean connectionMsg(String msg, Socket packet) {
 		if (msg.equalsIgnoreCase("--getLevel")) {
 			String fileContent = packFile(Game.getLevel().getFileName());
 			sendTo(fileContent, packet);
@@ -159,11 +157,11 @@ public class MPServer extends Thread {
 		return false;
 	}
 
-	private boolean sendTo(String cmd, Socket c) {
+	private static boolean sendTo(String cmd, Socket c) {
 		return sendTo(cmd.getBytes(), c);
 	}
 
-	private boolean sendTo(byte[] data, Socket c) {
+	private static boolean sendTo(byte[] data, Socket c) {
 		try {
 			//this.socket.
 			System.out.println("Sending to [" + c.getInetAddress().toString() + "] => " + new String(data).toString());

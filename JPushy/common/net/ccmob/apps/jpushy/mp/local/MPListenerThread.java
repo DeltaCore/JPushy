@@ -9,11 +9,11 @@ public class MPListenerThread implements Runnable {
 	private Socket	 client;
 	private Thread	 t	     = null;
 	private boolean	 running	= true;	;
-	private MPServer	serverParent;
+	private ICommandHandler handler;
 
-	public MPListenerThread(Socket client, MPServer server) {
+	public MPListenerThread(Socket client, ICommandHandler h) {
 		this.client = client;
-		this.serverParent = server;
+		this.handler = h;
 		t = new Thread(this, "[MP|" + client.getInetAddress().getHostAddress() + "]");
 		t.start();
 	}
@@ -32,11 +32,11 @@ public class MPListenerThread implements Runnable {
 				String msg = b.toString().trim();
 				System.out.println("Connection from [" + client.getInetAddress().toString() + "] => " + msg);
 				if (msg.length() > 0) {
-					if (!this.serverParent.connectionMsg(msg, client)) {
+					if (!MPServer.connectionMsg(msg, client)) {
 						String[] cmds = msg.split("/");
 						for (String s : cmds)
 							System.out.println(s);
-						this.serverParent.cmdHandler.onCommand(cmds, client, this);
+						this.handler.onCommand(cmds, client, this);
 					}
 				}
 			} catch (Exception e) {

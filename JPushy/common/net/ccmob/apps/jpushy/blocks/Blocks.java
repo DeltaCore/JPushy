@@ -1,8 +1,8 @@
 package net.ccmob.apps.jpushy.blocks;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
+import net.ccmob.apps.jpushy.blocks.ColoredBall.NamedColor;
 import net.ccmob.apps.jpushy.graphics.PictureLoader;
 
 /**
@@ -43,18 +43,18 @@ public class Blocks {
 	public static final Block	     gate	           = new Gate("Gate", 24, PictureLoader.loadImageFromFile("gate.png")).setDestroyable(true).setPlayerAbleToWalkOn(false).setSolid(true).setInvincebleBlock(Blocks.getBlockById(0)).setVisible(true);
 	public static final Block	     lever	         = new SwitchBlock("Lever", 25, PictureLoader.loadImageFromFile("leverOn.png"), PictureLoader.loadImageFromFile("leverOff.png")).setDestroyable(false).setSolid(true).setPlayerAbleToWalkOn(true);
 	public static final Block	     button	         = new Button("Button", 26, PictureLoader.loadImageFromFile("button.png")).setDestroyable(false).setSolid(true).setPlayerAbleToWalkOn(true).setCanGetocupied(true);
-	public static final Block	     blueBallBox	   = new ColoredBallBox("Blue ball box", 27, PictureLoader.loadImageFromFile("BlueBallBox.png"), Color.blue);
-	public static final Block	     greenBallBox	   = new ColoredBallBox("Green ball box", 28, PictureLoader.loadImageFromFile("GreenBallBox.png"), Color.green);
-	public static final Block	     redBallBox	     = new ColoredBallBox("Red ball box", 29, PictureLoader.loadImageFromFile("RedBallBox.png"), Color.red);
-	public static final Block	     blueBall	       = new ColoredBall("Blue ball", 30, PictureLoader.loadImageFromFile("BlueBall.png"), Color.blue);
-	public static final Block	     greenBall	     = new ColoredBall("Green ball", 31, PictureLoader.loadImageFromFile("GreenBall.png"), Color.green);
-	public static final Block	     redBall	       = new ColoredBall("Red ball", 32, PictureLoader.loadImageFromFile("RedBall.png"), Color.red);
-	public static final Block	     blueBallPaint	 = new ColoredBallPaint("Blue ball paint", 33, PictureLoader.loadImageFromFile("BlueBallPaint.png"), Color.blue);
-	public static final Block	     greenBallPaint	 = new ColoredBallPaint("Green ball paint", 34, PictureLoader.loadImageFromFile("GreenBallPaint.png"), Color.green);
-	public static final Block	     redBallPaint	   = new ColoredBallPaint("Red ball paint", 35, PictureLoader.loadImageFromFile("RedBallPaint.png"), Color.red);
+	public static final Block	     blueBallBox	   = new ColoredBallBox("Blue ball box", 27, PictureLoader.loadImageFromFile("BlueBallBox.png"), NamedColor.BLUE);
+	public static final Block	     greenBallBox	   = new ColoredBallBox("Green ball box", 28, PictureLoader.loadImageFromFile("GreenBallBox.png"), NamedColor.GREEN);
+	public static final Block	     redBallBox	     = new ColoredBallBox("Red ball box", 29, PictureLoader.loadImageFromFile("RedBallBox.png"), NamedColor.RED);
+	public static final Block	     blueBall	       = new ColoredBall("Blue ball", 30, PictureLoader.loadImageFromFile("BlueBall.png"), NamedColor.BLUE);
+	public static final Block	     greenBall	     = new ColoredBall("Green ball", 31, PictureLoader.loadImageFromFile("GreenBall.png"), NamedColor.GREEN);
+	public static final Block	     redBall	       = new ColoredBall("Red ball", 32, PictureLoader.loadImageFromFile("RedBall.png"), NamedColor.RED);
+	public static final Block	     blueBallPaint	 = new ColoredBallPaint("Blue ball paint", 33, PictureLoader.loadImageFromFile("BlueBallPaint.png"), NamedColor.BLUE);
+	public static final Block	     greenBallPaint	 = new ColoredBallPaint("Green ball paint", 34, PictureLoader.loadImageFromFile("GreenBallPaint.png"), NamedColor.GREEN);
+	public static final Block	     redBallPaint	   = new ColoredBallPaint("Red ball paint", 35, PictureLoader.loadImageFromFile("RedBallPaint.png"), NamedColor.RED);
 	public static final Block	     disableBase	   = new DisableBase("One way ground", 36, PictureLoader.loadImageFromFile("disabled.png"));
 	public static final Block	     disablePushBase	= new NoPushGround("No push ground", 37, PictureLoader.loadImageFromFile("disabled.png"));
-	public static final Pipe.PipeBlockHandler pipeHAndler = new Pipe.PipeBlockHandler();
+	public static final Pipe.PipeBlockHandler pipeHandler = new Pipe.PipeBlockHandler();
 	
 	// continue with id 36
 

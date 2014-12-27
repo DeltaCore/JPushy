@@ -4,14 +4,10 @@ package net.ccmob.apps.jpushy.mp.local;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.swing.plaf.metal.MetalIconFactory.FolderIcon16;
 
 /**
  * 
@@ -21,8 +17,6 @@ import javax.swing.plaf.metal.MetalIconFactory.FolderIcon16;
 public class MPClient {
 
 	MPServer	          server;
-	private InetAddress	serverIp;
-	private int	        port;
 	private boolean	    connected	       = false;
 	private Socket	    serverConnection	= null;
 
@@ -35,7 +29,6 @@ public class MPClient {
 	}
 
 	public String join(String ip) {
-		String lvl;
 		String cfg;
 		String hostname = "";
 		int port = 11941;
@@ -71,9 +64,6 @@ public class MPClient {
 					return null;
 				}
 			}
-
-			this.serverIp = InetAddress.getByName(hostname);
-			this.port = port;
 			serverConnection = new Socket(InetAddress.getByName(hostname), port);
 
 			System.out.println("[MP-Server] Connection to " + hostname + ":" + port);
@@ -82,7 +72,6 @@ public class MPClient {
 			if (!mpFolder.exists())
 				mpFolder.mkdirs();
 
-			lvl = "Data/lvl/mpcache/" + hostname + "/" + key + "/" + "tmp.lvl";
 			cfg = "Data/lvl/mpcache/" + hostname + "/" + key + "/" + "tmp.cfg";
 
 			LevelType levelType = LevelType.NONE;

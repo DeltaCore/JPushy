@@ -1,7 +1,5 @@
 package net.ccmob.apps.jpushy.blocks;
 
-import java.util.ArrayList;
-
 import net.ccmob.apps.jpushy.graphics.Picture;
 import net.ccmob.apps.jpushy.sp.level.Stage;
 

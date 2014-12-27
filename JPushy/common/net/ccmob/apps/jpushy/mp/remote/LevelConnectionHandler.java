@@ -1,11 +1,10 @@
 package net.ccmob.apps.jpushy.mp.remote;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
+
+import net.ccmob.apps.jpushy.mp.local.MPListenerThread;
 
 /**
  * 
@@ -52,39 +51,24 @@ public class LevelConnectionHandler implements Runnable {
 	@Override
 	public void run() {
 		try {
-			socket = new ServerSocket(port); // open port
-			byte[] data = new byte[1024];
-			DatagramPacket packet;
-			String msg;
+			LevelServerCmdHandler handler = new LevelServerCmdHandler(this.levelServer);
+      socket = new ServerSocket(port);
+			socket.setSoTimeout(1000);
 			while (isRunning()) {
-				data = new byte[1024];
-				packet = new DatagramPacket(data, data.length);
-				printHashLine();
-				newLine();
-				newLine();
-				try {
+				try{
 					Socket client = socket.accept();
-					msg = new String(packet.getData()).trim();
-					System.out.println("Connection from : " + packet.getAddress().toString() + ":" + packet.getPort() + " - " + packet.getAddress().getHostName().toString() + "\nMSG : " + msg);
-					newLine();
-					levelServer.getCMDHandler().onCommand(msg, client, null);
-					newLine();
-					newLine();
-					printHashLine();
-					newLine();
-					newLine();
-					newLine();
-				} catch (IOException e) {
-					e.printStackTrace();
+					new MPListenerThread(client, handler);
+				}catch(Exception e){
+					
 				}
 			}
-		} catch (SocketException e) {
-			e.printStackTrace();
-		} catch (IOException e1) {
-	    e1.printStackTrace();
+			socket.close();
+			System.out.println("MpServer terminated.");
+    } catch (IOException e) {
+      e.printStackTrace();
     }
 	}
-
+ /*
 	private void newLine() {
 		System.out.println();
 	}
@@ -92,7 +76,7 @@ public class LevelConnectionHandler implements Runnable {
 	private void printHashLine() {
 		System.out.println("##########################################################################################");
 	}
-
+*/
 	public boolean sendPacket(Socket packet, String data) {
 		return sendTo(data, packet);
 	}

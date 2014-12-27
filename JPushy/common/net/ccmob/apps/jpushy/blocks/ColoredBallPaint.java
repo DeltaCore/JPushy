@@ -3,8 +3,7 @@
  */
 package net.ccmob.apps.jpushy.blocks;
 
-import java.awt.Color;
-
+import net.ccmob.apps.jpushy.blocks.ColoredBall.NamedColor;
 import net.ccmob.apps.jpushy.core.Game;
 import net.ccmob.apps.jpushy.graphics.Picture;
 import net.ccmob.apps.jpushy.sp.level.LVData;
@@ -17,9 +16,9 @@ import net.ccmob.apps.jpushy.sp.level.Stage;
  */
 public class ColoredBallPaint extends Block {
 
-	private Color	color;
+	private NamedColor	color;
 
-	public ColoredBallPaint(String name, int id, Picture img, Color c) {
+	public ColoredBallPaint(String name, int id, Picture img, NamedColor c) {
 		super(name, id, img);
 		this.setPlayerAbleToWalkOn(true);
 		this.setSolid(true);
@@ -40,7 +39,7 @@ public class ColoredBallPaint extends Block {
 				Game.sendMessage("Block at pos [" + this.getX() + "|" + this.getY() + "] " + s.getMoveableBlock(this.getX(), this.getY()).toString());
 				if (s.getMoveableBlock(this.getX(), this.getY()) instanceof ColoredBall) {
 					String dataNameOld = ((ColoredBall) s.getMoveableBlock(this.getX(), this.getY())).getData().getDataName();
-					String dataNameNew = this.getColor().toString() + "_balls_left";
+					String dataNameNew = this.getColor().getColorName() + " balls left";
 					s.getMoveableBlock(this.getX(), this.getY()).onSpecialAction();
 					s.setMoveableBlock(ColoredBall.getColoredBall(this.getColor()), this.getX(), this.getY());
 					l.getActiveStage().getDataList().getDataByDataName(dataNameOld).setInt(l.getActiveStage().getDataList().getDataByDataName(dataNameOld).getInt() - 1);
@@ -70,7 +69,7 @@ public class ColoredBallPaint extends Block {
 	/**
 	 * @return the color
 	 */
-	public Color getColor() {
+	public NamedColor getColor() {
 		return color;
 	}
 
@@ -78,7 +77,7 @@ public class ColoredBallPaint extends Block {
 	 * @param color
 	 *          the color to set
 	 */
-	public void setColor(Color color) {
+	public void setColor(NamedColor color) {
 		this.color = color;
 	}
 }

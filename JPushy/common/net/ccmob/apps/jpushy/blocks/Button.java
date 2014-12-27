@@ -34,13 +34,10 @@ public class Button extends Block {
 
 	@Override
 	public void onOccupied(boolean o, Level l) {
-		System.out.println("Ouch !");
-		Block b = l.getActiveStage().getBlock(this.getExPos(), this.getEyPos());
-		System.out.println(this.getExPos() + ":" + this.getEyPos() + " -> " + b.toString());
 		if (o) {
-			b.set();
+			l.getActiveStage().getBlock(this.getExPos(), this.getEyPos()).set();
 		} else {
-			b.reset();
+			l.getActiveStage().getBlock(this.getExPos(), this.getEyPos()).reset();
 		}
 	}
 
@@ -60,7 +57,7 @@ public class Button extends Block {
 	  super.onLevelLoad(x, y, stageId, action);
 	  this.setExPos(action.blockDestX);
 		this.setEyPos(action.blockDestY);
-		System.out.println("X; " + this.getExPos() + " - Y; " + this.getEyPos());
+		//System.out.println("X; " + this.getExPos() + " - Y; " + this.getEyPos());
 	}
 
 	/**

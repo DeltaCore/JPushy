@@ -17,11 +17,34 @@ import net.ccmob.apps.jpushy.sp.level.Stage;
  */
 public class ColoredBall extends MoveableBlock {
 
+	public enum NamedColor {
+	  BLUE(Color.BLUE, "Blue"),
+	  RED(Color.RED, "Red"),
+	  GREEN(Color.GREEN, "Green"),
+	  WHITE(Color.WHITE, "White");
+
+	  private final Color awtColor;
+	  private final String colorName;
+
+	  private NamedColor(Color awtColor, String name) {
+	    this.awtColor = awtColor;
+	    this.colorName = name;
+	  }
+	  
+	  public Color getAwtColor() {
+	    return awtColor;
+	  }
+
+	  public String getColorName() {
+	    return colorName;
+	  }
+	}
+	
 	private LVData	data;
 
-	private Color	 color	= Color.white;
+	private NamedColor	 color	= NamedColor.WHITE;
 
-	public static ColoredBall getColoredBall(Color color) {
+	public static ColoredBall getColoredBall(NamedColor color) {
 		for (int i = 0; i < Blocks.blockRegistry.size(); i++) {
 			try {
 				ColoredBall b = (ColoredBall) Blocks.getBlockById(i);
@@ -29,13 +52,13 @@ public class ColoredBall extends MoveableBlock {
 					return b;
 				}
 			} catch (Exception e) {
-
+				
 			}
 		}
 		return null;
 	}
 
-	public ColoredBall(String name, int id, Picture img, Color c) {
+	public ColoredBall(String name, int id, Picture img, NamedColor c) {
 		super(name, id, img);
 		this.setDestroyable(false);
 		this.setMovable(true);
@@ -43,7 +66,7 @@ public class ColoredBall extends MoveableBlock {
 		this.setSolid(false);
 		this.setVisible(true);
 		this.setColor(c);
-		data = new LVData(this.getColor().toString() + "_balls_left");
+		data = new LVData(this.getColor().getColorName() + " balls left");
 	}
 
 	@Override
@@ -54,7 +77,7 @@ public class ColoredBall extends MoveableBlock {
 	/**
 	 * @return the color
 	 */
-	public Color getColor() {
+	public NamedColor getColor() {
 		return color;
 	}
 
@@ -62,7 +85,7 @@ public class ColoredBall extends MoveableBlock {
 	 * @param color
 	 *          the color to set
 	 */
-	public void setColor(Color color) {
+	public void setColor(NamedColor color) {
 		this.color = color;
 	}
 
@@ -93,9 +116,7 @@ public class ColoredBall extends MoveableBlock {
 
 	@Override
 	public void onSpecialAction() {
-		LVData d = Game.getActiveLevel().getActiveStage().getDataList().getDataByDataName(data.getDataName());
-		d.setInt(d.getInt() - 1);
-		Game.getActiveLevel().getActiveStage().getDataList().setData(d);
+		Game.getActiveLevel().getActiveStage().getDataList().getDataByDataName(data.getDataName()).setInt(Game.getActiveLevel().getActiveStage().getDataList().getDataByDataName(data.getDataName()).getInt() - 1);
 	}
 
 }

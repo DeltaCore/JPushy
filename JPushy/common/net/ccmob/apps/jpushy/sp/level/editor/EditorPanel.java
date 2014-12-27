@@ -21,13 +21,11 @@ import javax.swing.JPanel;
 
 import net.ccmob.apps.jpushy.blocks.Block;
 import net.ccmob.apps.jpushy.blocks.Blocks;
-import net.ccmob.apps.jpushy.blocks.MoveableBlock;
 import net.ccmob.apps.jpushy.blocks.WallBlock;
 import net.ccmob.apps.jpushy.blocks.WallState;
 import net.ccmob.apps.jpushy.items.Item;
 import net.ccmob.apps.jpushy.items.Items;
 import net.ccmob.apps.jpushy.sp.level.BlockArray;
-import net.ccmob.apps.jpushy.sp.level.BlockList;
 import net.ccmob.apps.jpushy.sp.level.ItemArray;
 import net.ccmob.apps.jpushy.sp.level.LevelLoader;
 import net.ccmob.apps.jpushy.sp.level.Stage;
