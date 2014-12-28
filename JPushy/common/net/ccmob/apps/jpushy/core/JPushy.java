@@ -1,6 +1,7 @@
 package net.ccmob.apps.jpushy.core;
 
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import net.ccmob.apps.jpushy.blocks.Blocks;
 import net.ccmob.apps.jpushy.core.natives.MacOSX;
@@ -42,6 +43,7 @@ public class JPushy {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					UIManager.setLookAndFeel(UIManager.getLookAndFeel());
 					launcher = new Game();
 					launcher.setVisible(true);
 				} catch (Exception e) {

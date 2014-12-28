@@ -96,13 +96,18 @@ public class MPClient {
 					if (returnString.startsWith("undef-")) {
 						levelType = LevelType.UNDEFINED;
 						levelName = "Data/lvl/mpcache/" + hostname + "/" + key + "/" + returnString.substring(returnString.indexOf('-') + 1);
-						;
 					}
 				}
 			}
-
+			
 			File tmp = new File("Data/lvl/mpcache");
-			tmp.mkdirs();
+			tmp.mkdir();
+			
+			tmp = new File("Data/lvl/mpcache/" + hostname);
+			tmp.mkdir();
+			
+			tmp = new File("Data/lvl/mpcache/" + hostname + "/" + key);
+			tmp.mkdir();
 			
 			/* Level File */
 			File levelFile = new File(levelName);

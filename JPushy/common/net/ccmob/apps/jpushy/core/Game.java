@@ -28,6 +28,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -75,7 +76,7 @@ public class Game extends JFrame {
 	private JMenuItem	               generalUpdates	          = new JMenuItem("Updates");	              // General->Updates
 	private final JLabel	           stateLabel	              = new JLabel("JPushy");
 
-	private JList<String>	                   levelList	              = new JList<String>();
+	private JList<String>	           levelList	              = new JList<String>();
 	private JTextArea	               txtLevelInfo	            = new JTextArea();
 	private LevelSelectionListener	 listener;
 
@@ -86,6 +87,11 @@ public class Game extends JFrame {
 	 */
 	public Game() {
 		super(Game.name + " V" + Game.version);
+		try {
+	    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    } catch (Exception e) {
+	    e.printStackTrace();
+    }
 		this.listener = new LevelSelectionListener(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 809, 470);
@@ -175,7 +181,7 @@ public class Game extends JFrame {
 			if (f.isFile()) {
 				if (f.getName().endsWith(".lvl")) {
 					levels.add(readLevel(f.getName()));
-				}else if(f.getName().endsWith(".xml")){
+				} else if (f.getName().endsWith(".xml")) {
 					levels.add(readXMLLevel(f.getName()));
 				}
 			}
@@ -186,8 +192,8 @@ public class Game extends JFrame {
 		}
 		this.levelList.setModel(this.getLevelModel());
 	}
-	
-	public LevelItem readXMLLevel(String fileName){
+
+	public LevelItem readXMLLevel(String fileName) {
 		LevelItem level = new LevelItem();
 		level.setFile(fileName);
 		XMLConfig levelFile = new XMLConfig("Data/lvl/" + fileName);
@@ -199,7 +205,7 @@ public class Game extends JFrame {
 			} else {
 				level.setName("Unnamed level");
 			}
-			if(levelNode.attributeExists("version")){
+			if (levelNode.attributeExists("version")) {
 				level.setVersion((String) levelNode.getAttribute("version").getAttributeValue());
 			}
 			if (levelNode.attributeExists("comment")) {
@@ -237,7 +243,8 @@ public class Game extends JFrame {
 				if (levelMatcher.matches()) {
 					levelItem.setName(levelMatcher.group(1));
 					levelItem.setVersion(levelMatcher.group(2));
-					//System.out.println("[Level] Name : " + levelMatcher.group(1) + " version : " + levelMatcher.group(2) + " file: " + filename);
+					// System.out.println("[Level] Name : " + levelMatcher.group(1) +
+					// " version : " + levelMatcher.group(2) + " file: " + filename);
 				} else if (commentStartMatcher.matches()) {
 					flag = true;
 				} else if (commentEndMatcher.matches()) {
@@ -258,7 +265,7 @@ public class Game extends JFrame {
 	}
 
 	public void startGame() {
-		if(levelList.getSelectedIndex() != -1){
+		if (levelList.getSelectedIndex() != -1) {
 			this.thread = new LevelThread(this, levels.get(levelList.getSelectedIndex()));
 			Thread t = new Thread(thread);
 			t.start();
