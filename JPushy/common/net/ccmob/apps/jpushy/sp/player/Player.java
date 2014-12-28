@@ -145,9 +145,9 @@ public class Player {
 		Block b = this.thread.getLevel().getActiveStage().getBlock(x, y);
 		Block mb = this.thread.getLevel().getActiveStage().getMoveableBlock(x, y);
 		if (mb != null) {
-			System.out.println("MB : " + mb.toString());
+			//System.out.println("MB : " + mb.toString());
 		} else {
-			System.out.println("EMPTY !");
+			//System.out.println("EMPTY !");
 		}
 		if (mb != null)
 			return false;

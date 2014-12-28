@@ -78,10 +78,10 @@ public class SwitchBlock extends Block {
 	@Override
 	public void onLevelLoad(int x, int y, int stageId, BlockAction action) {
 	  super.onLevelLoad(x, y, stageId, action);
-	  System.out.println("Lols");
+	  //System.out.println("Lols");
 	  this.setExPos(action.blockDestX);
 		this.setEyPos(action.blockDestY);
-		System.out.println("X; " + this.getExPos() + " - Y; " + this.getEyPos());
+		//System.out.println("X; " + this.getExPos() + " - Y; " + this.getEyPos());
 	}
 
 	/**

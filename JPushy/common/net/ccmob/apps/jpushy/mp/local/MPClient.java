@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * @author Marcel Benning
  * 
  */
-public class MPClient {
+public class MPClient implements Runnable{
 
 	MPServer	          server;
 	private boolean	    connected	       = false;
@@ -34,8 +34,7 @@ public class MPClient {
 		int port = 11941;
 		String key = MPServer.getRandomKey();
 		try {
-
-			if (ip == "localhost") {
+			if (ip.equalsIgnoreCase("localhost")) {
 				hostname = ip;
 			} else {
 				String regex_ip_port = "^([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}):([0-9]{1,})";
@@ -231,5 +230,11 @@ public class MPClient {
 		System.out.println("Loading Player : " + server.getLauncher().getPlayer().getName());
 		sendToServer("-addPlayer/" + server.getLauncher().getPlayer().getName(), serverConnection);
 	}
+
+	@Override
+  public void run() {
+	  // TODO Auto-generated method stub
+	  
+  }
 
 }

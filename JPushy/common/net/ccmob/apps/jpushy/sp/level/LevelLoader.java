@@ -88,7 +88,7 @@ public class LevelLoader {
 										Item i = Items.getItemById(Integer.valueOf((String) item.getAttribute("id").getAttributeValue()));
 										if (normalBlocks.getBlocks()[Integer.valueOf((String) item.getAttribute("x").getAttributeValue())][Integer.valueOf((String) item.getAttribute("y")
 										    .getAttributeValue())] != null) {
-											normalBlocks.getBlocks()[Integer.valueOf((String) item.getAttribute("x").getAttributeValue())][Integer.valueOf((String) item.getAttribute("y")
+											normalBlocks.getBlocks()[Integer.valueOf((String) item.getAttribute("y").getAttributeValue())][Integer.valueOf((String) item.getAttribute("x")
 											    .getAttributeValue())].setKeptItem(i);
 										}
 									}

@@ -30,7 +30,7 @@ public class Inventory {
 
 	public boolean addItem(Item item) {
 		if (!item.getName().equalsIgnoreCase("noitem")) {
-			System.out.println("Item : " + item.toString());
+			//System.out.println("Item : " + item.toString());
 			InventorySlot slot = null;
 			Item t = null;
 			int slotAmount = 0;
@@ -62,7 +62,7 @@ public class Inventory {
 					}
 				}
 			}
-			Game.sendMessage("No Inv. space.");
+			Game.sendMessage("No space in your inventory left.");
 			return false;
 		}
 		return false;
@@ -122,7 +122,7 @@ public class Inventory {
 		for (InventorySlot slot : this.getSlots()) {
 			if (slot.getItem().getId() != -1) {
 				if (slot.getAmount() <= 0) {
-					System.out.println("Clearing slot : " + slot.toString());
+					//System.out.println("Clearing slot : " + slot.toString());
 					slot.clear();
 				}
 			}

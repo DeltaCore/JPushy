@@ -16,6 +16,7 @@ public class Chat {
 	}
 
 	public void sendMessage(String msg) {
+		System.out.println("[CHAT] " + msg);
 		gamePanel.getConsoleLines().add(msg);
 	}
 

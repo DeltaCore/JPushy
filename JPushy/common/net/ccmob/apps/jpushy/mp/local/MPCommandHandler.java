@@ -96,7 +96,7 @@ public class MPCommandHandler implements ICommandHandler {
 	}
   
 	public void addPlayer(Player player) {
-		System.out.println("Adding Player : " + player.getName());
+		//System.out.println("Adding Player : " + player.getName());
 		players.add(player);
 	}
   

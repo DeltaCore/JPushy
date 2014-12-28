@@ -62,12 +62,12 @@ public class TeleportBaseAdv extends TeleportBase {
 
 	@Override
 	public Block onConfigLoaded(int x, int y, int stageId, ArrayList<String> cfgLines, Stage stage) {
-		System.out.println("X: " + x + " Y:" + y + " STAGE: " + stageId);
+		//System.out.println("X: " + x + " Y:" + y + " STAGE: " + stageId);
 		this.setThisX(x);
 		this.setThisY(y);
 		int[] cfgCords = LevelLoader.checkCFGCords(cfgLines, stageId, x, y);
 		if (cfgCords[0] == 0 && cfgCords[1] == 0) {
-			System.out.println("No coords for me :(");
+			//System.out.println("No coords for me :(");
 		} else {
 			this.setEndX(cfgCords[0]);
 			this.setEndY(cfgCords[1]);

@@ -1,3 +1,4 @@
+
 package net.ccmob.apps.jpushy.sp.level;
 
 import java.awt.Dimension;
@@ -7,6 +8,7 @@ import net.ccmob.apps.jpushy.blocks.Block;
 import net.ccmob.apps.jpushy.blocks.Blocks;
 import net.ccmob.apps.jpushy.core.Game;
 import net.ccmob.apps.jpushy.graphics.PictureLoader;
+import net.ccmob.apps.jpushy.mp.remote.BlockPacket;
 import net.ccmob.apps.jpushy.sp.player.Player;
 import net.ccmob.apps.jpushy.utils.Coord2D;
 
@@ -259,6 +261,10 @@ public class Level {
 
 	public int getWidth() {
 		return this.getActiveStage().getBlocks()[0].length;
+	}
+
+	public void onBlockPacketReceive(BlockPacket packet) {
+		this.getActiveStage().getBlock(packet.getBlockPos().getX(), packet.getBlockPos().getY()).onPacketReceive(packet);
 	}
 
 }

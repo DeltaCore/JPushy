@@ -272,9 +272,10 @@ public class EditorPanel extends JPanel {
 												Item i = Items.getItemById(Integer.valueOf((String) item.getAttribute("id").getAttributeValue()));
 												if (this.getBlockLayers().get(Integer.valueOf((String) child.getAttribute("id").getAttributeValue()))
 												    .getBlock(Integer.valueOf((String) item.getAttribute("x").getAttributeValue()), Integer.valueOf((String) item.getAttribute("y").getAttributeValue())) != null) {
-													this.getBlockLayers().get(Integer.valueOf((String) child.getAttribute("id").getAttributeValue()))
-													    .getBlock(Integer.valueOf((String) item.getAttribute("x").getAttributeValue()), Integer.valueOf((String) item.getAttribute("y").getAttributeValue()))
-													    .setKeptItem(i);
+													/*this.getBlockLayers().get(Integer.valueOf(child.getAttribute("id").getAttributeValue()))
+													    .getBlock(Integer.valueOf(item.getAttribute("x").getAttributeValue()), Integer.valueOf(item.getAttribute("y").getAttributeValue()))
+													    .setKeptItem(i);*/
+													this.getItemLayers().get(Integer.valueOf(child.getAttribute("id").getAttributeValue())).set(Integer.valueOf(item.getAttribute("x").getAttributeValue()), Integer.valueOf(item.getAttribute("y").getAttributeValue()), i);
 												}
 											}
 										}

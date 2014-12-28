@@ -1,3 +1,4 @@
+
 package net.ccmob.apps.jpushy.items;
 
 import net.ccmob.apps.jpushy.core.Game;
@@ -105,7 +106,7 @@ public class Item {
 	public void onUse(Stage stage, int dir, ItemUseEvent e) {
 		if (!e.isHandled()) {
 			if (!e.isCanceled()) {
-				System.out.println("On use !");
+				// System.out.println("On use !");
 				if (this.isDamageBar()) {
 					this.setDmg(this.getDmg() + 1);
 					if (this.getDmg() >= this.getMaxDMG()) {

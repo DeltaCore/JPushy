@@ -37,7 +37,7 @@ public class Gate extends Block {
 
 	@Override
 	public void set() {
-		System.out.println("Lols");
+		//System.out.println("Lols");
 		this.setVisible(false);
 		this.setPlayerAbleToWalkOn(true);
 		this.setCanGetocupied(true);

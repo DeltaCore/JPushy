@@ -7,6 +7,7 @@ import net.ccmob.apps.jpushy.graphics.Picture;
 import net.ccmob.apps.jpushy.graphics.handler.RenderHandler;
 import net.ccmob.apps.jpushy.items.Item;
 import net.ccmob.apps.jpushy.items.Items;
+import net.ccmob.apps.jpushy.mp.remote.BlockPacket;
 import net.ccmob.apps.jpushy.sp.level.Level;
 import net.ccmob.apps.jpushy.sp.level.Stage;
 import net.ccmob.apps.jpushy.sp.level.editor.EditorSaveThread.BlockAction;
@@ -460,6 +461,9 @@ public class Block extends Object implements Cloneable {
 	}
 
 	public void onSpecialAction() {
+	}
+	
+	public void onPacketReceive(BlockPacket packet){
 	}
 	
 }

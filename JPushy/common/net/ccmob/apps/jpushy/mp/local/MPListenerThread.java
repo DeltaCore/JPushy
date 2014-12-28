@@ -4,6 +4,10 @@ package net.ccmob.apps.jpushy.mp.local;
 import java.io.IOException;
 import java.net.Socket;
 
+import net.ccmob.apps.jpushy.core.Game;
+import net.ccmob.apps.jpushy.mp.remote.BlockPacket;
+import net.ccmob.apps.jpushy.mp.remote.BlockPacket.InvalidPacketContentException;
+
 public class MPListenerThread implements Runnable {
 
 	private Socket	 client;
@@ -17,7 +21,7 @@ public class MPListenerThread implements Runnable {
 		t = new Thread(this, "[MP|" + client.getInetAddress().getHostAddress() + "]");
 		t.start();
 	}
-
+	
 	@Override
 	public void run() {
 		while (isRunning()) {
@@ -33,10 +37,15 @@ public class MPListenerThread implements Runnable {
 				System.out.println("Connection from [" + client.getInetAddress().toString() + "] => " + msg);
 				if (msg.length() > 0) {
 					if (!MPServer.connectionMsg(msg, client)) {
-						String[] cmds = msg.split("/");
-						for (String s : cmds)
-							System.out.println(s);
-						this.handler.onCommand(cmds, client, this);
+						try{
+							BlockPacket packet = new BlockPacket(client, msg);
+							Game.getActiveLevel().onBlockPacketReceive(packet);
+						}catch(InvalidPacketContentException e){
+							String[] cmds = msg.split("/");
+							for (String s : cmds)
+								System.out.println(s);
+							this.handler.onCommand(cmds, client, this);
+						}
 					}
 				}
 			} catch (Exception e) {

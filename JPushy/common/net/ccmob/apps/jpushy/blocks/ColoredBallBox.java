@@ -63,30 +63,25 @@ public class ColoredBallBox extends Block {
 	public void onLoaded(int x, int y, int stageId, Stage stage) {
 		this.x = x;
 		this.y = y;
-		stage.getWinConditions().newWinConWincondition("Ball " + this.getColor().getColorName().toLowerCase() + " Finished");
+		stage.getWinConditions().newWinConWincondition("Ball " + this.getColor().getColorName().toLowerCase() + " finished");
 	}
 
 	@Override
 	public void onOccupied(boolean o, Level l) {
 		if (o) {
 			Stage s = l.getActiveStage();
-			Game.sendMessage("Block at pos [" + x + "|" + y + "] " + s.getMoveableBlock(x, y));
-
 			if (((ColoredBall) s.getMoveableBlock(x, y)).getColor() == this.getColor()) {
-				Game.sendMessage("Yes ! Right type of ball");
 				String dataName = ((ColoredBall) s.getMoveableBlock(x, y)).getData().getDataName();
 				s.getMoveableBlock(x, y).onSpecialAction();
 				s.setMoveableBlock(null, x, y);
-				// s.getDataList().getDataByDataName(dataName).setInt(s.getDataList().getDataByDataName(dataName).getInt()
-				// + 1);
 				this.setOccupiedByBlock(null);
 				this.setOcupied(false);
 				int left = s.getDataList().getDataByDataName(dataName).getInt();
 				if (left == 0) {
-					s.getWinConditions().completeCondition("Ball " + this.getColor().toString() + " Finished");
+					s.getWinConditions().completeCondition("Ball " + this.getColor().getColorName().toLowerCase() + " finished");
 				}
 			} else {
-				Game.sendMessage("MEEEP ! Wrong ball ...");
+				Game.sendMessage("Wrong ball color...");
 			}
 
 		}

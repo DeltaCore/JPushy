@@ -26,13 +26,13 @@ public class BlockDoor extends Block {
 	@Override
 	public void onBlockActivated(Stage stage, Player p) {
 		super.onBlockActivated(stage, p);
-		System.out.println("Someone unlocked me !");
+		//System.out.println("Someone unlocked me !");
 		if (p.getInventory().getItemInHand().getName().equalsIgnoreCase("key")) {
 			this.setPlayerAbleToWalkOn(true);
 			this.setTexture(PictureLoader.loadImageFromFile("door_open.png"));
 			this.setVisible(false);
 		} else {
-			System.out.println("Sorry, tryed to unlocked me ... -->> !! Without a key !");
+			//System.out.println("Sorry, tryed to unlocked me ... -->> !! Without a key !");
 		}
 	}
 

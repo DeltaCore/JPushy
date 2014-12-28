@@ -35,12 +35,7 @@ public class TeleportBase extends Block {
 	@Override
 	public void onWalk(int x, int y, Level l) {
 		super.onWalk(x, y, l);
-		System.out.println("Player cords : " + Game.getPlayer().getX() + "," + Game.getPlayer().getY());
-		System.out.println("Ouch ! Get away from me ! My cords : " + endX + "," + endY);
-		Block b = l.getActiveStage().getBlock(endX, endY);
-		System.out.println(b.toString());
 		if (l.getActiveStage().getBlock(endX, endY).getId() == Blocks.teleportExit.getId()) {
-			Game.sendMessage("Ouch ! Get away ! From me in about NOW !");
 			Game.getPlayer().setFreezed(true);
 			teleport = true;
 			Timer timer = new Timer();
@@ -61,10 +56,10 @@ public class TeleportBase extends Block {
 
 	@Override
 	public Block onConfigLoaded(int x, int y, int stageId, ArrayList<String> cfgLines, Stage stage) {
-		System.out.println("X: " + x + " Y:" + y + " STAGE: " + stageId);
+		//System.out.println("X: " + x + " Y:" + y + " STAGE: " + stageId);
 		int[] cfgCords = LevelLoader.checkCFGCords(cfgLines, stageId, x, y);
 		if (cfgCords[0] == 0 && cfgCords[1] == 0) {
-			System.out.println("No coords for me :(");
+			//System.out.println("No coords for me :(");
 		} else {
 			this.setEndX(cfgCords[0]);
 			this.setEndY(cfgCords[1]);

@@ -28,7 +28,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -413,7 +412,7 @@ public class Game extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			System.out.println(arg0.getActionCommand());
+			//System.out.println(arg0.getActionCommand());
 			if (arg0.getActionCommand().equals("start")) {
 				gui.startGame();
 			} else if (arg0.getActionCommand().equals("connectToServer")) {
