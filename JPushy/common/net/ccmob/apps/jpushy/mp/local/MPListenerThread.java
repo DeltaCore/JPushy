@@ -10,10 +10,10 @@ import net.ccmob.apps.jpushy.mp.remote.BlockPacket.InvalidPacketContentException
 
 public class MPListenerThread implements Runnable {
 
-	private Socket	 client;
-	private Thread	 t	     = null;
-	private boolean	 running	= true;	;
-	private ICommandHandler handler;
+	private Socket	        client;
+	private Thread	        t	      = null;
+	private boolean	        running	= true;	;
+	private ICommandHandler	handler;
 
 	public MPListenerThread(Socket client, ICommandHandler h) {
 		this.client = client;
@@ -21,14 +21,22 @@ public class MPListenerThread implements Runnable {
 		t = new Thread(this, "[MP|" + client.getInetAddress().getHostAddress() + "]");
 		t.start();
 	}
-	
+
 	@Override
 	public void run() {
+		BlockPacket packet;
+		StringBuilder b;
 		while (isRunning()) {
 			try {
-				StringBuilder b = new StringBuilder();
-				while (client.getInputStream().available() == 0){
+				b = new StringBuilder();
+				while (client.getInputStream().available() == 0) {
 					Thread.sleep(100);
+					if (!this.isRunning()) {
+						break;
+					}
+				}
+				if (!this.isRunning()) {
+					break;
 				}
 				while (client.getInputStream().available() > 0) {
 					b.append((char) client.getInputStream().read());
@@ -37,10 +45,10 @@ public class MPListenerThread implements Runnable {
 				System.out.println("Connection from [" + client.getInetAddress().toString() + "] => " + msg);
 				if (msg.length() > 0) {
 					if (!MPServer.connectionMsg(msg, client)) {
-						try{
-							BlockPacket packet = new BlockPacket(client, msg);
+						try {
+							packet = new BlockPacket(client, msg);
 							Game.getActiveLevel().onBlockPacketReceive(packet);
-						}catch(InvalidPacketContentException e){
+						} catch (InvalidPacketContentException e) {
 							String[] cmds = msg.split("/");
 							for (String s : cmds)
 								System.out.println(s);

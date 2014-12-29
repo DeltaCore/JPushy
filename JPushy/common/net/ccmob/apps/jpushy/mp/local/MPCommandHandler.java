@@ -25,6 +25,7 @@ public class MPCommandHandler implements ICommandHandler {
 
 	@Override
 	public void onCommand(String[] args, Socket packet, MPListenerThread t) {
+		server.broadcastToClientsFromSourceClient(args, packet);
 		if (args.length == 2) {
 			if (args[0].equals("-addPlayer")) {
 				String playername = args[1];
@@ -32,14 +33,12 @@ public class MPCommandHandler implements ICommandHandler {
 				addPlayer(playername);
 				thread.pushUpdate();
 				thread.sendMessage("Player " + playername + " joined your game.");
-				Connection c = server.getConnection(packet);
-				c.setPlayerName(playername);
-				server.updateConnection(c);
 			} else if (args[0].equals("-exit")) {
 				String playername = args[1];
 				removePlayerByName(playername);
 				thread.sendMessage("Player " + playername + " left your game.");
 				thread.pushUpdate();
+				t.setRunning(false);
 			}
 		} else if (args.length == 3) {
 			String arg = args[0];
@@ -50,11 +49,8 @@ public class MPCommandHandler implements ICommandHandler {
 				if (arg.equals("-movePlayer")) {
 					target.movePlayer(dir);
 					thread.pushUpdate();
+					server.broadcastToClientsFromSourceClient(args, packet);
 				}
-			}
-		} else if(args.length == 1){
-			if(args[0].equalsIgnoreCase("--endconnection")){
-				t.setRunning(false);
 			}
 		}
 	}

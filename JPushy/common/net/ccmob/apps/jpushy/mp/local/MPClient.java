@@ -9,17 +9,24 @@ import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.ccmob.apps.jpushy.core.Game;
+import net.ccmob.apps.jpushy.mp.remote.BlockPacket;
+import net.ccmob.apps.jpushy.mp.remote.BlockPacket.InvalidPacketContentException;
+
 /**
  * 
  * @author Marcel Benning
  * 
  */
-public class MPClient implements Runnable{
+public class MPClient implements Runnable, ICommandHandler{
 
 	MPServer	          server;
 	private boolean	    connected	       = false;
 	private Socket	    serverConnection	= null;
-
+	private Thread serverConnectionThread = null;
+	private boolean serverConnectionRunning = true;
+	private boolean client = false;
+	
 	public MPClient(MPServer server) {
 		this.server = server;
 	}
@@ -149,7 +156,7 @@ public class MPClient implements Runnable{
 			System.out.println("Setting levelfile");
 			connected = true;
 			System.out.println("Setting levelfile done.");
-
+			this.setClient(true);
 			switch (returnString) {
 				case "xml": {
 					return "Data/lvl/mpcache/" + hostname + "/" + key + "/level.xml";
@@ -163,6 +170,8 @@ public class MPClient implements Runnable{
 					}
 				}
 			}
+			this.serverConnectionThread = new Thread(this, "[MPClient] Server connection thread [" + this.serverConnection.getInetAddress().toString() + "]");
+			this.serverConnectionThread.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -178,6 +187,9 @@ public class MPClient implements Runnable{
 			// DatagramPacket packet = new DatagramPacket(cmd.getBytes(),
 			// cmd.getBytes().length);
 			sendToServer(cmd, serverConnection);
+			if(!this.isClient()){
+				this.server.broadcastToClientsFromSourceClient(cmd, null);
+			}
 		}
 	}
 
@@ -187,6 +199,9 @@ public class MPClient implements Runnable{
 			// DatagramPacket packet = new DatagramPacket(cmd.getBytes(),
 			// cmd.getBytes().length);
 			sendToServer(cmd, serverConnection);
+			if(!this.isClient()){
+				this.server.broadcastToClientsFromSourceClient(cmd, null);
+			}
 		}
 	}
 
@@ -213,7 +228,6 @@ public class MPClient implements Runnable{
 				try {
 	        Thread.sleep(100);
         } catch (InterruptedException e) {
-	        //e.printStackTrace();
         }
 			}
 			while (serverConnection.getInputStream().available() > 0) {
@@ -233,8 +247,76 @@ public class MPClient implements Runnable{
 
 	@Override
   public void run() {
+		StringBuilder b;
+		String msg = "";
+	  while(this.isServerConnectionRunning()){
+	  	try{
+		  	while(this.serverConnection.getInputStream().available() == 0){
+		  		Thread.sleep(100);
+		  		if(!this.isServerConnectionRunning()){
+		  			break;
+		  		}
+		  	}
+		  	if(!isServerConnectionRunning())
+		  		break;
+		  	
+		  	//else continue
+		  	
+		  	b = new StringBuilder();
+		  	while(this.serverConnection.getInputStream().available() > 0){
+		  		b.append((char) this.serverConnection.getInputStream().read());
+		  	}
+		  	msg = b.toString();
+		  	try{
+		  		BlockPacket p = new BlockPacket(this.serverConnection, msg);
+		  		Game.getActiveLevel().onBlockPacketReceive(p);
+		  	}catch(InvalidPacketContentException e){
+		  		
+		  	}
+	  	}catch(Exception e){
+	  		
+	  	}
+	  }
+  }
+
+	/**
+	 * @return the serverConnectionRunning
+	 */
+	public boolean isServerConnectionRunning() {
+		return serverConnectionRunning;
+	}
+
+	/**
+	 * @param serverConnectionRunning the serverConnectionRunning to set
+	 */
+	public void setServerConnectionRunning(boolean serverConnectionRunning) {
+		this.serverConnectionRunning = serverConnectionRunning;
+	}
+
+	@Override
+  public void onCommand(String[] args, Socket packet, MPListenerThread thread) {
 	  // TODO Auto-generated method stub
 	  
   }
+
+	@Override
+  public void onCommand(String msg, Socket packet, MPListenerThread thread) {
+	  // TODO Auto-generated method stub
+	  
+  }
+
+	/**
+	 * @return the client
+	 */
+	boolean isClient() {
+		return client;
+	}
+
+	/**
+	 * @param client the client to set
+	 */
+	void setClient(boolean client) {
+		this.client = client;
+	}
 
 }

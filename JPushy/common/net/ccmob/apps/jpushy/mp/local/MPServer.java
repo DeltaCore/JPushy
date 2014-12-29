@@ -26,7 +26,7 @@ public class MPServer extends Thread {
 	int	                    mode	      = 0;
 	private ServerSocket	socket;
 	
-	ArrayList<Connection>	  connections	= new ArrayList<Connection>();
+	ArrayList<Socket>	  connections	= new ArrayList<Socket>();
 
 	private LevelThread	    launcher;
 	
@@ -39,7 +39,7 @@ public class MPServer extends Thread {
 		InetAddress ip = packet.getInetAddress();
 		int port = packet.getPort();
 		if (!checkInetAddress(ip) && !checkPort(port)) {
-			connections.add(new Connection(packet));
+			connections.add(packet);
 		}
 	}
 
@@ -54,35 +54,8 @@ public class MPServer extends Thread {
 
 	private boolean checkInetAddress(InetAddress ip) {
 		for (int i = 0; i < connections.size(); i++) {
-			if (connections.get(i).getIp() == ip) {
+			if (connections.get(i).getInetAddress() == ip) {
 				return true;
-			}
-		}
-		return false;
-	}
-
-	public Connection getConnection(Socket packet) {
-		InetAddress ip = packet.getInetAddress();
-		int port = packet.getPort();
-		for (int i = 0; i < connections.size(); i++) {
-			if (ip.equals(connections.get(i).getIp())) {
-				if (port == (connections.get(i).getPort())) {
-					return connections.get(i);
-				}
-			}
-		}
-		return null;
-	}
-
-	public boolean updateConnection(Connection c) {
-		InetAddress ip = c.getIp();
-		int port = c.getPort();
-		for (int i = 0; i < connections.size(); i++) {
-			if (ip.equals(connections.get(i).getIp())) {
-				if (port == (connections.get(i).getPort())) {
-					connections.set(i, c);
-					return true;
-				}
 			}
 		}
 		return false;
@@ -102,6 +75,25 @@ public class MPServer extends Thread {
 			e.printStackTrace();
 		}
 		return returnString;
+	}
+	
+	public void broadcastToClientsFromSourceClient(String msg, Socket sourceClient){
+		for(Socket s : this.getConnections()){
+			if(!s.equals(sourceClient)){
+				sendTo(msg, s);
+			}
+		}
+	}
+	
+	public void broadcastToClientsFromSourceClient(String[] args, Socket sourceClient){
+		StringBuilder b = new StringBuilder();
+		for(String arg : args)
+			b.append(arg);
+		for(Socket s : this.getConnections()){
+			if(!s.equals(sourceClient)){
+				sendTo(b.toString(), s);
+			}
+		}
 	}
 
 	@Override
@@ -131,7 +123,7 @@ public class MPServer extends Thread {
       }
 	}
 
-	public ArrayList<Connection> getConnections() {
+	public ArrayList<Socket> getConnections() {
 		return connections;
 	}
 

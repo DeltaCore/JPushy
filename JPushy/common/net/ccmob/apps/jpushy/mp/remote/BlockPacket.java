@@ -1,7 +1,9 @@
 package net.ccmob.apps.jpushy.mp.remote;
 
+import java.io.IOException;
 import java.net.Socket;
 
+import net.ccmob.apps.jpushy.blocks.Block;
 import net.ccmob.apps.jpushy.utils.Coord2D;
 
 public class BlockPacket {
@@ -14,6 +16,8 @@ public class BlockPacket {
 	private Coord2D blockPos;
 	private String packetContent;
 	private boolean canceled = false;
+	
+	boolean sendable = false;
 	
 	public BlockPacket(Socket socket, String rawPacketContent) throws InvalidPacketContentException {
 	  if(rawPacketContent.startsWith(packetPrefix)){
@@ -29,7 +33,17 @@ public class BlockPacket {
 	  	throw new InvalidPacketContentException();
 	  }
   }
-
+  
+	BlockPacket(Socket socket, String packetContent, boolean sendable) {
+	  this.setSendable(sendable);
+	  this.setPacketSocket(socket);
+	  this.setRawPacketContent(packetContent);
+  }
+	
+	public static BlockPacket createSendPacket(String msg, Block b, Socket socket){
+		return new BlockPacket(socket, packetPrefix + b.getX() + ";" + b.getY() + "\\" + msg, true);
+	}
+	
 	/**
 	 * @return the packetSocket
 	 */
@@ -100,9 +114,34 @@ public class BlockPacket {
 		this.canceled = canceled;
 	}
 
+	/**
+	 * @return the sendable
+	 */
+	boolean isSendable() {
+		return sendable;
+	}
+
+	/**
+	 * @param sendable the sendable to set
+	 */
+	void setSendable(boolean sendable) {
+		this.sendable = sendable;
+	}
+
 	public static class InvalidPacketContentException extends Exception {
     private static final long serialVersionUID = 8362853397961122718L;
     
+	}
+	
+	public void send(){
+		if(this.isSendable()){
+			try {
+	      this.getPacketSocket().getOutputStream().write(this.getRawPacketContent().getBytes());
+	      this.getPacketSocket().getOutputStream().flush();
+      } catch (IOException e) {
+	      e.printStackTrace();
+      }
+		}
 	}
 	
 }
