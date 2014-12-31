@@ -1,6 +1,8 @@
+
 package net.ccmob.apps.jpushy.sp.player;
 
 import net.ccmob.apps.jpushy.blocks.Block;
+import net.ccmob.apps.jpushy.core.Game;
 import net.ccmob.apps.jpushy.core.LevelThread;
 import net.ccmob.apps.jpushy.graphics.Picture;
 
@@ -19,6 +21,7 @@ public class Player {
 	private String	    name	         = "Player";
 	private Inventory	  inventory;
 	private boolean	    cancelnextmove	= false;
+
 	public Player(LevelThread levelThread, Picture img, String name) {
 		this.thread = levelThread;
 		this.img = img;
@@ -27,26 +30,28 @@ public class Player {
 	}
 
 	public void movePlayer(int dir) {// Sides : 0 = north ; 1 = east ; 2 = south ;
-																	 // 3 = west
-		if (isFreezed()) {
-			setCancelnextmove(false);
-			return;
-		}
-		switch (dir) {
-			case 0:
-				dirNorth();
-				break;
-			case 1:
-				dirEast();
-				break;
-			case 2:
-				dirSouth();
-				break;
-			case 3:
-				dirWest();
-				break;
-		}
-		this.setCancelnextmove(false);
+		                               // 3 = west
+		//if (Game.instance.getThread().getServer().isHost()) {
+			if (isFreezed()) {
+				setCancelnextmove(false);
+				return;
+			}
+			switch (dir) {
+				case 0:
+					dirNorth();
+					break;
+				case 1:
+					dirEast();
+					break;
+				case 2:
+					dirSouth();
+					break;
+				case 3:
+					dirWest();
+					break;
+			}
+			this.setCancelnextmove(false);
+		//}
 	}
 
 	public void dirNorth() {
@@ -145,9 +150,9 @@ public class Player {
 		Block b = this.thread.getLevel().getActiveStage().getBlock(x, y);
 		Block mb = this.thread.getLevel().getActiveStage().getMoveableBlock(x, y);
 		if (mb != null) {
-			//System.out.println("MB : " + mb.toString());
+			// System.out.println("MB : " + mb.toString());
 		} else {
-			//System.out.println("EMPTY !");
+			// System.out.println("EMPTY !");
 		}
 		if (mb != null)
 			return false;

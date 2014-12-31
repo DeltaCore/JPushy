@@ -53,6 +53,7 @@ public class Game extends JFrame {
 
 	public static final String	     name	                    = "JPushy";
 	public static final String	     version	                = "0.2.3";
+	public static Game instance;
 
 	LevelThread	                     thread;
 
@@ -86,6 +87,7 @@ public class Game extends JFrame {
 	 */
 	public Game() {
 		super(Game.name + " V" + Game.version);
+		Game.instance = this;
 		try {
 	    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     } catch (Exception e) {
@@ -481,6 +483,20 @@ public class Game extends JFrame {
 	 */
 	public void setCreateLevel(JMenuItem createLevel) {
 		this.createLevel = createLevel;
+	}
+
+	/**
+	 * @return the thread
+	 */
+	public LevelThread getThread() {
+		return thread;
+	}
+
+	/**
+	 * @param thread the thread to set
+	 */
+	void setThread(LevelThread thread) {
+		this.thread = thread;
 	}
 
 }

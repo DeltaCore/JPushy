@@ -93,7 +93,6 @@ public class MPClient implements Runnable, ICommandHandler{
 				}
 				case "lvl": {
 					levelType = LevelType.LVL;
-					
 					levelName = "Data/lvl/mpcache/" + hostname + "/" + key + "/" + "tmp.lvl";
 					cfg = "Data/lvl/mpcache/" + hostname + "/" + key + "/" + "tmp.cfg";
 					break;
@@ -107,13 +106,13 @@ public class MPClient implements Runnable, ICommandHandler{
 			}
 			
 			File tmp = new File("Data/lvl/mpcache");
-			tmp.mkdir();
+			tmp.getParentFile().mkdirs();
 			
 			tmp = new File("Data/lvl/mpcache/" + hostname);
-			tmp.mkdir();
+			tmp.getParentFile().mkdirs();
 			
 			tmp = new File("Data/lvl/mpcache/" + hostname + "/" + key);
-			tmp.mkdir();
+			tmp.getParentFile().mkdirs();
 			
 			/* Level File */
 			File levelFile = new File(levelName);
@@ -159,13 +158,16 @@ public class MPClient implements Runnable, ICommandHandler{
 			this.setClient(true);
 			switch (returnString) {
 				case "xml": {
-					return "Data/lvl/mpcache/" + hostname + "/" + key + "/level.xml";
+					System.out.println("Returning " + levelName);
+					return levelName;
 				}
 				case "lvl": {
-					return "Data/lvl/mpcache/" + hostname + "/" + key + "/" + "tmp.lvl";
+					System.out.println("Returning " + levelName);
+					return levelName;
 				}
 				default: {
 					if (returnString.startsWith("undef-")) {
+						System.out.println("Returning " + "Data/lvl/mpcache/" + hostname + "/" + key + "/" + returnString.substring(returnString.indexOf('-') + 1));
 						return "Data/lvl/mpcache/" + hostname + "/" + key + "/" + returnString.substring(returnString.indexOf('-') + 1);
 					}
 				}

@@ -28,9 +28,12 @@ import net.ccmob.xml.XMLConfig.XMLNode;
 
 public class LevelLoader {
 
-	public static Level load(String fileName) {
-		Level level = new Level(fileName);
-		XMLConfig levelFile = new XMLConfig("Data/lvl/" + fileName);
+	public static Level load(String fullFileName, boolean extendsPath){
+		if(extendsPath){
+			fullFileName = "Data/lvl/" + fullFileName;
+		}
+		Level level = new Level(fullFileName);
+		XMLConfig levelFile = new XMLConfig(fullFileName, false);
 		XMLNode rootNode = levelFile.getRootNode();
 		if (rootNode.getName().equals("level")) {
 			XMLNode levelNode = rootNode;
@@ -122,9 +125,13 @@ public class LevelLoader {
 			}
 		} else {
 			System.out.println("Found corrupt level file. Is it maybe an old one ? Trying to parse it with the old level parser ...");
-			return loadLevelFromFile(fileName);
+			return loadLevelFromFile(fullFileName);
 		}
 		return level;
+	}
+	
+	public static Level load(String fileName) {
+		return load(fileName, true);
 	}
 
 	public static Coord2D getStageBounds(XMLNode stageNode) {

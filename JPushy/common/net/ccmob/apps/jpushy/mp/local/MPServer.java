@@ -1,3 +1,4 @@
+
 package net.ccmob.apps.jpushy.mp.local;
 
 import java.io.BufferedReader;
@@ -24,15 +25,26 @@ public class MPServer extends Thread {
 	private boolean	        running	    = true;
 	public MPCommandHandler	cmdHandler;
 	int	                    mode	      = 0;
-	private ServerSocket	socket;
-	
-	ArrayList<Socket>	  connections	= new ArrayList<Socket>();
+	private ServerSocket	  socket;
+	private boolean	        startServer	= true;
+
+	ArrayList<Socket>	      connections	= new ArrayList<Socket>();
 
 	private LevelThread	    launcher;
-	
+
+	public MPServer(LevelThread gui, boolean startServer) {
+		this.launcher = gui;
+		cmdHandler = new MPCommandHandler(launcher, this);
+		this.startServer = startServer;
+		if (!this.startServer) {
+			this.mode = 1;
+		}
+	}
+
 	public MPServer(LevelThread gui) {
 		this.launcher = gui;
 		cmdHandler = new MPCommandHandler(launcher, this);
+		this.startServer = true;
 	}
 
 	private void newConnection(Socket packet) {
@@ -63,7 +75,7 @@ public class MPServer extends Thread {
 
 	private static String packFile(String filename) {
 		String returnString = "";
-		File f = new File("Data/lvl/" + filename);
+		File f = new File(filename);
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(f));
 			String line;
@@ -76,22 +88,26 @@ public class MPServer extends Thread {
 		}
 		return returnString;
 	}
-	
-	public void broadcastToClientsFromSourceClient(String msg, Socket sourceClient){
-		for(Socket s : this.getConnections()){
-			if(!s.equals(sourceClient)){
-				sendTo(msg, s);
+
+	public void broadcastToClientsFromSourceClient(String msg, Socket sourceClient) {
+		if (this.mode == 0) {
+			for (Socket s : this.getConnections()) {
+				if (!s.equals(sourceClient)) {
+					sendTo(msg, s);
+				}
 			}
 		}
 	}
-	
-	public void broadcastToClientsFromSourceClient(String[] args, Socket sourceClient){
-		StringBuilder b = new StringBuilder();
-		for(String arg : args)
-			b.append(arg);
-		for(Socket s : this.getConnections()){
-			if(!s.equals(sourceClient)){
-				sendTo(b.toString(), s);
+
+	public void broadcastToClientsFromSourceClient(String[] args, Socket sourceClient) {
+		if (this.mode == 0) {
+			StringBuilder b = new StringBuilder();
+			for (String arg : args)
+				b.append(arg);
+			for (Socket s : this.getConnections()) {
+				if (!s.equals(sourceClient)) {
+					sendTo(b.toString(), s);
+				}
 			}
 		}
 	}
@@ -104,23 +120,23 @@ public class MPServer extends Thread {
 	}
 
 	private void startServer() {
-			try {
-	      socket = new ServerSocket(port);
-				socket.setSoTimeout(1000);
-				while (isRunning()) {
-					try{
-						Socket client = socket.accept();
-						newConnection(client);
-						new MPListenerThread(client, this.cmdHandler);
-					}catch(Exception e){
-						
-					}
+		try {
+			socket = new ServerSocket(port);
+			socket.setSoTimeout(1000);
+			while (isRunning()) {
+				try {
+					Socket client = socket.accept();
+					newConnection(client);
+					new MPListenerThread(client, this.cmdHandler);
+				} catch (Exception e) {
+
 				}
-				socket.close();
-				System.out.println("MpServer terminated.");
-      } catch (IOException e) {
-	      e.printStackTrace();
-      }
+			}
+			socket.close();
+			System.out.println("MpServer terminated.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public ArrayList<Socket> getConnections() {
@@ -137,11 +153,11 @@ public class MPServer extends Thread {
 			sendTo(fileContent, packet);
 			return true;
 		} else if (msg.equalsIgnoreCase("--getLevelType")) {
-			if(Game.getLevel().getFileName().endsWith(".xml")){
+			if (Game.getLevel().getFileName().endsWith(".xml")) {
 				sendTo("xml", packet);
-			}else if(Game.getLevel().getFileName().endsWith(".lvl")){
+			} else if (Game.getLevel().getFileName().endsWith(".lvl")) {
 				sendTo("lvl", packet);
-			}else{
+			} else {
 				sendTo("undef-" + Game.getLevel().getFileName().substring(Game.getLevel().getFileName().lastIndexOf('.'), Game.getLevel().getFileName().length()), packet);
 			}
 			return true;
@@ -155,7 +171,7 @@ public class MPServer extends Thread {
 
 	private static boolean sendTo(byte[] data, Socket c) {
 		try {
-			//this.socket.
+			// this.socket.
 			System.out.println("Sending to [" + c.getInetAddress().toString() + "] => " + new String(data).toString());
 			c.getOutputStream().write(data);
 			c.getOutputStream().flush();
@@ -176,39 +192,21 @@ public class MPServer extends Thread {
 
 	// IO Stuff
 	/*
-	private static ArrayList<String> loadLevelFile(String filename) {
-		ArrayList<String> returnString = new ArrayList<String>();
-		File f = new File("Data/lvl/" + filename);
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(f));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				returnString.add(line);
-			}
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return returnString;
-	}
-
-	private static ArrayList<String> loadLevelConfig(String filename) {
-		ArrayList<String> returnString = new ArrayList<String>();
-		String modPath = filename.replace(".lvl", ".cfg");
-		File f = new File("Data/lvl/" + modPath);
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(f));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				returnString.add(line);
-			}
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return returnString;
-	}
-*/
+	 * private static ArrayList<String> loadLevelFile(String filename) {
+	 * ArrayList<String> returnString = new ArrayList<String>(); File f = new
+	 * File("Data/lvl/" + filename); try { BufferedReader reader = new
+	 * BufferedReader(new FileReader(f)); String line; while ((line =
+	 * reader.readLine()) != null) { returnString.add(line); } reader.close(); }
+	 * catch (IOException e) { e.printStackTrace(); } return returnString; }
+	 * 
+	 * private static ArrayList<String> loadLevelConfig(String filename) {
+	 * ArrayList<String> returnString = new ArrayList<String>(); String modPath =
+	 * filename.replace(".lvl", ".cfg"); File f = new File("Data/lvl/" + modPath);
+	 * try { BufferedReader reader = new BufferedReader(new FileReader(f)); String
+	 * line; while ((line = reader.readLine()) != null) { returnString.add(line);
+	 * } reader.close(); } catch (IOException e) { e.printStackTrace(); } return
+	 * returnString; }
+	 */
 	public static String getRandomKey() {
 		char[] aChars = { 'A', 'B', 'C', 'D', 'E', 'F', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
 		String key = "";
@@ -236,4 +234,8 @@ public class MPServer extends Thread {
 		this.launcher = launcher;
 	}
 
+	public boolean isHost(){
+		return this.mode == 0;
+	}
+	
 }

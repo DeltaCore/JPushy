@@ -1,3 +1,4 @@
+
 package net.ccmob.apps.jpushy.core;
 
 import java.awt.BorderLayout;
@@ -56,8 +57,8 @@ public class LevelThread extends JFrame implements Runnable {
 		this.addKeyListener(input);
 		showControls();
 	}
-	
-	private void showControls(){
+
+	private void showControls() {
 		ArrayList<String> controls = new ArrayList<String>();
 		controls.add("The controls : ");
 		controls.add("W - Up");
@@ -67,60 +68,22 @@ public class LevelThread extends JFrame implements Runnable {
 		controls.add("Enter - Use an item");
 		controls.add("	-> After you pressed enter , use W/A/S/D to determine ");
 		controls.add("     a direction you wanna active the item");
-		for(int i = 0;i<controls.size();i++){
+		for (int i = 0; i < controls.size(); i++) {
 			Game.sendMessage(controls.get(i));
 		}
 	}
-	
+
 	public LevelThread(String ip) {
 		super("JPushy");
 		this.setPlayer(new Player(this, PictureLoader.loadImageFromFile("char.png"), "Player"));
-		this.setServer(new MPServer(this));
+		this.setServer(new MPServer(this, false));
 		this.setClient(new MPClient(this.getServer()));
 		this.getServer().cmdHandler.addPlayer(this.getPlayer());
 		String filename = client.join(ip);
-		String levelRegEx = "<level name=\"([a-zA-Z0-9\\s]{1,})\" version='([a-zA-Z0-9.,\\s]{1,})'>";
-		String commentStartRegEx = "^<comment>";
-		String commentEndRegEx = "^</comment>";
+		System.out.println("Got filename: " + filename);
 		LevelItem levelItem = new LevelItem();
-		try {
-			String comment = "";
-			BufferedReader reader = new BufferedReader(new FileReader(new File(filename)));
-			String line = "";
-			Pattern level = Pattern.compile(levelRegEx);
-			Matcher levelMatcher = level.matcher("");
-
-			Pattern commentStart = Pattern.compile(commentStartRegEx);
-			Matcher commentStartMatcher = level.matcher("");
-
-			Pattern commentEnd = Pattern.compile(commentEndRegEx);
-			Matcher commentEndMatcher = level.matcher("");
-			boolean flag = false;
-			while ((line = reader.readLine()) != null) {
-				levelMatcher = level.matcher(line);
-				commentStartMatcher = commentStart.matcher(line);
-				commentEndMatcher = commentEnd.matcher(line);
-				if (levelMatcher.matches()) {
-					levelItem.setName(levelMatcher.group(1));
-					levelItem.setVersion(levelMatcher.group(2));
-					System.out.println("[Level] Name : " + levelMatcher.group(1) + " version : " + levelMatcher.group(2) + " file: " + filename);
-				} else if (commentStartMatcher.matches()) {
-					flag = true;
-				} else if (commentEndMatcher.matches()) {
-					flag = false;
-				} else if (flag) {
-					comment += line + "\n";
-				}
-			}
-			levelItem.setComment(comment);
-			levelItem.setFile(filename);
-			reader.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		loadLevel(levelItem.getFile());
+		levelItem.setFile(filename);
+		this.setLevel(LevelLoader.load(filename, false));
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setPreferredSize(new Dimension(1000, 700));
 		this.setSize(new Dimension(1000, 700));
