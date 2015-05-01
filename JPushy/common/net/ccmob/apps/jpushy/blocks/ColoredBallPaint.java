@@ -38,6 +38,10 @@ public class ColoredBallPaint extends Block {
 				System.out.println("Block at pos [" + this.getX() + "|" + this.getY() + "]");
 				Game.sendMessage("Block at pos [" + this.getX() + "|" + this.getY() + "] " + s.getMoveableBlock(this.getX(), this.getY()).toString());
 				if (s.getMoveableBlock(this.getX(), this.getY()) instanceof ColoredBall) {
+					ColoredBall b = (ColoredBall) s.getMoveableBlock(this.getX(), this.getY());
+					if(this.getColor().equals(b.getColor())){
+						return;
+					}
 					String dataNameOld = ((ColoredBall) s.getMoveableBlock(this.getX(), this.getY())).getData().getDataName();
 					String dataNameNew = this.getColor().getColorName() + " balls left";
 					s.getMoveableBlock(this.getX(), this.getY()).onSpecialAction();

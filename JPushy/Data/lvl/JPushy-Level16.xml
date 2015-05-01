@@ -73,7 +73,7 @@
 			<block uid="69" id="0" x="9" y="3" />
 			<block uid="70" id="0" x="10" y="3" />
 			<block uid="71" id="0" x="11" y="3" />
-			<block uid="72" id="19" x="12" y="3" />
+			<block uid="72" id="19" x="12" y="3" actionUID="1" />
 			<block uid="73" id="3" x="13" y="3" />
 			<block uid="74" id="0" x="14" y="3" />
 			<block uid="75" id="0" x="15" y="3" />
@@ -123,7 +123,7 @@
 			<block uid="119" id="3" x="19" y="5" />
 			<block uid="120" id="6" x="0" y="6" />
 			<block uid="121" id="2" x="1" y="6" />
-			<block uid="122" id="2" x="2" y="6" />
+			<block uid="122" id="2" x="2" y="6" actionUID="2" />
 			<block uid="123" id="14" x="3" y="6" />
 			<block uid="124" id="17" x="4" y="6" />
 			<block uid="125" id="1" x="5" y="6" />
@@ -172,7 +172,7 @@
 			<block uid="168" id="31" x="8" y="8" />
 			<block uid="169" id="0" x="9" y="8" />
 			<block uid="170" id="0" x="10" y="8" />
-			<block uid="171" id="26" x="11" y="8" />
+			<block uid="171" id="26" x="11" y="8" actionUID="3" />
 			<block uid="172" id="0" x="12" y="8" />
 			<block uid="173" id="3" x="13" y="8" />
 			<block uid="174" id="0" x="14" y="8" />
@@ -245,5 +245,8 @@
 	</stage>
 	<actions>
 		<action uid="0" bSourceX="1" bSourceY="1" bDestX="1" bDestY="10" bSourceL="0" bDestL="0" />
+		<action uid="1" bSourceX="12" bSourceY="3" bDestX="10" bDestY="3" bSourceL="0" bDestL="0" />
+		<action uid="2" bSourceX="2" bSourceY="6" bDestX="4" bDestY="8" bSourceL="0" bDestL="0" />
+		<action uid="3" bSourceX="11" bSourceY="8" bDestX="5" bDestY="7" bSourceL="0" bDestL="0" />
 	</actions>
 </level>

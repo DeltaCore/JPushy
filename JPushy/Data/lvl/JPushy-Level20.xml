@@ -202,7 +202,7 @@
 			<block uid="198" id="0" x="18" y="9" />
 			<block uid="199" id="3" x="19" y="9" />
 			<block uid="200" id="3" x="0" y="10" />
-			<block uid="201" id="22" x="1" y="10" />
+			<block uid="201" id="22" x="1" y="10" actionUID="2" />
 			<block uid="202" id="0" x="2" y="10" />
 			<block uid="203" id="0" x="3" y="10" />
 			<block uid="204" id="0" x="4" y="10" />
@@ -246,5 +246,6 @@
 	<actions>
 		<action uid="0" bSourceX="2" bSourceY="7" bDestX="1" bDestY="10" bSourceL="0" bDestL="0" />
 		<action uid="1" bSourceX="3" bSourceY="9" bDestX="3" bDestY="7" bSourceL="0" bDestL="0" />
+		<action uid="2" bSourceX="1" bSourceY="10" bDestX="2" bDestY="7" bSourceL="0" bDestL="0" />
 	</actions>
 </level>
