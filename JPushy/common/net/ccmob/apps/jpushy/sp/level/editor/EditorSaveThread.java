@@ -138,6 +138,16 @@ public class EditorSaveThread implements Runnable {
 
 		public int	id		           = 0;
 
+		@Override
+		public String toString() {
+		  return "[BlockSourceX|" + this.blockSourceX + "]" + 
+		  			 "[BlockSourceY|" + this.blockSourceY + "]" + 
+		  		   "[BlockDestX|" + this.blockDestX + "]" + 
+		  			 "[BlockDestY|" + this.blockDestY + "]" + 
+		  		   "[BlockSourceL|" + this.blockLayerSource + "]" + 
+		  			 "[BlockDestL|" + this.blockLayerDest + "]";
+		}
+		
 	}
 
 }

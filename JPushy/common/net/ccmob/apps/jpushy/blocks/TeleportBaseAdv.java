@@ -54,16 +54,19 @@ public class TeleportBaseAdv extends TeleportBase {
 	@Override
 	public void afterInit(Stage s) {
 		super.afterInit(s);
+		System.out.println("After init.");
 		if (s.getBlock(endX, endY) instanceof TeleportBaseAdv) {
 			((TeleportBaseAdv) s.getBlock(endX, endY)).setEndX(this.getThisX());
 			((TeleportBaseAdv) s.getBlock(endX, endY)).setEndY(this.getThisY());
+			((TeleportBaseAdv) s.getBlock(endX, endY)).setThisX(endX);
+			((TeleportBaseAdv) s.getBlock(endX, endY)).setThisY(endY);
 		}
 	}
 
 	@Override
 	public Block onConfigLoaded(int x, int y, int stageId, ArrayList<String> cfgLines, Stage stage) {
 		//System.out.println("X: " + x + " Y:" + y + " STAGE: " + stageId);
-		this.setThisX(x);
+		/*this.setThisX(x);
 		this.setThisY(y);
 		int[] cfgCords = LevelLoader.checkCFGCords(cfgLines, stageId, x, y);
 		if (cfgCords[0] == 0 && cfgCords[1] == 0) {
@@ -71,7 +74,7 @@ public class TeleportBaseAdv extends TeleportBase {
 		} else {
 			this.setEndX(cfgCords[0]);
 			this.setEndY(cfgCords[1]);
-		}
+		}*/
 		return this;
 	}
 	
@@ -82,6 +85,7 @@ public class TeleportBaseAdv extends TeleportBase {
 		this.setEndY(action.blockDestY);
 		this.setThisX(action.blockSourceX);
 		this.setThisY(action.blockSourceY);
+		System.out.println("Blockaction: " + action.toString());
 	}
 
 	public int getEndX() {
@@ -89,6 +93,7 @@ public class TeleportBaseAdv extends TeleportBase {
 	}
 
 	public void setEndX(int endX) {
+		System.out.println("SetEndX: " + endX);
 		this.endX = endX;
 	}
 
@@ -97,6 +102,7 @@ public class TeleportBaseAdv extends TeleportBase {
 	}
 
 	public void setEndY(int endY) {
+		System.out.println("SetEndY: " + endY);
 		this.endY = endY;
 	}
 
