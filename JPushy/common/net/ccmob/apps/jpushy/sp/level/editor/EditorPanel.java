@@ -40,39 +40,39 @@ public class EditorPanel extends JPanel {
 	 * This Editor Panel is the panel where you can push your level around and set
 	 * blocks
 	 */
-	private static final long	    serialVersionUID	= 1L;
+	private static final long			serialVersionUID	= 1L;
 
-	private LevelEditorGui	      gui;
+	private LevelEditorGui				gui;
 
-	private int	                  layer	            = 0;
-	private int	                  levelWidth	      = 0;
-	private int	                  levelHeight	      = 0;
+	private int										layer							= 0;
+	private int										levelWidth				= 0;
+	private int										levelHeight				= 0;
 
-	private int	                  currentLayer	    = 0;
+	private int										currentLayer			= 0;
 
-	private ArrayList<BlockArray>	blockLayers	      = new ArrayList<BlockArray>();
-	private ArrayList<ItemArray>	itemLayers	      = new ArrayList<ItemArray>();
+	private ArrayList<BlockArray>	blockLayers				= new ArrayList<BlockArray>();
+	private ArrayList<ItemArray>	itemLayers				= new ArrayList<ItemArray>();
 
-	private char	                layerUp	          = '+';
-	private char	                layerDown	        = '-';
-	private char	                settingsToDefault	= 'd';
+	private char									layerUp						= '+';
+	private char									layerDown					= '-';
+	private char									settingsToDefault	= 'd';
 
-	private int	                  lastX	            = 0;
-	private int	                  lastY	            = 0;
+	private int										lastX							= 0;
+	private int										lastY							= 0;
 
-	private int	                  originX	          = 100;
-	private int	                  originY	          = 100;
-	private float	                scale	            = 1.0f;
-	private int	                  opX	              = 0;
-	private int	                  opY	              = 0;
+	private int										originX						= 100;
+	private int										originY						= 100;
+	private float									scale							= 1.0f;
+	private int										opX								= 0;
+	private int										opY								= 0;
 
-	private static int	          margin	          = 10;
+	private static int						margin						= 10;
 
-	private InputListener	        listener;
+	private InputListener					listener;
 
-	private final Font	          inPanelFont	      = new Font("Arial", Font.PLAIN, 18);
+	private final Font						inPanelFont				= new Font("Arial", Font.PLAIN, 18);
 
-	private ArrayList<String>	    controls	        = new ArrayList<String>();
+	private ArrayList<String>			controls					= new ArrayList<String>();
 
 	public EditorPanel() {
 		super();
@@ -80,11 +80,11 @@ public class EditorPanel extends JPanel {
 		this.addMouseListener(this.listener);
 		this.addMouseMotionListener(this.listener);
 		this.addMouseWheelListener(this.listener);
-		controls.add("Right mouse button -> Drag the level");
-		controls.add("Left mouse button -> Place the selected block");
-		controls.add("Middle mouse button -> select the currently hovered block");
-		controls.add("Shift-click -> selects a block");
-		controls.add("Ctrl-Click -> set's the optional coordinate for the currently selected block");
+		this.controls.add("Right mouse button -> Drag the level");
+		this.controls.add("Left mouse button -> Place the selected block");
+		this.controls.add("Middle mouse button -> select the currently hovered block");
+		this.controls.add("Shift-click -> selects a block");
+		this.controls.add("Ctrl-Click -> set's the optional coordinate for the currently selected block");
 	}
 
 	public void updateLayer(int layers, int width, int height) {
@@ -108,10 +108,10 @@ public class EditorPanel extends JPanel {
 
 	public void updateCoords(int x, int y) {
 		// System.out.println("update !");
-		if (listener.getSelTileX() != -1 && listener.getSelTileY() != -1) {
+		if (this.listener.getSelTileX() != -1 && this.listener.getSelTileY() != -1) {
 			this.setOpX(x);
 			this.setOpY(y);
-			this.getBlockLayers().get(currentLayer).setOption(this.listener.selTileX, this.listener.selTileY, new Coord2D(x, y));
+			this.getBlockLayers().get(this.currentLayer).setOption(this.listener.selTileX, this.listener.selTileY, new Coord2D(x, y));
 			this.repaint();
 			// System.out.println("Option X : " +
 			// this.getBlockLayers().get(currentLayer).getOption(this.listener.selTileX,
@@ -134,7 +134,7 @@ public class EditorPanel extends JPanel {
 			} else {
 				Block b = Blocks.getBlockByName(sel);
 				this.getBlockLayers().get(this.getCurrentLayer()).setBlock(cx, cy, b);
-				makeWallsFancy();
+				this.makeWallsFancy();
 				if (b.getId() == Blocks.air.getId()) {
 					this.getItemLayers().get(this.getCurrentLayer()).set(cx, cy, Items.getItemById(Items.noitem.getId()));
 				}
@@ -145,7 +145,7 @@ public class EditorPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		render((Graphics2D) g);
+		this.render((Graphics2D) g);
 	}
 
 	private void renderControls(Graphics2D g) {
@@ -159,25 +159,26 @@ public class EditorPanel extends JPanel {
 		g.drawLine(this.listener.getxPos(), 0, this.listener.getxPos(), (int) this.getBounds().getHeight());
 		g.drawLine(0, this.listener.getyPos(), (int) this.getBounds().getWidth(), this.listener.getyPos());
 		g.setFont(this.getFont());
-		String s = "X : " + (int) ((this.listener.getxPos() - originX) / (40 * this.getScale())) + " Y : " + (int) ((this.listener.getyPos() - originY) / (40 * this.getScale()));
+		String s = "X : " + (int) ((this.listener.getxPos() - this.originX) / (40 * this.getScale())) + " Y : "
+		    + (int) ((this.listener.getyPos() - this.originY) / (40 * this.getScale()));
 		g.drawString(s, 0, (int) (g.getFontMetrics().getStringBounds(s, g).getHeight() * 2) + margin);
-		renderControls(g);
-		g.translate(originX, originY);
-		g.scale(scale, scale);
+		this.renderControls(g);
+		g.translate(this.originX, this.originY);
+		g.scale(this.scale, this.scale);
 		if (this.getBlockLayers().size() != 0) {
-			this.getBlockLayers().get(currentLayer).render(g);
+			this.getBlockLayers().get(this.currentLayer).render(g);
 		}
 		if (this.getItemLayers().size() != 0) {
-			this.getItemLayers().get(currentLayer).render(g);
+			this.getItemLayers().get(this.currentLayer).render(g);
 		}
 		if (this.listener.getSelTileX() != -1 && this.listener.getSelTileY() != -1) {
 			g.setColor(Color.red);
 			g.drawRect(this.listener.getSelTileX() * 40, this.listener.getSelTileY() * 40, 40, 40);
 			g.setColor(Color.blue);
-			if (this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() != -1
-			    && this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() != -1) {
-				g.drawRect(this.getBlockLayers().get(currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() * 40, this.getBlockLayers().get(currentLayer)
-				    .getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getY() * 40, 40, 40);
+			if (this.getBlockLayers().get(this.currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() != -1
+			    && this.getBlockLayers().get(this.currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() != -1) {
+				g.drawRect(this.getBlockLayers().get(this.currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getX() * 40,
+				    this.getBlockLayers().get(this.currentLayer).getOption(this.listener.getSelTileX(), this.listener.getSelTileY()).getY() * 40, 40, 40);
 			}
 		}
 	}
@@ -203,7 +204,7 @@ public class EditorPanel extends JPanel {
 			if (rootNode.getName().equals("level")) {
 				XMLNode levelNode = rootNode;
 				if (levelNode.attributeExists("name")) {
-					this.gui.getLevelNameText().setText((String) levelNode.getAttribute("name").getAttributeValue());
+					this.gui.getLevelNameText().setText(levelNode.getAttribute("name").getValueS());
 				} else {
 					this.gui.getLevelNameText().setText("Unnamed level");
 				}
@@ -211,12 +212,13 @@ public class EditorPanel extends JPanel {
 					if (levelNode.getChild("comment").nodeExists("line")) {
 						ArrayList<String> lines = new ArrayList<String>();
 						for (XMLNode commentLine : levelNode.getChild("comment").getChilds()) {
-							if (commentLine.attributeExists("value"))
-								lines.add((String) commentLine.getAttribute("value").getAttributeValue());
+							if (commentLine.attributeExists("value")) {
+								lines.add(commentLine.getAttribute("value").getValueS());
+							}
 						}
 					}
 				}
-				
+
 				int layerSize = 0;
 				Coord2D size = new Coord2D(0, 0);
 				for (XMLNode child : levelNode.getChilds()) {
@@ -226,7 +228,7 @@ public class EditorPanel extends JPanel {
 						size.setY(LevelLoader.getStageBounds(child).getY());
 					}
 				}
-				
+
 				this.gui.getxSizeVal().setValue(size.getX());
 				this.gui.getySizeVal().setValue(size.getY());
 				this.gui.getLayerVal().setValue(layerSize);
@@ -242,40 +244,43 @@ public class EditorPanel extends JPanel {
 					this.getItemLayers().get(i).setWidth(size.getX());
 					this.getItemLayers().get(i).initArray();
 				}
-				
+
 				for (XMLNode child : levelNode.getChilds()) {
 					if (child.getName().equalsIgnoreCase("stage") && child.attributeExists("id")) {
 						try {
-							Stage stage = new Stage(Integer.valueOf(child.getAttribute("id").getAttributeValue()));
+							Stage stage = new Stage(child.getAttribute("id").getValueI());
 							XMLNode stageNode = child;
 							if (stageNode.nodeExists("blocks")) {
 								Coord2D bounds = LevelLoader.getStageBounds(child);
-								this.getBlockLayers().get(Integer.valueOf(child.getAttribute("id").getAttributeValue())).setHeight(bounds.getY());
-								this.getBlockLayers().get(Integer.valueOf(child.getAttribute("id").getAttributeValue())).setWidth(bounds.getX());
-								this.getBlockLayers().get(Integer.valueOf(child.getAttribute("id").getAttributeValue())).initArray();
+								this.getBlockLayers().get(child.getAttribute("id").getValueI()).setHeight(bounds.getY());
+								this.getBlockLayers().get(child.getAttribute("id").getValueI()).setWidth(bounds.getX());
+								this.getBlockLayers().get(child.getAttribute("id").getValueI()).initArray();
 								XMLNode blocksNode = stageNode.getChild("blocks");
 								for (XMLNode block : blocksNode.getChilds()) {
 									if (block.getName().equals("block") && block.attributeExists("id") && block.attributeExists("x") && block.attributeExists("y") && block.attributeExists("uid")) {
-										Block b = Blocks.getBlockById(Integer.valueOf((String) block.getAttribute("id").getAttributeValue()));
-										b.onLoaded(Integer.valueOf((String) block.getAttribute("x").getAttributeValue()), Integer.valueOf((String) block.getAttribute("y").getAttributeValue()),
-										    Integer.valueOf((String) child.getAttribute("id").getAttributeValue()), stage);
+										Block b = Blocks.getBlockById(block.getAttribute("id").getValueI());
+										b.onLoaded((block.getAttribute("x").getValueI()), (block.getAttribute("y").getValueI()), (child.getAttribute("id").getValueI()), stage);
 										{
-											this.getBlockLayers()
-											    .get(Integer.valueOf((String) child.getAttribute("id").getAttributeValue()))
-											    .setBlock(Integer.valueOf((String) block.getAttribute("x").getAttributeValue()), Integer.valueOf((String) block.getAttribute("y").getAttributeValue()), b);
+											this.getBlockLayers().get((child.getAttribute("id").getValueI())).setBlock((block.getAttribute("x").getValueI()), (block.getAttribute("y").getValueI()), b);
 										}
 									}
 									if (stageNode.nodeExists("items")) {
 										XMLNode itemssNode = stageNode.getChild("items");
 										for (XMLNode item : itemssNode.getChilds()) {
 											if (item.getName().equals("item") && item.attributeExists("id") && item.attributeExists("x") && item.attributeExists("y") && item.attributeExists("uid")) {
-												Item i = Items.getItemById(Integer.valueOf((String) item.getAttribute("id").getAttributeValue()));
-												if (this.getBlockLayers().get(Integer.valueOf((String) child.getAttribute("id").getAttributeValue()))
-												    .getBlock(Integer.valueOf((String) item.getAttribute("x").getAttributeValue()), Integer.valueOf((String) item.getAttribute("y").getAttributeValue())) != null) {
-													/*this.getBlockLayers().get(Integer.valueOf(child.getAttribute("id").getAttributeValue()))
-													    .getBlock(Integer.valueOf(item.getAttribute("x").getAttributeValue()), Integer.valueOf(item.getAttribute("y").getAttributeValue()))
-													    .setKeptItem(i);*/
-													this.getItemLayers().get(Integer.valueOf(child.getAttribute("id").getAttributeValue())).set(Integer.valueOf(item.getAttribute("x").getAttributeValue()), Integer.valueOf(item.getAttribute("y").getAttributeValue()), i);
+												Item i = Items.getItemById((item.getAttribute("id").getValueI()));
+												if (this.getBlockLayers().get((child.getAttribute("id").getValueI())).getBlock((item.getAttribute("x").getValueI()),
+												    (item.getAttribute("y").getValueI())) != null) {
+													/*
+													 * this.getBlockLayers().get(Integer.valueOf(child.
+													 * getAttribute("id").getValue()))
+													 * .getBlock(Integer.valueOf(item.getAttribute("x").
+													 * getValue()),
+													 * Integer.valueOf(item.getAttribute("y").getValue()
+													 * )) .setKeptItem(i);
+													 */
+													this.getItemLayers().get((child.getAttribute("id").getValueI())).set((item.getAttribute("x").getValueI()),
+													    Integer.valueOf(item.getAttribute("y").getValueI()), i);
 												}
 											}
 										}
@@ -292,14 +297,14 @@ public class EditorPanel extends JPanel {
 						if (actions.attributeExists("uid") && actions.attributeExists("bSourceX") && actions.attributeExists("bSourceY") && actions.attributeExists("bDestX")
 						    && actions.attributeExists("bDestY") && actions.attributeExists("bSourceL") && actions.attributeExists("bDestL")) {
 							BlockAction action = new BlockAction();
-							action.id = Integer.valueOf((String) actions.getAttribute("uid").getAttributeValue());
-							action.blockSourceX = Integer.valueOf((String) actions.getAttribute("bSourceX").getAttributeValue());
-							action.blockSourceY = Integer.valueOf((String) actions.getAttribute("bSourceY").getAttributeValue());
-							action.blockDestX = Integer.valueOf((String) actions.getAttribute("bDestX").getAttributeValue());
-							action.blockDestY = Integer.valueOf((String) actions.getAttribute("bDestY").getAttributeValue());
-							action.blockLayerSource = Integer.valueOf((String) actions.getAttribute("bSourceL").getAttributeValue());
-							action.blockLayerDest = Integer.valueOf((String) actions.getAttribute("bDestL").getAttributeValue());
-							if(this.getBlockLayers().size() >= action.blockLayerSource){
+							action.id = (actions.getAttribute("uid").getValueI());
+							action.blockSourceX = (actions.getAttribute("bSourceX").getValueI());
+							action.blockSourceY = (actions.getAttribute("bSourceY").getValueI());
+							action.blockDestX = (actions.getAttribute("bDestX").getValueI());
+							action.blockDestY = actions.getAttribute("bDestY").getValueI();
+							action.blockLayerSource = actions.getAttribute("bSourceL").getValueI();
+							action.blockLayerDest = actions.getAttribute("bDestL").getValueI();
+							if (this.getBlockLayers().size() >= action.blockLayerSource) {
 								this.getBlockLayers().get(action.blockLayerSource).getOption(action.blockSourceX, action.blockSourceY).setX(action.blockDestX);
 								this.getBlockLayers().get(action.blockLayerSource).getOption(action.blockSourceX, action.blockSourceY).setY(action.blockDestY);
 							}
@@ -485,7 +490,7 @@ public class EditorPanel extends JPanel {
 	 * @return the currentLayer
 	 */
 	public int getCurrentLayer() {
-		return currentLayer;
+		return this.currentLayer;
 	}
 
 	/**
@@ -500,7 +505,7 @@ public class EditorPanel extends JPanel {
 	 * @return the parent gui
 	 */
 	public LevelEditorGui getGui() {
-		return gui;
+		return this.gui;
 	}
 
 	/**
@@ -515,7 +520,7 @@ public class EditorPanel extends JPanel {
 	 * @return the amount of layers
 	 */
 	public int getLayer() {
-		return layer;
+		return this.layer;
 	}
 
 	/**
@@ -530,7 +535,7 @@ public class EditorPanel extends JPanel {
 	 * @return the levelWidth
 	 */
 	public int getLevelWidth() {
-		return levelWidth;
+		return this.levelWidth;
 	}
 
 	/**
@@ -545,7 +550,7 @@ public class EditorPanel extends JPanel {
 	 * @return the levelHeight
 	 */
 	public int getLevelHeight() {
-		return levelHeight;
+		return this.levelHeight;
 	}
 
 	/**
@@ -560,7 +565,7 @@ public class EditorPanel extends JPanel {
 	 * @return the layerUp <- character for keyboard
 	 */
 	public char getLayerUp() {
-		return layerUp;
+		return this.layerUp;
 	}
 
 	/**
@@ -575,7 +580,7 @@ public class EditorPanel extends JPanel {
 	 * @return the layerDown <- character for keyboard
 	 */
 	public char getLayerDown() {
-		return layerDown;
+		return this.layerDown;
 	}
 
 	/**
@@ -590,7 +595,7 @@ public class EditorPanel extends JPanel {
 	 * @return the blockLayers
 	 */
 	public ArrayList<BlockArray> getBlockLayers() {
-		return blockLayers;
+		return this.blockLayers;
 	}
 
 	/**
@@ -605,7 +610,7 @@ public class EditorPanel extends JPanel {
 	 * @return the itemLayers
 	 */
 	public ArrayList<ItemArray> getItemLayers() {
-		return itemLayers;
+		return this.itemLayers;
 	}
 
 	/**
@@ -620,7 +625,7 @@ public class EditorPanel extends JPanel {
 	 * @return the settingsToDefault
 	 */
 	public char getSettingsToDefault() {
-		return settingsToDefault;
+		return this.settingsToDefault;
 	}
 
 	/**
@@ -635,7 +640,7 @@ public class EditorPanel extends JPanel {
 	 * @return the lastX
 	 */
 	public int getLastX() {
-		return lastX;
+		return this.lastX;
 	}
 
 	/**
@@ -650,7 +655,7 @@ public class EditorPanel extends JPanel {
 	 * @return the lastY
 	 */
 	public int getLastY() {
-		return lastY;
+		return this.lastY;
 	}
 
 	/**
@@ -665,7 +670,7 @@ public class EditorPanel extends JPanel {
 	 * @return the originX
 	 */
 	public int getOriginX() {
-		return originX;
+		return this.originX;
 	}
 
 	/**
@@ -680,7 +685,7 @@ public class EditorPanel extends JPanel {
 	 * @return the originY
 	 */
 	public int getOriginY() {
-		return originY;
+		return this.originY;
 	}
 
 	/**
@@ -695,7 +700,7 @@ public class EditorPanel extends JPanel {
 	 * @return the scale
 	 */
 	public float getScale() {
-		return scale;
+		return this.scale;
 	}
 
 	/**
@@ -710,7 +715,7 @@ public class EditorPanel extends JPanel {
 	 * @return the listener
 	 */
 	public InputListener getListener() {
-		return listener;
+		return this.listener;
 	}
 
 	/**
@@ -722,7 +727,7 @@ public class EditorPanel extends JPanel {
 	}
 
 	public int getOpX() {
-		return opX;
+		return this.opX;
 	}
 
 	public void setOpX(int opX) {
@@ -730,7 +735,7 @@ public class EditorPanel extends JPanel {
 	}
 
 	public int getOpY() {
-		return opY;
+		return this.opY;
 	}
 
 	public void setOpY(int opY) {
@@ -741,19 +746,19 @@ public class EditorPanel extends JPanel {
 	 * @return the inPanelFont
 	 */
 	public Font getInPanelFont() {
-		return inPanelFont;
+		return this.inPanelFont;
 	}
 
 	private class InputListener implements MouseListener, MouseWheelListener, MouseMotionListener, KeyListener {
 
 		private EditorPanel	gui;
 
-		private int		      selTileX	= -1;
-		private int		      selTileY	= -1;
+		private int					selTileX	= -1;
+		private int					selTileY	= -1;
 
-		private boolean		  btns[]		= new boolean[] { false, false, false, false };
+		private boolean			btns[]		= new boolean[] { false, false, false, false };
 
-		private int		      xPos		 = 0, yPos = 0;
+		private int					xPos			= 0, yPos = 0;
 
 		public InputListener(EditorPanel gui) {
 			this.setGui(gui);
@@ -761,11 +766,11 @@ public class EditorPanel extends JPanel {
 
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
-			gui.scale += (float) e.getWheelRotation() / 100;
-			if (gui.scale < 0.5f) {
-				gui.scale = 0.5f;
+			this.gui.scale += (float) e.getWheelRotation() / 100;
+			if (this.gui.scale < 0.5f) {
+				this.gui.scale = 0.5f;
 			}
-			gui.repaint();
+			this.gui.repaint();
 		}
 
 		@Override
@@ -774,16 +779,16 @@ public class EditorPanel extends JPanel {
 			this.setxPos(e.getX());
 			this.setyPos(e.getY());
 			this.gui.repaint();
-			if (btns[3]) {
-				gui.originX += e.getX() - lastX;
-				gui.originY += e.getY() - lastY;
-				lastX = e.getX();
-				lastY = e.getY();
-				gui.repaint();
-			} else if (btns[1]) {
-				if ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0)) {
-					gui.onClick(e.getX() - gui.originX, e.getY() - gui.originY);
-					gui.repaint();
+			if (this.btns[3]) {
+				this.gui.originX += e.getX() - EditorPanel.this.lastX;
+				this.gui.originY += e.getY() - EditorPanel.this.lastY;
+				EditorPanel.this.lastX = e.getX();
+				EditorPanel.this.lastY = e.getY();
+				this.gui.repaint();
+			} else if (this.btns[1]) {
+				if ((e.getX() - this.gui.originX >= 0) && (e.getY() - this.gui.originY >= 0)) {
+					this.gui.onClick(e.getX() - this.gui.originX, e.getY() - this.gui.originY);
+					this.gui.repaint();
 				}
 			}
 		}
@@ -811,49 +816,49 @@ public class EditorPanel extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if (e.isShiftDown() && ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0))) {
-				this.selTileX = (e.getX() - gui.originX) / (int) (40 * this.gui.getScale());
-				this.selTileY = (e.getY() - gui.originY) / (int) (40 * this.gui.getScale());
-			} else if (e.isControlDown() && ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0))) {
-				this.gui.getGui().getOptionsLabelXVal().setValue((e.getX() - gui.originX) / (int) (40 * this.gui.getScale()));
-				this.gui.getGui().getOptionsLabelYVal().setValue((e.getY() - gui.originY) / (int) (40 * this.gui.getScale()));
+			if (e.isShiftDown() && ((e.getX() - this.gui.originX >= 0) && (e.getY() - this.gui.originY >= 0))) {
+				this.selTileX = (e.getX() - this.gui.originX) / (int) (40 * this.gui.getScale());
+				this.selTileY = (e.getY() - this.gui.originY) / (int) (40 * this.gui.getScale());
+			} else if (e.isControlDown() && ((e.getX() - this.gui.originX >= 0) && (e.getY() - this.gui.originY >= 0))) {
+				this.gui.getGui().getOptionsLabelXVal().setValue((e.getX() - this.gui.originX) / (int) (40 * this.gui.getScale()));
+				this.gui.getGui().getOptionsLabelYVal().setValue((e.getY() - this.gui.originY) / (int) (40 * this.gui.getScale()));
 			} else {
 				this.selTileX = -1;
 				this.selTileY = -1;
 				switch (e.getButton()) {
 					case 1: {
-						btns[1] = true;
+						this.btns[1] = true;
 						break;
 					}
 					case 2: {
-						btns[2] = true;
+						this.btns[2] = true;
 						break;
 					}
 					case 3: {
-						btns[3] = true;
+						this.btns[3] = true;
 						break;
 					}
 				}
-				if (btns[3]) {
-					gui.lastX = e.getX();
-					gui.lastY = e.getY();
-				} else if (btns[2]) {
-					if ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0)) {
-						int cx = (e.getX() - gui.originX) / (int) (40 * this.gui.getScale());
-						int cy = (e.getY() - gui.originY) / (int) (40 * this.gui.getScale());
+				if (this.btns[3]) {
+					this.gui.lastX = e.getX();
+					this.gui.lastY = e.getY();
+				} else if (this.btns[2]) {
+					if ((e.getX() - this.gui.originX >= 0) && (e.getY() - this.gui.originY >= 0)) {
+						int cx = (e.getX() - this.gui.originX) / (int) (40 * this.gui.getScale());
+						int cy = (e.getY() - this.gui.originY) / (int) (40 * this.gui.getScale());
 						if (cx < this.gui.getWidth() && cy < this.gui.getHeight()) {
 							System.out.println("Block : " + cx + ":" + cy);
 							for (int i = 0; i < this.gui.getGui().getCurrentBlock().getModel().getSize(); i++) {
 								String name = this.gui.getGui().getCurrentBlock().getModel().getElementAt(i).toString();
 								if (i >= Blocks.blockRegistry.size()) {
-									String itemName = this.gui.getItemLayers().get(gui.getCurrentLayer()).get(cx, cy).getName();
+									String itemName = this.gui.getItemLayers().get(this.gui.getCurrentLayer()).get(cx, cy).getName();
 									if (!itemName.equalsIgnoreCase("noitem")) {
 										if (itemName.equalsIgnoreCase(name)) {
 											this.gui.getGui().getCurrentBlock().setSelectedIndex(i);
 										}
 									}
 								} else {
-									String blockName = this.gui.getBlockLayers().get(gui.getCurrentLayer()).getBlock(cx, cy).getName();
+									String blockName = this.gui.getBlockLayers().get(this.gui.getCurrentLayer()).getBlock(cx, cy).getName();
 									if (blockName.equalsIgnoreCase(name)) {
 										this.gui.getGui().getCurrentBlock().setSelectedIndex(i);
 									}
@@ -862,29 +867,29 @@ public class EditorPanel extends JPanel {
 							this.gui.getGui().getBlockPanel().setSelectedIndex(this.gui.getGui().getCurrentBlock().getSelectedIndex());
 						}
 					}
-				} else if (btns[1]) {
-					if ((e.getX() - gui.originX >= 0) && (e.getY() - gui.originY >= 0)) {
-						gui.onClick(e.getX() - gui.originX, e.getY() - gui.originY);
-						gui.repaint();
+				} else if (this.btns[1]) {
+					if ((e.getX() - this.gui.originX >= 0) && (e.getY() - this.gui.originY >= 0)) {
+						this.gui.onClick(e.getX() - this.gui.originX, e.getY() - this.gui.originY);
+						this.gui.repaint();
 					}
 				}
 			}
-			gui.repaint();
+			this.gui.repaint();
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			switch (e.getButton()) {
 				case 1: {
-					btns[1] = false;
+					this.btns[1] = false;
 					break;
 				}
 				case 2: {
-					btns[2] = false;
+					this.btns[2] = false;
 					break;
 				}
 				case 3: {
-					btns[3] = false;
+					this.btns[3] = false;
 					break;
 				}
 			}
@@ -902,17 +907,17 @@ public class EditorPanel extends JPanel {
 		@Override
 		public void keyTyped(KeyEvent e) {
 			System.out.println("downup");
-			if ((e.getKeyChar() == gui.getLayerUp()) && (gui.currentLayer < layer - 1)) {
-				gui.setCurrentLayer(gui.getCurrentLayer() + 1);
+			if ((e.getKeyChar() == this.gui.getLayerUp()) && (this.gui.currentLayer < EditorPanel.this.layer - 1)) {
+				this.gui.setCurrentLayer(this.gui.getCurrentLayer() + 1);
 			}
-			if ((e.getKeyChar() == gui.getLayerDown()) && (gui.currentLayer > 0)) {
-				gui.setCurrentLayer(gui.getCurrentLayer() - 1);
+			if ((e.getKeyChar() == this.gui.getLayerDown()) && (this.gui.currentLayer > 0)) {
+				this.gui.setCurrentLayer(this.gui.getCurrentLayer() - 1);
 			}
-			gui.getGui().getCurrentLayerBox().setValue(gui.getCurrentLayer());
-			if (e.getKeyChar() == gui.settingsToDefault) {
-				gui.scale = 1f;
-				gui.originX = 0;
-				gui.originY = 0;
+			this.gui.getGui().getCurrentLayerBox().setValue(this.gui.getCurrentLayer());
+			if (e.getKeyChar() == this.gui.settingsToDefault) {
+				this.gui.scale = 1f;
+				this.gui.originX = 0;
+				this.gui.originY = 0;
 			}
 		}
 
@@ -928,21 +933,21 @@ public class EditorPanel extends JPanel {
 		 * @return the selTileX
 		 */
 		public int getSelTileX() {
-			return selTileX;
+			return this.selTileX;
 		}
 
 		/**
 		 * @return the selTileY
 		 */
 		public int getSelTileY() {
-			return selTileY;
+			return this.selTileY;
 		}
 
 		/**
 		 * @return the xPos
 		 */
 		public int getxPos() {
-			return xPos;
+			return this.xPos;
 		}
 
 		/**
@@ -957,7 +962,7 @@ public class EditorPanel extends JPanel {
 		 * @return the yPos
 		 */
 		public int getyPos() {
-			return yPos;
+			return this.yPos;
 		}
 
 		/**

@@ -43,43 +43,43 @@ import net.ccmob.xml.XMLConfig.XMLNode;
 
 public class Game extends JFrame {
 
-	private static final long	       serialVersionUID	        = 1L;
+	private static final long					serialVersionUID					= 1L;
 
-	private JPanel	                 contentPane;
+	private JPanel										contentPane;
 
 	/**
 	 * Launch the application.
 	 */
 
-	public static final String	     name	                    = "JPushy";
-	public static final String	     version	                = "0.2.3";
+	public static final String				name											= "JPushy";
+	public static final String				version										= "0.2.3";
 
-	LevelThread	                     thread;
+	LevelThread												thread;
 
-	private DefaultListModel<String>	levelModel	            = new DefaultListModel<String>();
+	private DefaultListModel<String>	levelModel								= new DefaultListModel<String>();
 
-	private JMenuBar	               mainBar	                = new JMenuBar();
+	private JMenuBar									mainBar										= new JMenuBar();
 
-	private JMenu	                   levelMenu	              = new JMenu("Level");
-	private JMenuItem	               startLevel	              = new JMenuItem("Start");
-	private JMenuItem	               createLevel	            = new JMenuItem("Open Leveleditor");
+	private JMenu											levelMenu									= new JMenu("Level");
+	private JMenuItem									startLevel								= new JMenuItem("Start");
+	private JMenuItem									createLevel								= new JMenuItem("Open Leveleditor");
 
-	private JMenu	                   serverMenu	              = new JMenu("Server");
-	private JMenuItem	               connectToServer	        = new JMenuItem("Connect to server");
-	private JMenuItem	               connectToLevelServer	    = new JMenuItem("Connect to level server");
+	private JMenu											serverMenu								= new JMenu("Server");
+	private JMenuItem									connectToServer						= new JMenuItem("Connect to server");
+	private JMenuItem									connectToLevelServer			= new JMenuItem("Connect to level server");
 
-	private JMenu	                   generalMenu	            = new JMenu("General");	                  // General
-	private JMenu	                   generalSettingsMenu	    = new JMenu("Settings");	                  // General->Settings
-	private JMenuItem	               generalSettingsControls	= new JMenuItem("Controls");	              // General->Settings->Controls
-	private JMenuItem	               generalSettingsInterface	= new JMenuItem("Interface");	            // General->Settings->Interface
-	private JMenuItem	               generalUpdates	          = new JMenuItem("Updates");	              // General->Updates
-	private final JLabel	           stateLabel	              = new JLabel("JPushy");
+	private JMenu											generalMenu								= new JMenu("General");											// General
+	private JMenu											generalSettingsMenu				= new JMenu("Settings");										// General->Settings
+	private JMenuItem									generalSettingsControls		= new JMenuItem("Controls");								// General->Settings->Controls
+	private JMenuItem									generalSettingsInterface	= new JMenuItem("Interface");								// General->Settings->Interface
+	private JMenuItem									generalUpdates						= new JMenuItem("Updates");									// General->Updates
+	private final JLabel							stateLabel								= new JLabel("JPushy");
 
-	private JList<String>	           levelList	              = new JList<String>();
-	private JTextArea	               txtLevelInfo	            = new JTextArea();
-	private LevelSelectionListener	 listener;
+	private JList<String>							levelList									= new JList<String>();
+	private JTextArea									txtLevelInfo							= new JTextArea();
+	private LevelSelectionListener		listener;
 
-	ArrayList<LevelItem>	           levels	                  = new ArrayList<LevelItem>();
+	ArrayList<LevelItem>							levels										= new ArrayList<LevelItem>();
 
 	/**
 	 * Create the frame.
@@ -87,31 +87,31 @@ public class Game extends JFrame {
 	public Game() {
 		super(Game.name + " V" + Game.version);
 		try {
-	    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (Exception e) {
-	    e.printStackTrace();
-    }
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		this.listener = new LevelSelectionListener(this);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 809, 470);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setBounds(100, 100, 809, 470);
 
 		// Adding menus
-		this.setJMenuBar(mainBar);
+		this.setJMenuBar(this.mainBar);
 
 		this.getMainBar().add(this.getLevelMenu());
 		this.getLevelMenu().add(this.getStartLevel());
 		this.getLevelMenu().add(this.getCreateLevel());
 		this.getCreateLevel().setActionCommand("createLevel");
-		this.getCreateLevel().addActionListener(listener);
+		this.getCreateLevel().addActionListener(this.listener);
 
 		this.getMainBar().add(this.getServerMenu());
 		this.getServerMenu().add(this.getConnectToServer());
 		this.getServerMenu().add(this.getConnectToLevelServer());
 		this.getConnectToLevelServer().setActionCommand("connecttolevelserver");
-		this.getConnectToLevelServer().addActionListener(listener);
+		this.getConnectToLevelServer().addActionListener(this.listener);
 
 		this.getConnectToServer().setActionCommand("connectToServer");
-		this.getConnectToServer().addActionListener(listener);
+		this.getConnectToServer().addActionListener(this.listener);
 
 		this.getMainBar().add(this.getGeneralMenu());
 		this.getGeneralMenu().add(this.getGeneralSettingsMenu());
@@ -121,24 +121,24 @@ public class Game extends JFrame {
 
 		// Setting content pane
 
-		contentPane = new JPanel();
-		contentPane.setBorder(null);
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
+		this.contentPane = new JPanel();
+		this.contentPane.setBorder(null);
+		this.contentPane.setLayout(new BorderLayout(0, 0));
+		this.setContentPane(this.contentPane);
 
 		// Main splitpane
 
 		JSplitPane mainSplitPane = new JSplitPane();
 		mainSplitPane.setResizeWeight(0.4);
-		contentPane.add(mainSplitPane, BorderLayout.CENTER);
+		this.contentPane.add(mainSplitPane, BorderLayout.CENTER);
 
 		// Level list
 
-		stateLabel.setLabelFor(levelList);
-		levelList.setBackground(UIManager.getColor("CheckBox.background"));
-		levelList.addListSelectionListener(listener);
+		this.stateLabel.setLabelFor(this.levelList);
+		this.levelList.setBackground(UIManager.getColor("CheckBox.background"));
+		this.levelList.addListSelectionListener(this.listener);
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setViewportView(levelList);
+		scrollPane.setViewportView(this.levelList);
 		mainSplitPane.setRightComponent(scrollPane);
 		mainSplitPane.setBorder(null);
 
@@ -149,45 +149,45 @@ public class Game extends JFrame {
 		mainSplitPane.setLeftComponent(levelSplitPane);
 
 		JButton btnStart = new JButton("Start");
-		btnStart.addActionListener(listener);
+		btnStart.addActionListener(this.listener);
 		btnStart.setActionCommand("start");
 		levelSplitPane.setLeftComponent(btnStart);
 
-		txtLevelInfo.setText("Select a level");
-		txtLevelInfo.setEditable(false);
-		levelSplitPane.setRightComponent(txtLevelInfo);
+		this.txtLevelInfo.setText("Select a level");
+		this.txtLevelInfo.setEditable(false);
+		levelSplitPane.setRightComponent(this.txtLevelInfo);
 
-		contentPane.add(stateLabel, BorderLayout.SOUTH);
-		updateLevels();
+		this.contentPane.add(this.stateLabel, BorderLayout.SOUTH);
+		this.updateLevels();
 		System.out.println("[ModLoader] Initializing mods ...");
 		ModLoader.onInit();
 		System.out.println("[ModLoader] Postloading mods ...");
 		ModLoader.onPostInit();
 	}
 
-	String	levelRegEx	      = "^<level name=\"([a-zA-Z\\s0-9[-][_]]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
+	String	levelRegEx				= "^<level name=\"([a-zA-Z\\s0-9[-][_]]{1,})\" version='([a-zA-Z0-9.,]{1,})'>$";
 	String	commentStartRegEx	= "^<comment>";
-	String	commentEndRegEx	  = "^</comment>";
+	String	commentEndRegEx		= "^</comment>";
 
 	public void updateSelectedLevel() {
 		this.txtLevelInfo.setText(this.levels.get(this.levelList.getSelectedIndex()).getComment());
 	}
 
 	public void updateLevels() {
-		levels = new ArrayList<LevelItem>();
+		this.levels = new ArrayList<LevelItem>();
 		File dataFolder = new File("Data/lvl/");
 		for (File f : dataFolder.listFiles()) {
 			if (f.isFile()) {
 				if (f.getName().endsWith(".lvl")) {
-					levels.add(readLevel(f.getName()));
+					this.levels.add(this.readLevel(f.getName()));
 				} else if (f.getName().endsWith(".xml")) {
-					levels.add(readXMLLevel(f.getName()));
+					this.levels.add(this.readXMLLevel(f.getName()));
 				}
 			}
 		}
 		this.setLevelModel(new DefaultListModel<String>());
-		for (int i = 0; i < levels.size(); i++) {
-			this.getLevelModel().addElement(levels.get(i).toString());
+		for (int i = 0; i < this.levels.size(); i++) {
+			this.getLevelModel().addElement(this.levels.get(i).toString());
 		}
 		this.levelList.setModel(this.getLevelModel());
 	}
@@ -200,19 +200,20 @@ public class Game extends JFrame {
 		if (rootNode.getName().equals("level")) {
 			XMLNode levelNode = rootNode;
 			if (levelNode.attributeExists("name")) {
-				level.setName((String) levelNode.getAttribute("name").getAttributeValue());
+				level.setName(levelNode.getAttribute("name").getValueS());
 			} else {
 				level.setName("Unnamed level");
 			}
 			if (levelNode.attributeExists("version")) {
-				level.setVersion((String) levelNode.getAttribute("version").getAttributeValue());
+				level.setVersion(levelNode.getAttribute("version").getValueS());
 			}
 			if (levelNode.attributeExists("comment")) {
 				if (levelNode.getChild("comment").nodeExists("line")) {
 					ArrayList<String> lines = new ArrayList<String>();
 					for (XMLNode commentLine : levelNode.getChild("comment").getChilds()) {
-						if (commentLine.attributeExists("value"))
-							lines.add((String) commentLine.getAttribute("value").getAttributeValue());
+						if (commentLine.attributeExists("value")) {
+							lines.add(commentLine.getAttribute("value").getValueS());
+						}
 					}
 				}
 			}
@@ -226,13 +227,13 @@ public class Game extends JFrame {
 			String comment = "";
 			BufferedReader reader = new BufferedReader(new FileReader(new File("Data/lvl/" + filename)));
 			String line = "";
-			Pattern level = Pattern.compile(levelRegEx);
+			Pattern level = Pattern.compile(this.levelRegEx);
 			Matcher levelMatcher = level.matcher("");
 
-			Pattern commentStart = Pattern.compile(commentStartRegEx);
+			Pattern commentStart = Pattern.compile(this.commentStartRegEx);
 			Matcher commentStartMatcher = level.matcher("");
 
-			Pattern commentEnd = Pattern.compile(commentEndRegEx);
+			Pattern commentEnd = Pattern.compile(this.commentEndRegEx);
 			Matcher commentEndMatcher = level.matcher("");
 			boolean flag = false;
 			while ((line = reader.readLine()) != null) {
@@ -264,26 +265,26 @@ public class Game extends JFrame {
 	}
 
 	public void startGame() {
-		if (levelList.getSelectedIndex() != -1) {
-			this.thread = new LevelThread(this, levels.get(levelList.getSelectedIndex()));
-			Thread t = new Thread(thread);
+		if (this.levelList.getSelectedIndex() != -1) {
+			this.thread = new LevelThread(this, this.levels.get(this.levelList.getSelectedIndex()));
+			Thread t = new Thread(this.thread);
 			t.start();
 		}
 	}
 
 	public void openConnection() {
-		Thread t = new Thread(thread);
+		Thread t = new Thread(this.thread);
 		t.start();
 	}
 
 	public void startGame(String filename) {
 		this.thread = new LevelThread(filename);
-		Thread t = new Thread(thread);
+		Thread t = new Thread(this.thread);
 		t.start();
 	}
 
 	public JMenuBar getMainBar() {
-		return mainBar;
+		return this.mainBar;
 	}
 
 	public void setMainBar(JMenuBar mainBar) {
@@ -291,7 +292,7 @@ public class Game extends JFrame {
 	}
 
 	public JMenu getLevelMenu() {
-		return levelMenu;
+		return this.levelMenu;
 	}
 
 	public void setLevelMenu(JMenu levelMenu) {
@@ -299,7 +300,7 @@ public class Game extends JFrame {
 	}
 
 	public JMenuItem getStartLevel() {
-		return startLevel;
+		return this.startLevel;
 	}
 
 	public void setStartLevel(JMenuItem startLevel) {
@@ -307,7 +308,7 @@ public class Game extends JFrame {
 	}
 
 	public JMenu getServerMenu() {
-		return serverMenu;
+		return this.serverMenu;
 	}
 
 	public void setServerMenu(JMenu serverMenu) {
@@ -315,7 +316,7 @@ public class Game extends JFrame {
 	}
 
 	public JMenuItem getConnectToServer() {
-		return connectToServer;
+		return this.connectToServer;
 	}
 
 	public void setConnectToServer(JMenuItem connectToServer) {
@@ -323,7 +324,7 @@ public class Game extends JFrame {
 	}
 
 	public JMenuItem getConnectToLevelServer() {
-		return connectToLevelServer;
+		return this.connectToLevelServer;
 	}
 
 	public void setConnectToLevelServer(JMenuItem connectToLevelServer) {
@@ -331,7 +332,7 @@ public class Game extends JFrame {
 	}
 
 	public JMenu getGeneralMenu() {
-		return generalMenu;
+		return this.generalMenu;
 	}
 
 	public void setGeneralMenu(JMenu generalMenu) {
@@ -339,7 +340,7 @@ public class Game extends JFrame {
 	}
 
 	public JMenu getGeneralSettingsMenu() {
-		return generalSettingsMenu;
+		return this.generalSettingsMenu;
 	}
 
 	public void setGeneralSettingsMenu(JMenu generalSettingsMenu) {
@@ -347,7 +348,7 @@ public class Game extends JFrame {
 	}
 
 	public JMenuItem getGeneralSettingsControls() {
-		return generalSettingsControls;
+		return this.generalSettingsControls;
 	}
 
 	public void setGeneralSettingsControls(JMenuItem generalSettingsControls) {
@@ -355,7 +356,7 @@ public class Game extends JFrame {
 	}
 
 	public JMenuItem getGeneralSettingsInterface() {
-		return generalSettingsInterface;
+		return this.generalSettingsInterface;
 	}
 
 	public void setGeneralSettingsInterface(JMenuItem generalSettingsInterface) {
@@ -363,7 +364,7 @@ public class Game extends JFrame {
 	}
 
 	public JMenuItem getGeneralUpdates() {
-		return generalUpdates;
+		return this.generalUpdates;
 	}
 
 	public void setGeneralUpdates(JMenuItem generalUpdates) {
@@ -371,7 +372,7 @@ public class Game extends JFrame {
 	}
 
 	public DefaultListModel<String> getLevelModel() {
-		return levelModel;
+		return this.levelModel;
 	}
 
 	public void setLevelModel(DefaultListModel<String> levelModel) {
@@ -395,7 +396,7 @@ public class Game extends JFrame {
 	}
 
 	public JList<String> getLevelList() {
-		return levelList;
+		return this.levelList;
 	}
 
 	public void setLevelList(JList<String> levelList) {
@@ -404,7 +405,7 @@ public class Game extends JFrame {
 
 	private class LevelSelectionListener implements ActionListener, ListSelectionListener {
 
-		Game	gui;
+		Game gui;
 
 		public LevelSelectionListener(Game gui) {
 			this.gui = gui;
@@ -412,21 +413,21 @@ public class Game extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			//System.out.println(arg0.getActionCommand());
+			// System.out.println(arg0.getActionCommand());
 			if (arg0.getActionCommand().equals("start")) {
-				gui.startGame();
+				this.gui.startGame();
 			} else if (arg0.getActionCommand().equals("connectToServer")) {
 				String ip = JOptionPane.showInputDialog("Server ip :");
 				String username = JOptionPane.showInputDialog("Username : ");
-				gui.connect(ip);
+				this.gui.connect(ip);
 				Game.getPlayer().setName(username);
-				gui.thread.getClient().loadPlayer();
-				gui.openConnection();
+				this.gui.thread.getClient().loadPlayer();
+				this.gui.openConnection();
 			} else if (arg0.getActionCommand().equals("connecttolevelserver")) {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						LevelServerConnector con = new LevelServerConnector(gui);
+						LevelServerConnector con = new LevelServerConnector(LevelSelectionListener.this.gui);
 						con.setVisible(true);
 					}
 				});
@@ -437,7 +438,7 @@ public class Game extends JFrame {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			gui.updateSelectedLevel();
+			this.gui.updateSelectedLevel();
 		}
 
 	}
@@ -472,7 +473,7 @@ public class Game extends JFrame {
 	 * @return the createLevel
 	 */
 	public JMenuItem getCreateLevel() {
-		return createLevel;
+		return this.createLevel;
 	}
 
 	/**

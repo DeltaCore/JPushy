@@ -2,7 +2,6 @@
 package net.ccmob.apps.jpushy.sp.level;
 
 import java.io.BufferedReader;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,15 +14,15 @@ import net.ccmob.apps.jpushy.blocks.Blocks;
 import net.ccmob.apps.jpushy.blocks.MoveableBlock;
 import net.ccmob.apps.jpushy.items.Item;
 import net.ccmob.apps.jpushy.items.Items;
-import net.ccmob.apps.jpushy.utils.Coord2D;
 import net.ccmob.apps.jpushy.sp.level.editor.EditorSaveThread.BlockAction;
+import net.ccmob.apps.jpushy.utils.Coord2D;
 import net.ccmob.xml.XMLConfig;
 import net.ccmob.xml.XMLConfig.XMLNode;
 
 /**
- * 
+ *
  * @author Marcel Benning
- * 
+ *
  */
 
 public class LevelLoader {
@@ -35,7 +34,7 @@ public class LevelLoader {
 		if (rootNode.getName().equals("level")) {
 			XMLNode levelNode = rootNode;
 			if (levelNode.attributeExists("name")) {
-				level.setName((String) levelNode.getAttribute("name").getAttributeValue());
+				level.setName(levelNode.getAttribute("name").getValueS());
 			} else {
 				level.setName("Unnamed level");
 			}
@@ -43,15 +42,16 @@ public class LevelLoader {
 				if (levelNode.getChild("comment").nodeExists("line")) {
 					ArrayList<String> lines = new ArrayList<String>();
 					for (XMLNode commentLine : levelNode.getChild("comment").getChilds()) {
-						if (commentLine.attributeExists("value"))
-							lines.add((String) commentLine.getAttribute("value").getAttributeValue());
+						if (commentLine.attributeExists("value")) {
+							lines.add(commentLine.getAttribute("value").getValueS());
+						}
 					}
 				}
 			}
 			for (XMLNode child : levelNode.getChilds()) {
 				if (child.getName().equalsIgnoreCase("stage") && child.attributeExists("id")) {
 					try {
-						Stage stage = new Stage(Integer.valueOf((String) child.getAttribute("id").getAttributeValue()));
+						Stage stage = new Stage(Integer.valueOf(child.getAttribute("id").getValueI()));
 						XMLNode stageNode = child;
 						if (stageNode.nodeExists("blocks")) {
 							BlockList normalBlocks = new BlockList();
@@ -67,15 +67,13 @@ public class LevelLoader {
 							XMLNode blocksNode = stageNode.getChild("blocks");
 							for (XMLNode block : blocksNode.getChilds()) {
 								if (block.getName().equals("block") && block.attributeExists("id") && block.attributeExists("x") && block.attributeExists("y") && block.attributeExists("uid")) {
-									Block b = Blocks.getBlockById(Integer.valueOf((String) block.getAttribute("id").getAttributeValue()));
-									b.onLoaded(Integer.valueOf((String) block.getAttribute("x").getAttributeValue()), Integer.valueOf((String) block.getAttribute("y").getAttributeValue()),
-									    Integer.valueOf((String) child.getAttribute("id").getAttributeValue()), stage);
+									Block b = Blocks.getBlockById(Integer.valueOf(block.getAttribute("id").getValueI()));
+									b.onLoaded(Integer.valueOf(block.getAttribute("x").getValueI()), Integer.valueOf(block.getAttribute("y").getValueI()),
+									    Integer.valueOf(child.getAttribute("id").getValueI()), stage);
 									if (!(b instanceof MoveableBlock)) {
-										normalBlocks.setBlock(Integer.valueOf((String) block.getAttribute("x").getAttributeValue()),
-										    Integer.valueOf((String) block.getAttribute("y").getAttributeValue()), b);
+										normalBlocks.setBlock(Integer.valueOf(block.getAttribute("x").getValueI()), Integer.valueOf(block.getAttribute("y").getValueI()), b);
 									} else {
-										moveableBlocks.setBlock(Integer.valueOf((String) block.getAttribute("x").getAttributeValue()),
-										    Integer.valueOf((String) block.getAttribute("y").getAttributeValue()), b);
+										moveableBlocks.setBlock(Integer.valueOf(block.getAttribute("x").getValueI()), Integer.valueOf(block.getAttribute("y").getValueI()), b);
 									}
 								}
 							}
@@ -85,11 +83,9 @@ public class LevelLoader {
 								XMLNode itemssNode = stageNode.getChild("items");
 								for (XMLNode item : itemssNode.getChilds()) {
 									if (item.getName().equals("item") && item.attributeExists("id") && item.attributeExists("x") && item.attributeExists("y") && item.attributeExists("uid")) {
-										Item i = Items.getItemById(Integer.valueOf((String) item.getAttribute("id").getAttributeValue()));
-										if (normalBlocks.getBlocks()[Integer.valueOf((String) item.getAttribute("x").getAttributeValue())][Integer.valueOf((String) item.getAttribute("y")
-										    .getAttributeValue())] != null) {
-											normalBlocks.getBlocks()[Integer.valueOf((String) item.getAttribute("y").getAttributeValue())][Integer.valueOf((String) item.getAttribute("x")
-											    .getAttributeValue())].setKeptItem(i);
+										Item i = Items.getItemById(Integer.valueOf(item.getAttribute("id").getValueI()));
+										if (normalBlocks.getBlocks()[Integer.valueOf(item.getAttribute("x").getValueI())][Integer.valueOf(item.getAttribute("y").getValueI())] != null) {
+											normalBlocks.getBlocks()[Integer.valueOf(item.getAttribute("y").getValueI())][Integer.valueOf(item.getAttribute("x").getValueI())].setKeptItem(i);
 										}
 									}
 								}
@@ -106,16 +102,16 @@ public class LevelLoader {
 					if (actions.attributeExists("uid") && actions.attributeExists("bSourceX") && actions.attributeExists("bSourceY") && actions.attributeExists("bDestX")
 					    && actions.attributeExists("bDestY") && actions.attributeExists("bSourceL") && actions.attributeExists("bDestL")) {
 						BlockAction action = new BlockAction();
-						action.id = Integer.valueOf((String) actions.getAttribute("uid").getAttributeValue());
-						action.blockSourceX = Integer.valueOf((String) actions.getAttribute("bSourceX").getAttributeValue());
-						action.blockSourceY = Integer.valueOf((String) actions.getAttribute("bSourceY").getAttributeValue());
-						action.blockDestX = Integer.valueOf((String) actions.getAttribute("bDestX").getAttributeValue());
-						action.blockDestY = Integer.valueOf((String) actions.getAttribute("bDestY").getAttributeValue());
-						action.blockLayerSource = Integer.valueOf((String) actions.getAttribute("bSourceL").getAttributeValue());
-						action.blockLayerDest = Integer.valueOf((String) actions.getAttribute("bDestL").getAttributeValue());
+						action.id = Integer.valueOf(actions.getAttribute("uid").getValueI());
+						action.blockSourceX = Integer.valueOf(actions.getAttribute("bSourceX").getValueI());
+						action.blockSourceY = Integer.valueOf(actions.getAttribute("bSourceY").getValueI());
+						action.blockDestX = Integer.valueOf(actions.getAttribute("bDestX").getValueI());
+						action.blockDestY = Integer.valueOf(actions.getAttribute("bDestY").getValueI());
+						action.blockLayerSource = Integer.valueOf(actions.getAttribute("bSourceL").getValueI());
+						action.blockLayerDest = Integer.valueOf(actions.getAttribute("bDestL").getValueI());
 						if (level.getStages().size() >= action.blockLayerSource) {
-							level.getStages().get(action.blockLayerSource).getBlock(action.blockSourceX, action.blockSourceY)
-							    .onLevelLoad(action.blockSourceX, action.blockSourceY, action.blockLayerSource, action);
+							level.getStages().get(action.blockLayerSource).getBlock(action.blockSourceX, action.blockSourceY).onLevelLoad(action.blockSourceX, action.blockSourceY,
+							    action.blockLayerSource, action);
 						}
 					}
 				}
@@ -133,8 +129,8 @@ public class LevelLoader {
 		if (stageNode.nodeExists("blocks")) {
 			for (XMLNode block : stageNode.getChild("blocks").getChilds()) {
 				if (block.getName().equals("block") && block.attributeExists("id") && block.attributeExists("x") && block.attributeExists("y") && block.attributeExists("uid")) {
-					cX = Integer.valueOf((String) block.getAttribute("x").getAttributeValue());
-					cY = Integer.valueOf((String) block.getAttribute("y").getAttributeValue());
+					cX = Integer.valueOf(block.getAttribute("x").getValueI());
+					cY = Integer.valueOf(block.getAttribute("y").getValueI());
 					if (cX > maxX) {
 						maxX = cX;
 					}
@@ -185,8 +181,9 @@ public class LevelLoader {
 				if (matcher.matches()) {
 					String name = matcher.group(1);
 					String version = matcher.group(2);
-					if (debug)
+					if (debug) {
 						System.out.println("Level : " + line + String.format("%n") + "Name : " + name + " version : " + version);
+					}
 					level.setName(name);
 					level.setVersion(version);
 				}
@@ -203,8 +200,9 @@ public class LevelLoader {
 				int height = getStageLength(lines, currentStageId);
 				blocks.init(width, height);
 				secondLayer.init(width, height);
-				if (debug)
+				if (debug) {
 					System.out.println("Levelsize : x: " + width + " y:" + height);
+				}
 				currentStage = new Stage(currentStageId);
 				yCounter = 0;
 			} else if (line.matches(end_regex)) {
@@ -270,14 +268,17 @@ public class LevelLoader {
 				end = i - 1;
 			} else if (flag) {
 				length++;
-				if (debug)
+				if (debug) {
 					System.out.print(".");
+				}
 			}
 		}
-		if (debug)
+		if (debug) {
 			System.out.println();
-		if (debug)
+		}
+		if (debug) {
 			System.out.println("Stage (" + stageId + ") start : " + start + " end : " + String.valueOf(end));
+		}
 		return length;
 	}
 
@@ -366,8 +367,8 @@ public class LevelLoader {
 	public static ArrayList<String> loadLevelConfig(String filename) {
 		ArrayList<String> returnString = new ArrayList<String>();
 		String modPath = filename.replace(".lvl", ".cfg");
-		if(modPath.endsWith(".cfg.cfg")){
-			modPath = modPath.substring(0,modPath.indexOf(".cfg") + 4);
+		if (modPath.endsWith(".cfg.cfg")) {
+			modPath = modPath.substring(0, modPath.indexOf(".cfg") + 4);
 		}
 		if (!modPath.startsWith("Data/lvl/")) {
 			modPath = "Data/lvl/" + modPath;
@@ -401,7 +402,8 @@ public class LevelLoader {
 				int itemid = Integer.parseInt(matcher.group(4));
 				if (x1 == x && y1 == y && stage == id) {
 					// if (Core.getSettings().getSettings(Core.getSettings().debug))
-					// System.out.println("ID : " + id + " X: " + x + "-" + x1 + " Y: " +
+					// System.out.println("ID : " + id + " X: " + x + "-" + x1 + " Y: "
+					// +
 					// y + "-" + y1 + " - " + itemid);
 					return itemid;
 				}
